@@ -227,6 +227,7 @@ void parseconfig(string filename)
 }
 
 void EvalDataSVM(int numBatchesTest,  Network* _mynet, int iter){
+    cerr << "Start EvalDataSVM" << endl;
     int totCorrect = 0;
     int debugnumber = 0;
     std::ifstream testfile(testData);
@@ -247,7 +248,7 @@ void EvalDataSVM(int numBatchesTest,  Network* _mynet, int iter){
         vector<string> value;
         vector<string> label;
         while (std::getline(testfile, str)) {
-
+            cerr << "str=" << str << endl;
             char *mystring = &str[0];
             char *pch, *pchlabel;
             int track = 0;
@@ -270,6 +271,9 @@ void EvalDataSVM(int numBatchesTest,  Network* _mynet, int iter){
                 label.push_back(pchlabel);
                 pchlabel = strtok(NULL, ",");
             }
+            cerr << "pchlabel=" << pchlabel << endl;
+            cerr << "pch=" << pch << endl;
+            exit(44);
 
             nonzeros += list.size();
             records[count] = new int[list.size()];
@@ -327,6 +331,7 @@ void EvalDataSVM(int numBatchesTest,  Network* _mynet, int iter){
     cout << "over all " << totCorrect * 1.0 / (numBatchesTest*Batchsize) << endl;
     outputFile << iter << " " << globalTime/1000 << " " << totCorrect * 1.0 / (numBatchesTest*Batchsize) << endl;
 
+    cerr << "Finished EvalDataSVM" << endl;
 }
 
 void ReadDataSVM(size_t numBatches,  Network* _mynet, int epoch){
@@ -349,6 +354,7 @@ void ReadDataSVM(size_t numBatches,  Network* _mynet, int epoch){
         vector<string> value;
         vector<string> label;
         while (std::getline(file, str)) {
+            cerr << "str=" << str << endl;
             char *mystring = &str[0];
             char *pch, *pchlabel;
             int track = 0;
@@ -371,6 +377,8 @@ void ReadDataSVM(size_t numBatches,  Network* _mynet, int epoch){
                 label.push_back(pchlabel);
                 pchlabel = strtok(NULL, ",");
             }
+            cerr << "pchlabel=" << pchlabel << endl;
+            cerr << "pch=" << pch << endl;
 
             nonzeros += list.size();
             records[count] = new int[list.size()];
@@ -450,18 +458,23 @@ int main(int argc, char* argv[])
     //***********************************
     parseconfig(argv[1]);
 
+    std::cerr << "HH1" << std::endl;
     //***********************************
     // Initialize Network
     //***********************************
     int numBatches = totRecords/Batchsize;
     int numBatchesTest = totRecordsTest/Batchsize;
     NodeType* layersTypes = new NodeType[numLayer];
+    cerr << "totRecords=" << totRecords << " Batchsize=" << Batchsize << " numBatches=" << numBatches << endl;
+    cerr << "totRecordsTest=" << totRecordsTest << " Batchsize=" << Batchsize << " numBatchesTest=" << numBatchesTest << endl;
 
+    std::cerr << "HH2" << std::endl;
     for (int i=0; i<numLayer-1; i++){
         layersTypes[i] = NodeType::ReLU;
     }
     layersTypes[numLayer-1] = NodeType::Softmax;
 
+    std::cerr << "HH3" << std::endl;
     cnpy::npz_t arr;
     if (LOADWEIGHT) {
         arr = cnpy::npz_load(Weights);
@@ -476,8 +489,10 @@ int main(int argc, char* argv[])
     // Start Training
     //***********************************
 
+    std::cerr << "HH4" << std::endl;
     for (int e=0; e< Epoch; e++) {
-        ofstream outputFile(logFile,  std::ios_base::app);
+        ofstream outputFile(logFile);
+        std::cerr << "Epoch " << e << " " << logFile << endl;
         outputFile<<"Epoch "<<e<<endl;
         // train
         ReadDataSVM(numBatches, _mynet, e);
