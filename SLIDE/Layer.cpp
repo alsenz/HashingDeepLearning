@@ -204,7 +204,7 @@ float collision(int* hashes, int* table_hashes, int k, int l){
 }
 
 
-int Layer::queryActiveNodeandComputeActivations(int** activenodesperlayer, float** activeValuesperlayer, int* lengths, int layerIndex, int inputID, int* label, int labelsize, float Sparsity, int iter)
+int Layer::queryActiveNodeandComputeActivations(int** activenodesperlayer, float** activeValuesperlayer, int* lengths, int layerIndex, int inputID, const int* label, int labelsize, float Sparsity) const
 {
     //LSH QueryLogic
 

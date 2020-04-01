@@ -87,7 +87,7 @@ int Network::predictClass(int **inputIndices, float **inputValues, int *length, 
         //inference
         for (int j = 0; j < _numberOfLayers; j++) {
             _hiddenlayers[j]->queryActiveNodeandComputeActivations(activenodesperlayer, activeValuesperlayer, sizes, j, i, labels[i], 0,
-                    _Sparsity[_numberOfLayers+j], -1);
+                    _Sparsity[_numberOfLayers+j]);
         }
 
         //compute softmax
@@ -173,10 +173,13 @@ int Network::ProcessInput(int **inputIndices, float **inputValues, int *lengths,
         //auto t1 = std::chrono::high_resolution_clock::now();
         for (int j = 0; j < _numberOfLayers; j++) {
             in = _hiddenlayers[j]->queryActiveNodeandComputeActivations(activenodesperlayer, activeValuesperlayer, sizes, j, i, labels[i], labelsize[i],
-                    _Sparsity[j], iter*_currentBatchSize+i);
+                    _Sparsity[j]);
             avg_retrieval[j] += in;
         }
 
+        for (int j = 0; j < _numberOfLayers; j++)
+          cerr << "avg_retrieval[j]=" << avg_retrieval[j] << endl;
+        
         //Now backpropagate.
         // layers
         for (int j = _numberOfLayers - 1; j >= 0; j--) {
