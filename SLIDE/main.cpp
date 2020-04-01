@@ -226,6 +226,15 @@ void parseconfig(string filename)
     }
 }
 
+std::string PrintVec(const vector<string> &vec)
+{
+  stringstream strm;
+  for (vector<string>::const_iterator iter = vec.begin(); iter != vec.end(); ++iter) {
+    strm << *iter << " ";
+  }
+  return strm.str();
+}
+
 void EvalDataSVM(int numBatchesTest,  Network* _mynet, int iter){
     cerr << "Start EvalDataSVM" << endl;
     int totCorrect = 0;
@@ -248,7 +257,7 @@ void EvalDataSVM(int numBatchesTest,  Network* _mynet, int iter){
         vector<string> value;
         vector<string> label;
         while (std::getline(testfile, str)) {
-            cerr << "str=" << str << endl;
+            //cerr << "str=" << str << endl;
             char *mystring = &str[0];
             char *pch, *pchlabel;
             int track = 0;
@@ -271,10 +280,11 @@ void EvalDataSVM(int numBatchesTest,  Network* _mynet, int iter){
                 label.push_back(pchlabel);
                 pchlabel = strtok(NULL, ",");
             }
-            cerr << "pchlabel=" << pchlabel << endl;
-            cerr << "pch=" << pch << endl;
-            exit(44);
 
+            //cerr << "   list=" << PrintVec(list) << endl;
+            //cerr << "   value=" << PrintVec(value) << endl;
+            //cerr << "   label=" << PrintVec(label) << endl;
+           
             nonzeros += list.size();
             records[count] = new int[list.size()];
             values[count] = new float[list.size()];
