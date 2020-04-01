@@ -345,12 +345,13 @@ void EvalDataSVM(int numBatchesTest,  Network* _mynet, int iter){
 }
 
 void ReadDataSVM(size_t numBatches,  Network* _mynet, int epoch){
+    cerr << "Start ReadDataSVM" << endl;
     std::ifstream file(trainData);
     std::string str;
     //skipe header
     std::getline( file, str );
     for (size_t i = 0; i < numBatches; i++) {
-        if((i+epoch*numBatches)%Stepsize==0) {
+        if(i>0 && (i+epoch*numBatches)%Stepsize==0) {
             EvalDataSVM(20, _mynet, epoch*numBatches+i);
         }
         int **records = new int *[Batchsize];
@@ -364,7 +365,7 @@ void ReadDataSVM(size_t numBatches,  Network* _mynet, int epoch){
         vector<string> value;
         vector<string> label;
         while (std::getline(file, str)) {
-            cerr << "str=" << str << endl;
+            //cerr << "str=" << str << endl;
             char *mystring = &str[0];
             char *pch, *pchlabel;
             int track = 0;
@@ -387,8 +388,6 @@ void ReadDataSVM(size_t numBatches,  Network* _mynet, int epoch){
                 label.push_back(pchlabel);
                 pchlabel = strtok(NULL, ",");
             }
-            cerr << "pchlabel=" << pchlabel << endl;
-            cerr << "pch=" << pch << endl;
 
             nonzeros += list.size();
             records[count] = new int[list.size()];
@@ -458,6 +457,7 @@ void ReadDataSVM(size_t numBatches,  Network* _mynet, int epoch){
     }
     file.close();
 
+    cerr << "Finished ReadDataSVM" << endl;
 }
 
 

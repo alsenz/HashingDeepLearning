@@ -133,7 +133,7 @@ int Network::predictClass(int **inputIndices, float **inputValues, int *length, 
 
 
 int Network::ProcessInput(int **inputIndices, float **inputValues, int *lengths, int **labels, int *labelsize, int iter, bool rehash, bool rebuild) {
-
+    //cerr << "start Network::ProcessInput" << endl;
     float logloss = 0.0;
     int* avg_retrieval = new int[_numberOfLayers]();
 
@@ -290,10 +290,12 @@ int Network::ProcessInput(int **inputIndices, float **inputValues, int *lengths,
             delete[] local_weights;
         }
     }
-
+    
     if (DEBUG&rehash) {
         cout << "Avg sample size = " << avg_retrieval[0]*1.0/_currentBatchSize<<" "<<avg_retrieval[1]*1.0/_currentBatchSize << endl;
     }
+    //cerr << "finished Network::ProcessInput" << endl;
+
     return logloss;
 }
 

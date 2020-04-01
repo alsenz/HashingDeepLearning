@@ -9,6 +9,8 @@ Rebuild=128000
 InputDim=135909
 totRecords=490449
 totRecordsTest=153025
+#totRecords=9999
+#totRecordsTest=9999
 
 Lr=0.0001
 Epoch=10
@@ -19,6 +21,8 @@ numLayer=2
 
 trainData=../dataset/Amazon/amazon_train.txt
 testData=../dataset/Amazon/amazon_test.txt
+#trainData=../dataset/Amazon/10k/amazon_train.txt
+#testData=../dataset/Amazon/10k/amazon_test.txt
 
 weight=../savedWeight.npz
 savedweight=../savedWeight.npz
