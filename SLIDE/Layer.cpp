@@ -154,10 +154,10 @@ void Layer::addtoHashTable(float* weights, int length, float bias, int ID)
 }
 
 
-Node* Layer::getNodebyID(size_t nodeID)
+Node &Layer::getNodebyID(size_t nodeID) const
 {
     assert(("nodeID less than _noOfNodes" , nodeID < _noOfNodes));
-    return &_Nodes[nodeID];
+    return _Nodes[nodeID];
 }
 
 
@@ -171,7 +171,7 @@ int Layer::getNodeCount()
     return _noOfNodes;
 }
 
-float Layer::getNomalizationConstant(int inputID)
+float Layer::getNomalizationConstant(int inputID) const
 {
     assert(("Error Call to Normalization Constant for non - softmax layer", _type == NodeType::Softmax));
     return _normalizationConstants[inputID];

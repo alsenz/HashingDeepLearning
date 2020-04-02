@@ -60,7 +60,7 @@ void Node::Update(int dim, int nodeID, int layerID, NodeType type, int batchsize
 
 }
 
-float Node::getLastActivation(int inputID)
+float Node::getLastActivation(int inputID) const
 {
 	if(_train[inputID]._ActiveinputIds != 1)
 		return 0.0;
@@ -75,12 +75,12 @@ void Node::incrementDelta(int inputID, float incrementValue)
 	    _train[inputID]._lastDeltaforBPs += incrementValue;
 }
 
-bool Node::getInputActive(int inputID)
+bool Node::getInputActive(int inputID) const
 {
     return _train[inputID]._ActiveinputIds == 1;
 }
 
-bool Node::getActiveInputs(void)
+bool Node::getActiveInputs(void) const
 {
     return _activeInputs > 0;
 }
@@ -126,7 +126,7 @@ float Node::getActivation(int* indices, float* values, int length, int inputID)
 }
 
 
-void Node::ComputeExtaStatsForSoftMax(float normalizationConstant, int inputID, int* label, int labelsize)
+void Node::ComputeExtaStatsForSoftMax(float normalizationConstant, int inputID, int* label, int labelsize) const
 {
 	assert(("Input Not Active but still called !! BUG", _train[inputID]._ActiveinputIds ==1));
 
