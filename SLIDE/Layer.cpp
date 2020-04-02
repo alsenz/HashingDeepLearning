@@ -132,7 +132,7 @@ void Layer::updateRandomNodes()
 void Layer::addtoHashTable(float* weights, int length, float bias, int ID)
 {
     //LSH logic
-    int *hashes;
+    const int *hashes;
     if(HashFunction==1) {
         hashes = _wtaHasher->getHash(weights);
     }else if (HashFunction==2) {
@@ -223,8 +223,10 @@ int Layer::queryActiveNodeandComputeActivations(int** activenodesperlayer, float
     }
     else
     {
+        //cerr << "Mode=" << Mode << endl;
+        //cerr << "HashFunction=" << HashFunction << endl;
         if (Mode==1) {
-            int *hashes;
+            const int *hashes;
             if (HashFunction == 1) {
                 hashes = _wtaHasher->getHash(activeValuesperlayer[layerIndex]);
             } else if (HashFunction == 2) {
@@ -292,7 +294,7 @@ int Layer::queryActiveNodeandComputeActivations(int** activenodesperlayer, float
 
         }
         if (Mode==4) {
-            int *hashes;
+            const int *hashes;
             if (HashFunction == 1) {
                 hashes = _wtaHasher->getHash(activeValuesperlayer[layerIndex]);
             } else if (HashFunction == 2) {
@@ -333,6 +335,7 @@ int Layer::queryActiveNodeandComputeActivations(int** activenodesperlayer, float
             }
 
             in = counts.size();
+            cerr << "   in=" << in << endl;
             if (counts.size()<1500){
                 srand(time(NULL));
                 size_t start = rand() % _noOfNodes;

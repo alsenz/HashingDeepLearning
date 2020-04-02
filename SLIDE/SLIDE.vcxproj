@@ -28,6 +28,8 @@
     <ClCompile Include="MurmurHash.cpp" />
     <ClCompile Include="Network.cpp" />
     <ClCompile Include="Node.cpp" />
+    <ClCompile Include="srp.cpp" />
+    <ClCompile Include="WtaHash.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bucket.h" />
@@ -40,6 +42,8 @@
     <ClInclude Include="MurmurHash.h" />
     <ClInclude Include="Network.h" />
     <ClInclude Include="Node.h" />
+    <ClInclude Include="srp.h" />
+    <ClInclude Include="WtaHash.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Config_amz.csv" />

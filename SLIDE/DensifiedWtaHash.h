@@ -18,8 +18,8 @@ private:
     int *_randHash, _randa, _numhashes, _rangePow,_lognumhash, *_indices, *_pos, _permute;
 public:
     DensifiedWtaHash(int numHashes, int noOfBitsToHash);
-    int * getHash(int* indices, float* data, int dataLen);
-    int getRandDoubleHash(int binid, int count);
-    int * getHashEasy(float* data, int dataLen, int topK);
+    const int * getHash(int* indices, float* data, int dataLen) const;
+    const int getRandDoubleHash(int binid, int count) const;
+    const int * getHashEasy(float* data, int dataLen, int topK) const;
     ~DensifiedWtaHash();
 };

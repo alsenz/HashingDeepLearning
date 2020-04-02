@@ -178,12 +178,12 @@ int Network::ProcessInput(int **inputIndices, float **inputValues, int *lengths,
                     _Sparsity[j]);
             avg_retrieval[j] += in;
         }
-
+        /*
         for (int j = 0; j < _numberOfLayers; j++) {
           cerr << "avg_retrieval[" << j << "]=" << avg_retrieval[j] << endl;
           cerr << "_Sparsity=" << _Sparsity[j] << endl;
         }
-
+        */
         //Now backpropagate.
         // layers
         for (int j = _numberOfLayers - 1; j >= 0; j--) {
@@ -274,7 +274,7 @@ int Network::ProcessInput(int **inputIndices, float **inputValues, int *lengths,
                 tmp._bias = tmp._mirrorbias;
             }
             if (tmpRehash) {
-                int *hashes;
+                const int *hashes;
                 if(HashFunction==1) {
                     hashes = _hiddenlayers[l]->_wtaHasher->getHash(local_weights);
                 }else if (HashFunction==2){
@@ -301,8 +301,8 @@ int Network::ProcessInput(int **inputIndices, float **inputValues, int *lengths,
     if (DEBUG&rehash) {
         cout << "Avg sample size = " << avg_retrieval[0]*1.0/_currentBatchSize<<" "<<avg_retrieval[1]*1.0/_currentBatchSize << endl;
     }
-    //cerr << "finished Network::ProcessInput" << endl;
 
+    //cerr << "finished Network::ProcessInput logloss=" << logloss << endl;
     return logloss;
 }
 
