@@ -335,7 +335,7 @@ int Layer::queryActiveNodeandComputeActivations(int** activenodesperlayer, float
             }
 
             in = counts.size();
-            cerr << "   in=" << in << endl;
+            //cerr << "   in=" << in << endl;
             if (counts.size()<1500){
                 srand(time(NULL));
                 size_t start = rand() % _noOfNodes;
