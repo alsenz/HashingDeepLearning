@@ -74,7 +74,7 @@ public:
     int _currentBatchsize;
     size_t _dim, _layerNum, _IDinLayer;
 	const int* _indicesInTables;
-	int* _indicesInBuckets;
+	const int* _indicesInBuckets;
 	float* _weights;
 	float* _mirrorWeights;
 	float* _adamAvgMom;

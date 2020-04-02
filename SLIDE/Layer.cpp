@@ -144,7 +144,7 @@ void Layer::addtoHashTable(float* weights, int length, float bias, int ID)
     }
 
     const int * hashIndices = _hashTables->hashesToIndex(hashes);
-    int * bucketIndices = _hashTables->add(hashIndices, ID+1);
+    const int * bucketIndices = _hashTables->add(hashIndices, ID+1);
 
     _Nodes[ID]._indicesInTables = hashIndices;
     _Nodes[ID]._indicesInBuckets = bucketIndices;
@@ -238,7 +238,7 @@ int Layer::queryActiveNodeandComputeActivations(int** activenodesperlayer, float
                 hashes = _srp->getHashSparse(activenodesperlayer[layerIndex], activeValuesperlayer[layerIndex], lengths[layerIndex]);
             }
             const int *hashIndices = _hashTables->hashesToIndex(hashes);
-            int **actives = _hashTables->retrieveRaw(hashIndices);
+            const int **actives = _hashTables->retrieveRaw(hashIndices);
 
             // Get candidates from hashtable
             auto t00 = std::chrono::high_resolution_clock::now();
@@ -306,7 +306,7 @@ int Layer::queryActiveNodeandComputeActivations(int** activenodesperlayer, float
                 hashes = _srp->getHashSparse(activenodesperlayer[layerIndex], activeValuesperlayer[layerIndex], lengths[layerIndex]);
             }
             const int *hashIndices = _hashTables->hashesToIndex(hashes);
-            int **actives = _hashTables->retrieveRaw(hashIndices);
+            const int **actives = _hashTables->retrieveRaw(hashIndices);
             // we now have a sparse array of indices of active nodes
 
             // Get candidates from hashtable
