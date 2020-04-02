@@ -29,6 +29,7 @@
     <ClCompile Include="Network.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="srp.cpp" />
+    <ClCompile Include="Util.cpp" />
     <ClCompile Include="WtaHash.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -43,6 +44,7 @@
     <ClInclude Include="Network.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="srp.h" />
+    <ClInclude Include="Util.h" />
     <ClInclude Include="WtaHash.h" />
   </ItemGroup>
   <ItemGroup>

@@ -69,9 +69,9 @@ Layer *Network::getLayer(int LayerID) {
 
 int Network::predictClass(int **inputIndices, float **inputValues, int *length, int **labels, int *labelsize) {
     int correctPred = 0;
-    cerr << "start Network::predictClass " << _currentBatchSize << endl;
-    cerr << "_currentBatchSize=" << _currentBatchSize << endl;
-    cerr << "_numberOfLayers=" << _numberOfLayers << endl;
+    //cerr << "start Network::predictClass " << _currentBatchSize << endl;
+    //cerr << "_currentBatchSize=" << _currentBatchSize << endl;
+    //cerr << "_numberOfLayers=" << _numberOfLayers << endl;
 
     auto t1 = std::chrono::high_resolution_clock::now();
     #pragma omp parallel for reduction(+:correctPred)
@@ -104,8 +104,8 @@ int Network::predictClass(int **inputIndices, float **inputValues, int *length, 
             }
         }
 
-        /*
         cerr << "predict_class=" << predict_class << endl;
+        /*
         cerr << "labels=";
         for (int tt = 0; tt < labelsize[i]; tt++) {
           cerr << labels[i][tt] << " ";
@@ -127,9 +127,9 @@ int Network::predictClass(int **inputIndices, float **inputValues, int *length, 
     }
     auto t2 = std::chrono::high_resolution_clock::now();
     float timeDiffInMiliseconds = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
-    std::cout << "Inference takes " << timeDiffInMiliseconds/1000 << " milliseconds" << std::endl;
+    //std::cout << "Inference takes " << timeDiffInMiliseconds/1000 << " milliseconds" << std::endl;
 
-    cerr << "finished Network::predictClass, correctPred=" << correctPred << endl;
+    //cerr << "finished Network::predictClass, correctPred=" << correctPred << endl;
     return correctPred;
 }
 

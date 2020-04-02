@@ -17,6 +17,7 @@
 #include<map>
 #include<string>
 #include "Config.h"
+#include "Util.h"
 
 int *RangePow;
 int *K;
@@ -235,6 +236,15 @@ std::string PrintVec(const vector<string> &vec)
   return strm.str();
 }
 
+void ReadHeader(const string &str, int &numLines, int &numInClass, int &numOutClass)
+{
+  vector<int> vec = Tokenize<int>(str);
+  assert(vec.size() == 3);
+  numLines = vec[0];
+  numInClass = vec[1];
+  numOutClass = vec[2];
+}
+
 void EvalDataSVM(int numBatchesTest,  Network* _mynet, int iter){
     cerr << "Start EvalDataSVM" << endl;
     int totCorrect = 0;
@@ -243,6 +253,11 @@ void EvalDataSVM(int numBatchesTest,  Network* _mynet, int iter){
     string str;
     //Skipe header
     std::getline( testfile, str );
+
+    int numLines;
+    int numInClass;
+    int numOutClass;
+    ReadHeader(str, numLines, numInClass, numOutClass);
 
     ofstream outputFile(logFile,  std::ios_base::app);
     for (int i = 0; i < numBatchesTest; i++) {
@@ -296,7 +311,10 @@ void EvalDataSVM(int numBatchesTest,  Network* _mynet, int iter){
             debugnumber++;
             vector<string>::iterator it;
             for (it = list.begin(); it < list.end(); it++) {
-                records[count][currcount] = stoi(*it);
+                int inClass = stoi(*it);
+                assert(inClass < numInClass);
+                //cerr << "inClass=" << inClass << endl;
+                records[count][currcount] = inClass;
                 currcount++;
             }
             currcount = 0;
@@ -306,7 +324,10 @@ void EvalDataSVM(int numBatchesTest,  Network* _mynet, int iter){
             }
             currcount = 0;
             for (it = label.begin(); it < label.end(); it++) {
-                labels[count][currcount] = stoi(*it);
+                int label = stoi(*it);
+                assert(label < numOutClass);
+                //cerr << "label=" << label << endl;
+                labels[count][currcount] = label;
                 currcount++;
             }
 
@@ -323,7 +344,7 @@ void EvalDataSVM(int numBatchesTest,  Network* _mynet, int iter){
         }
 
         std::cout << Batchsize << " records, with "<< num_features << " features and " << num_labels << " labels" << std::endl;
-        auto correctPredict = _mynet->predictClass(records, values, sizes, labels, labelsize);
+        int correctPredict = _mynet->predictClass(records, values, sizes, labels, labelsize);
         totCorrect += correctPredict;
         std::cout <<" iter "<< i << ": " << totCorrect*1.0/(Batchsize*(i+1)) << " correct" << std::endl;
 
@@ -350,8 +371,14 @@ void ReadDataSVM(size_t numBatches,  Network* _mynet, int epoch){
     std::string str;
     //skipe header
     std::getline( file, str );
+
+    int numLines;
+    int numInClass;
+    int numOutClass;
+    ReadHeader(str, numLines, numInClass, numOutClass);
+
     for (size_t i = 0; i < numBatches; i++) {
-        if(i>0 && (i+epoch*numBatches)%Stepsize==0) {
+        if( (i+epoch*numBatches)%Stepsize==0) {
             EvalDataSVM(20, _mynet, epoch*numBatches+i);
         }
         int **records = new int *[Batchsize];
@@ -398,7 +425,9 @@ void ReadDataSVM(size_t numBatches,  Network* _mynet, int epoch){
             int currcount = 0;
             vector<string>::iterator it;
             for (it = list.begin(); it < list.end(); it++) {
-                records[count][currcount] = stoi(*it);
+                int inClass = stoi(*it);
+                assert(inClass < numInClass);
+                records[count][currcount] = inClass;
                 currcount++;
             }
             currcount = 0;
@@ -409,7 +438,10 @@ void ReadDataSVM(size_t numBatches,  Network* _mynet, int epoch){
 
             currcount = 0;
             for (it = label.begin(); it < label.end(); it++) {
-                labels[count][currcount] = stoi(*it);
+                int label = stoi(*it);
+                assert(label < numOutClass);
+                cerr << "label=" << label << endl;
+                labels[count][currcount] = label;
                 currcount++;
             }
 
