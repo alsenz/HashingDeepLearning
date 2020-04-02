@@ -161,12 +161,12 @@ Node &Layer::getNodebyID(size_t nodeID) const
 }
 
 
-Node* Layer::getAllNodes()
+Node* Layer::getAllNodes() const
 {
     return _Nodes;
 }
 
-int Layer::getNodeCount()
+int Layer::getNodeCount() const
 {
     return _noOfNodes;
 }
@@ -466,7 +466,7 @@ int Layer::queryActiveNodeandComputeActivations(int** activenodesperlayer, float
     return in;
 }
 
-void Layer::saveWeights(string file)
+void Layer::saveWeights(string file) const
 {
     if (_layerID==0) {
         cnpy::npz_save(file, "w_layer_0", _weights, {_noOfNodes, _Nodes[0]._dim}, "w");

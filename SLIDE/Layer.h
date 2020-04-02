@@ -36,15 +36,12 @@ public:
 	int * _binids;
 	Layer(size_t _numNodex, int previousLayerNumOfNodes, int layerID, NodeType type, int batchsize, int K, int L, int RangePow, float Sparsity, float* weights=NULL, float* bias=NULL, float *adamAvgMom=NULL, float *adamAvgVel=NULL);
 	Node &getNodebyID(size_t nodeID) const;
-	Node* getAllNodes();
-	int getNodeCount();
+	Node* getAllNodes() const;
+	int getNodeCount() const;
 	void addtoHashTable(float* weights, int length, float bias, int id);
 	float getNomalizationConstant(int inputID) const;
 	int queryActiveNodeandComputeActivations(int** activenodesperlayer, float** activeValuesperlayer, int* inlenght, int layerID, int inputID,  const int* label, int labelsize, float Sparsity) const;
-    int queryActiveNodes(int** activenodesperlayer, float** activeValuesperlayer, int* inlenght, int layerID, int inputID,  int* label, int labelsize, float Sparsity, int iter);
-    int computeActivations(int** activenodesperlayer, float** activeValuesperlayer, int* inlenght, int layerID, int inputID,  int* label, int labelsize, float Sparsity, int iter);
-    int computeSoftmax(int** activenodesperlayer, float** activeValuesperlayer, int* inlenght, int layerID, int inputID,  int* label, int labelsize, float Sparsity, int iter);
-	void saveWeights(string file);
+	void saveWeights(string file) const;
 	void updateTable();
 	void updateRandomNodes();
 
