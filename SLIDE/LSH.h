@@ -14,11 +14,11 @@ private:
 public:
 	LSH(int K, int L, int RangePow);
 	void clear();
-	int* add(int *indices, int id);
+	int* add(const int *indices, int id);
 	int add(int indices, int tableId, int id);
-	int * hashesToIndex(const int * hashes) const;
-	int** retrieveRaw(int *indices);
-	int retrieve(int table, int indices, int bucket);
+	const int * hashesToIndex(const int * hashes) const;
+	int** retrieveRaw(const int *indices) const;
+	int retrieve(int table, int indices, int bucket) const;
 	void count();
 	~LSH();
 };

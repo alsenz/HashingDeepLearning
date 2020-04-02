@@ -63,7 +63,7 @@ void LSH::count()
 }
 
 
-int* LSH::hashesToIndex(const int * hashes) const
+const int* LSH::hashesToIndex(const int * hashes) const
 {
 
 	int * indices = new int[_L];
@@ -99,7 +99,7 @@ int* LSH::hashesToIndex(const int * hashes) const
 }
 
 
-int* LSH::add(int *indices, int id)
+int* LSH::add(const int *indices, int id)
 {
 	int * secondIndices = new int[_L];
 	for (int i = 0; i < _L; i++)
@@ -121,7 +121,7 @@ int LSH::add(int tableId, int indices, int id)
 /*
 * Returns all the buckets
 */
-int** LSH::retrieveRaw(int *indices)
+int** LSH::retrieveRaw(const int *indices) const
 {
 	int ** rawResults = new int*[_L];
 
@@ -133,7 +133,7 @@ int** LSH::retrieveRaw(int *indices)
 }
 
 
-int LSH::retrieve(int table, int indices, int bucket)
+int LSH::retrieve(int table, int indices, int bucket) const
 {
 	return _bucket[table][indices].retrieve(bucket);
 }

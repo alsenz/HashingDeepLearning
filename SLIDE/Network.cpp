@@ -285,7 +285,7 @@ int Network::ProcessInput(int **inputIndices, float **inputValues, int *lengths,
                     hashes = _hiddenlayers[l]->_srp->getHash(local_weights, dim);
                 }
 
-                int *hashIndices = _hiddenlayers[l]->_hashTables->hashesToIndex(hashes);
+                const int *hashIndices = _hiddenlayers[l]->_hashTables->hashesToIndex(hashes);
                 int * bucketIndices = _hiddenlayers[l]->_hashTables->add(hashIndices, m+1);
 
                 delete[] hashes;

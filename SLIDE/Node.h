@@ -73,7 +73,7 @@ public:
 	train* _train;
     int _currentBatchsize;
     size_t _dim, _layerNum, _IDinLayer;
-	int* _indicesInTables;
+	const int* _indicesInTables;
 	int* _indicesInBuckets;
 	float* _weights;
 	float* _mirrorWeights;
