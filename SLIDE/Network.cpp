@@ -67,7 +67,7 @@ Layer *Network::getLayer(int LayerID) {
 }
 
 
-int Network::predictClass(int **inputIndices, float **inputValues, int *length, int **labels, int *labelsize, int numInClass, int numOutClass) {
+int Network::predictClass(int **inputIndices, float **inputValues, int *length, int **labels, int *labelsize, int numInClass, int numOutClass) const {
     int correctPred = 0;
     //cerr << "start Network::predictClass " << _currentBatchSize << endl;
     //cerr << "_currentBatchSize=" << _currentBatchSize << endl;
@@ -137,7 +137,7 @@ int Network::predictClass(int **inputIndices, float **inputValues, int *length, 
 }
 
 
-int Network::ProcessInput(int **inputIndices, float **inputValues, int *lengths, int **labels, int *labelsize, int iter, bool rehash, bool rebuild) {
+int Network::ProcessInput(int **inputIndices, float **inputValues, int *lengths, int **labels, int *labelsize, int iter, bool rehash, bool rebuild) const {
     //cerr << "start Network::ProcessInput" << endl;
     float logloss = 0.0;
     int* avg_retrieval = new int[_numberOfLayers]();
@@ -239,14 +239,14 @@ int Network::ProcessInput(int **inputIndices, float **inputValues, int *lengths,
             tmpRebuild=false;
         }
         if (tmpRehash) {
-            _hiddenlayers[l]->_hashTables->clear();
+            _hiddenlayers[l]->getHashTables().clear();
         }
         if (tmpRebuild){
             _hiddenlayers[l]->updateTable();
         }
         int ratio = 1;
 #pragma omp parallel for
-        for (size_t m = 0; m < _hiddenlayers[l]->_noOfNodes; m++)
+        for (size_t m = 0; m < _hiddenlayers[l]->getNoOfNodes(); m++)
         {
             Node &tmp = _hiddenlayers[l]->getNodebyID(m);
             int dim = tmp._dim;
@@ -279,17 +279,17 @@ int Network::ProcessInput(int **inputIndices, float **inputValues, int *lengths,
             if (tmpRehash) {
                 const int *hashes;
                 if(HashFunction==1) {
-                    hashes = _hiddenlayers[l]->_wtaHasher->getHash(local_weights);
+                    hashes = _hiddenlayers[l]->getWTAHasher().getHash(local_weights);
                 }else if (HashFunction==2){
-                    hashes = _hiddenlayers[l]->_dwtaHasher->getHashEasy(local_weights, dim, TOPK);
+                    hashes = _hiddenlayers[l]->getDensifiedWtaHash().getHashEasy(local_weights, dim, TOPK);
                 }else if (HashFunction==3){
-                    hashes = _hiddenlayers[l]->_MinHasher->getHashEasy(_hiddenlayers[l]->_binids, local_weights, dim, TOPK);
+                    hashes = _hiddenlayers[l]->getDensifiedMinhash().getHashEasy(_hiddenlayers[l]->getBinIds(), local_weights, dim, TOPK);
                 }else if (HashFunction==4){
-                    hashes = _hiddenlayers[l]->_srp->getHash(local_weights, dim);
+                    hashes = _hiddenlayers[l]->getSparseRandomProjection().getHash(local_weights, dim);
                 }
 
-                const int *hashIndices = _hiddenlayers[l]->_hashTables->hashesToIndex(hashes);
-                const int * bucketIndices = _hiddenlayers[l]->_hashTables->add(hashIndices, m+1);
+                const int *hashIndices = _hiddenlayers[l]->getHashTables().hashesToIndex(hashes);
+                const int * bucketIndices = _hiddenlayers[l]->getHashTables().add(hashIndices, m+1);
 
                 delete[] hashes;
                 delete[] hashIndices;

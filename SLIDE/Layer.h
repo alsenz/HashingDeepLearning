@@ -21,20 +21,23 @@ private:
     train* _train_array;
 
 
-public:
-	int _layerID, _noOfActive;
-	size_t _noOfNodes;
-	float* _weights;
-	float* _adamAvgMom;
-	float* _adamAvgVel;
-	float* _bias;
-	LSH *_hashTables;
-	WtaHash *_wtaHasher;
+    int _layerID, _noOfActive;
+    size_t _noOfNodes;
+    float* _weights;
+    float* _adamAvgMom;
+    float* _adamAvgVel;
+    float* _bias;
+    LSH *_hashTables;
+    int * _binids;
+
+    WtaHash *_wtaHasher;
     DensifiedMinhash *_MinHasher;
     SparseRandomProjection *_srp;
     DensifiedWtaHash *_dwtaHasher;
-	int * _binids;
-	Layer(size_t _numNodex, int previousLayerNumOfNodes, int layerID, NodeType type, int batchsize, int K, int L, int RangePow, float Sparsity, float* weights=NULL, float* bias=NULL, float *adamAvgMom=NULL, float *adamAvgVel=NULL);
+
+public:
+
+  Layer(size_t _numNodex, int previousLayerNumOfNodes, int layerID, NodeType type, int batchsize, int K, int L, int RangePow, float Sparsity, float* weights=NULL, float* bias=NULL, float *adamAvgMom=NULL, float *adamAvgVel=NULL);
 	Node &getNodebyID(size_t nodeID) const;
 	Node* getAllNodes() const;
 	int getNodeCount() const;
@@ -62,4 +65,35 @@ public:
         return ptr;};
     void operator delete(void * pointer){munmap(pointer, sizeof(Layer));};
 
+    size_t getNoOfNodes() const
+    {
+      return _noOfNodes; 
+    }
+
+    LSH &getHashTables() const
+    {
+      return *_hashTables;
+    }
+
+    int *getBinIds() const 
+    {
+      return _binids;
+    }
+
+    WtaHash &getWTAHasher() const
+    {
+      return *_wtaHasher;
+    }
+    DensifiedMinhash &getDensifiedMinhash() const
+    {
+      return *_MinHasher;
+    }
+    SparseRandomProjection &getSparseRandomProjection() const
+    {
+      return *_srp;
+    }
+    DensifiedWtaHash &getDensifiedWtaHash() const
+    {
+      return *_dwtaHasher;
+    }
 };

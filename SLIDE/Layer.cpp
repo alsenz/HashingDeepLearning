@@ -178,7 +178,7 @@ float Layer::getNomalizationConstant(int inputID) const
 }
 
 
-float innerproduct(int* index1, float* value1, int len1, float* value2){
+float innerproduct(const int* index1, const float* value1, int len1, const float* value2) {
     float total = 0;
     for (int i=0; i<len1; i++){
         total+=value1[i]*value2[index1[i]];
