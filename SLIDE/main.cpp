@@ -243,6 +243,7 @@ void ReadHeader(const string &str, int &numLines, int &numInClass, int &numOutCl
   numLines = vec[0];
   numInClass = vec[1];
   numOutClass = vec[2];
+  cerr << "header " << numLines << " " << numInClass << " " << numOutClass << endl;
 }
 
 void EvalDataSVM(int numBatchesTest,  Network* _mynet, int iter){
@@ -344,7 +345,7 @@ void EvalDataSVM(int numBatchesTest,  Network* _mynet, int iter){
         }
 
         std::cout << Batchsize << " records, with "<< num_features << " features and " << num_labels << " labels" << std::endl;
-        int correctPredict = _mynet->predictClass(records, values, sizes, labels, labelsize);
+        int correctPredict = _mynet->predictClass(records, values, sizes, labels, labelsize, numInClass, numOutClass);
         totCorrect += correctPredict;
         std::cout <<" iter "<< i << ": " << totCorrect*1.0/(Batchsize*(i+1)) << " correct" << std::endl;
 

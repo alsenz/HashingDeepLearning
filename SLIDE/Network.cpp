@@ -67,7 +67,7 @@ Layer *Network::getLayer(int LayerID) {
 }
 
 
-int Network::predictClass(int **inputIndices, float **inputValues, int *length, int **labels, int *labelsize) {
+int Network::predictClass(int **inputIndices, float **inputValues, int *length, int **labels, int *labelsize, int numInClass, int numOutClass) {
     int correctPred = 0;
     //cerr << "start Network::predictClass " << _currentBatchSize << endl;
     //cerr << "_currentBatchSize=" << _currentBatchSize << endl;
@@ -92,6 +92,7 @@ int Network::predictClass(int **inputIndices, float **inputValues, int *length, 
 
         //compute softmax
         int noOfClasses = sizes[_numberOfLayers];
+        assert(noOfClasses == numOutClass);
         float max_act = -222222222;
         int predict_class = -1;
         for (int k = 0; k < noOfClasses; k++) {
@@ -104,7 +105,9 @@ int Network::predictClass(int **inputIndices, float **inputValues, int *length, 
             }
         }
 
-        cerr << "predict_class=" << predict_class << endl;
+        //cerr << "_numberOfLayers=" << _numberOfLayers << endl;
+        //cerr << "noOfClasses=" << noOfClasses << endl;
+        //cerr << "predict_class=" << predict_class << endl;
         /*
         cerr << "labels=";
         for (int tt = 0; tt < labelsize[i]; tt++) {
