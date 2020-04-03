@@ -288,11 +288,10 @@ int Network::ProcessInput(int **inputIndices, float **inputValues, int *lengths,
                     hashes = _hiddenlayers[l]->getSparseRandomProjection().getHash(local_weights, dim);
                 }
 
-                const int *hashIndices = _hiddenlayers[l]->getHashTables().hashesToIndex(hashes);
+                std::vector<int> hashIndices = _hiddenlayers[l]->getHashTables().hashesToIndex(hashes);
                 const int * bucketIndices = _hiddenlayers[l]->getHashTables().add(hashIndices, m+1);
 
                 delete[] hashes;
-                delete[] hashIndices;
                 delete[] bucketIndices;
             }
 

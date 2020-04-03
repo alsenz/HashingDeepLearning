@@ -224,8 +224,6 @@ void Node::SetlastActivation(int inputID, float realActivation)
 
 Node::~Node()
 {
-
-	delete[] _indicesInTables;
 	delete[] _indicesInBuckets;
 
 	if (ADAM)

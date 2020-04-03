@@ -63,10 +63,9 @@ void LSH::count()
 }
 
 
-const int* LSH::hashesToIndex(const int * hashes) const
+std::vector<int> LSH::hashesToIndex(const int * hashes) const
 {
-
-	int * indices = new int[_L];
+  std::vector<int> indices = std::vector<int>(_L);
 	for (int i = 0; i < _L; i++)
 	{
 		unsigned int index = 0;
@@ -99,7 +98,7 @@ const int* LSH::hashesToIndex(const int * hashes) const
 }
 
 
-const int* LSH::add(const int *indices, int id)
+const int* LSH::add(const std::vector<int> &indices, int id)
 {
 	int * secondIndices = new int[_L];
 	for (int i = 0; i < _L; i++)
@@ -121,7 +120,7 @@ int LSH::add(int tableId, int indices, int id)
 /*
 * Returns all the buckets
 */
-const int** LSH::retrieveRaw(const int *indices) const
+const int** LSH::retrieveRaw(const std::vector<int> &indices) const
 {
 	const int ** rawResults = (const int **) new int*[_L];
 

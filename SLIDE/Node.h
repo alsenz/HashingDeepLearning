@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <iostream>
+#include <vector>
 #include <cmath>
 #include <linux/mman.h>
 #include <sys/mman.h>
@@ -71,7 +72,7 @@ private:
     train* _train;
     int _currentBatchsize;
     size_t _dim, _layerNum, _IDinLayer;
-    const int* _indicesInTables;
+    std::vector<int> _indicesInTables;
     const int* _indicesInBuckets;
     float* _weights;
     float* _mirrorWeights;
@@ -125,7 +126,7 @@ public:
     return _dim;
   }
 
-  void setIndicesInTables(const int *val)
+  void setIndicesInTables(std::vector<int> &val)
   {
     _indicesInTables = val;
   }
