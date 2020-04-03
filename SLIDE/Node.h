@@ -73,7 +73,7 @@ private:
     int _currentBatchsize;
     size_t _dim, _layerNum, _IDinLayer;
     std::vector<int> _indicesInTables;
-    const int* _indicesInBuckets;
+    std::vector<int> _indicesInBuckets;
     float* _weights;
     float* _mirrorWeights;
     float* _adamAvgMom;
@@ -131,7 +131,7 @@ public:
     _indicesInTables = val;
   }
 
-  void setIndicesInBuckets(const int *val)
+  void setIndicesInBuckets(const std::vector<int> &val)
   {
     _indicesInBuckets = val;
   }

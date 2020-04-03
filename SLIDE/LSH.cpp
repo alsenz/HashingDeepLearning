@@ -98,9 +98,9 @@ std::vector<int> LSH::hashesToIndex(const int * hashes) const
 }
 
 
-const int* LSH::add(const std::vector<int> &indices, int id)
+std::vector<int> LSH::add(const std::vector<int> &indices, int id) const
 {
-	int * secondIndices = new int[_L];
+  std::vector<int> secondIndices = std::vector<int>(_L);
 	for (int i = 0; i < _L; i++)
 	{
 		secondIndices[i] = _bucket[i][indices[i]].add(id);

@@ -14,7 +14,7 @@ private:
 public:
 	LSH(int K, int L, int RangePow);
 	void clear();
-	const int* add(const std::vector<int> &indices, int id);
+  std::vector<int> add(const std::vector<int> &indices, int id) const;
 	int add(int indices, int tableId, int id);
   std::vector<int> hashesToIndex(const int * hashes) const;
   const int** retrieveRaw(const std::vector<int> &indices) const;

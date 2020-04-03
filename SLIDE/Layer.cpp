@@ -144,7 +144,7 @@ void Layer::addtoHashTable(float* weights, int length, float bias, int ID)
     }
 
     std::vector<int> hashIndices = _hashTables->hashesToIndex(hashes);
-    const int * bucketIndices = _hashTables->add(hashIndices, ID+1);
+    std::vector<int> bucketIndices = _hashTables->add(hashIndices, ID+1);
 
     _Nodes[ID].setIndicesInTables(hashIndices);
     _Nodes[ID].setIndicesInBuckets(bucketIndices);

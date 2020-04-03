@@ -289,10 +289,9 @@ int Network::ProcessInput(int **inputIndices, float **inputValues, int *lengths,
                 }
 
                 std::vector<int> hashIndices = _hiddenlayers[l]->getHashTables().hashesToIndex(hashes);
-                const int * bucketIndices = _hiddenlayers[l]->getHashTables().add(hashIndices, m+1);
+                std::vector<int> bucketIndices = _hiddenlayers[l]->getHashTables().add(hashIndices, m+1);
 
                 delete[] hashes;
-                delete[] bucketIndices;
             }
 
             std::copy(local_weights, local_weights + dim, tmp.getWeights());
