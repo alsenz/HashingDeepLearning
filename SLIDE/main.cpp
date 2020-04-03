@@ -344,7 +344,7 @@ void EvalDataSVM(int numBatchesTest,  Network* _mynet, int iter){
             num_labels += labelsize[i];
         }
 
-        std::cout << Batchsize << " records, with "<< num_features << " features and " << num_labels << " labels" << " count " << count << std::endl;
+        std::cout << Batchsize << " records, with "<< num_features << " features and " << num_labels << " labels" << " debugnumber " << debugnumber << std::endl;
         int correctPredict = _mynet->predictClass(records, values, sizes, labels, labelsize, numInClass, numOutClass);
         totCorrect += correctPredict;
         std::cout <<" iter "<< i << ": " << totCorrect*1.0/(Batchsize*(i+1)) << " correct" << std::endl;
