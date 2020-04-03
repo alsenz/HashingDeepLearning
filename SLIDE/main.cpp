@@ -441,7 +441,7 @@ void ReadDataSVM(size_t numBatches,  Network* _mynet, int epoch){
             for (it = label.begin(); it < label.end(); it++) {
                 int label = stoi(*it);
                 assert(label < numOutClass);
-                cerr << "label=" << label << endl;
+                //cerr << "label=" << label << endl;
                 labels[count][currcount] = label;
                 currcount++;
             }
