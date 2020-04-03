@@ -101,38 +101,10 @@ public:
 	void backPropagateFirstLayer(int* nnzindices, float* nnzvalues, int nnzSize, float learningRate, int inputID);
 	~Node();
 
-    void * operator new(size_t size){
-        std::cout << "new Node" << std::endl;
-        void* ptr = mmap(NULL, size,
-            PROT_READ | PROT_EXEC | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS | MAP_HUGETLB | MAP_HUGE_1GB,
-            -1, 0);
-        if (ptr == MAP_FAILED){
-            ptr = mmap(NULL, size,
-                PROT_READ | PROT_EXEC | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS,
-                -1, 0);
-        }
-        if (ptr == MAP_FAILED){
-            std::cout << "mmap failed at Node." << std::endl;
-        }
-        return ptr;
-    }
+    void * operator new(size_t size);
     void* operator new (std::size_t size, const std::nothrow_t& nothrow_value){return operator new (size);};
     void* operator new (std::size_t size, void* ptr){return operator new (size);};
-    void* operator new[] (std::size_t size){
-        std::cout << "new Node array" << std::endl;
-        void* ptr = mmap(NULL, size,
-            PROT_READ | PROT_EXEC | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS | MAP_HUGETLB | MAP_HUGE_1GB,
-            -1, 0);
-        if (ptr == MAP_FAILED){
-            ptr = mmap(NULL, size,
-                PROT_READ | PROT_EXEC | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS,
-                -1, 0);
-        }
-        if (ptr == MAP_FAILED){
-            std::cout << "mmap failed at Node array." << std::endl;
-        }
-        return ptr;
-    }
+    void* operator new[](std::size_t size);
     void* operator new[] (std::size_t size, const std::nothrow_t& nothrow_value){return operator new (size);};
     void* operator new[] (std::size_t size, void* ptr){return operator new (size);};
 
