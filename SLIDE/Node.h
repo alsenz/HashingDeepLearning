@@ -68,24 +68,24 @@ private:
 	int _activeInputs;
     NodeType _type;
 
-
-public:
-	train* _train;
+    train* _train;
     int _currentBatchsize;
     size_t _dim, _layerNum, _IDinLayer;
-	const int* _indicesInTables;
-	const int* _indicesInBuckets;
-	float* _weights;
-	float* _mirrorWeights;
-	float* _adamAvgMom;
-	float* _adamAvgVel;
-	float* _t; //for adam
-	int* _update;
-	float _bias =0;
-	float _tbias = 0;
-	float _adamAvgMombias=0;
-	float _adamAvgVelbias=0;
-	float _mirrorbias =0;
+    const int* _indicesInTables;
+    const int* _indicesInBuckets;
+    float* _weights;
+    float* _mirrorWeights;
+    float* _adamAvgMom;
+    float* _adamAvgVel;
+    float* _t; //for adam
+    int* _update;
+    float _bias = 0;
+    float _tbias = 0;
+    float _adamAvgMombias = 0;
+    float _adamAvgVelbias = 0;
+    float _mirrorbias = 0;
+
+public:
 
 	Node(){};
 	Node(int dim, int nodeID, int layerID, NodeType type, int batchsize, float *weights, float bias, float *adamAvgMom, float *adamAvgVel);
@@ -147,4 +147,98 @@ public:
 	//only for debugging
 	float purturbWeight(int weightid, float delta);
 	float getGradient(int weightid, int inputID, float InputVal);
+
+  const size_t &getDim() const 
+  {
+    return _dim;
+  }
+
+  void setIndicesInTables(const int *val)
+  {
+    _indicesInTables = val;
+  }
+
+  void setIndicesInBuckets(const int *val)
+  {
+    _indicesInBuckets = val;
+  }
+
+  float *getWeights() const
+  {
+    return _weights;
+  }
+
+  float *getMirrorWeights() const
+  {
+    return _mirrorWeights;
+  }
+
+  float getAdamAvgMom(size_t idx) const
+  {
+    return _adamAvgMom[idx];
+  }
+  void setAdamAvgMom(size_t idx, float val)
+  {
+    _adamAvgMom[idx] = val;
+  }
+
+  float getAdamAvgVel(size_t idx) const
+  {
+    return _adamAvgVel[idx];
+  }
+  void setAdamAvgVel(size_t idx, float val)
+  {
+    _adamAvgVel[idx] = val;
+  }
+  
+  float getT(size_t idx) const
+  {
+    return _t[idx];
+  }
+  void setT(size_t idx, float val)
+  {
+    _t[idx] = val;
+  }
+
+  float getBias() const
+  {
+    return _bias;
+  }
+  float &getBias()
+  {
+    return _bias;
+  }
+
+  float getTBias() const
+  {
+    return _tbias;
+  }
+  float &getTBias()
+  {
+    return _tbias;
+  }
+
+  float getAdamAvgMombias() const
+  {
+    return _adamAvgMombias;
+  }
+  float &getAdamAvgMombias()
+  {
+    return _adamAvgMombias;
+  }
+
+  float getAdamAvgVelbias() const
+  {
+    return _adamAvgVelbias;
+  }
+  float &getAdamAvgVelbias()
+  {
+    return _adamAvgVelbias;
+  }
+
+  float getMirrorBias() const
+  {
+    return _mirrorbias;
+  }
+
 };

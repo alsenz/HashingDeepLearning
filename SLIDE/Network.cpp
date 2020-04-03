@@ -249,32 +249,32 @@ int Network::ProcessInput(int **inputIndices, float **inputValues, int *lengths,
         for (size_t m = 0; m < _hiddenlayers[l]->getNoOfNodes(); m++)
         {
             Node &tmp = _hiddenlayers[l]->getNodebyID(m);
-            int dim = tmp._dim;
+            int dim = tmp.getDim();
             float* local_weights = new float[dim];
-            std::copy(tmp._weights, tmp._weights + dim, local_weights);
+            std::copy(tmp.getWeights(), tmp.getWeights() + dim, local_weights);
 
             if(ADAM){
                 for (int d=0; d < dim;d++){
-                    float _t = tmp._t[d];
-                    float Mom = tmp._adamAvgMom[d];
-                    float Vel = tmp._adamAvgVel[d];
+                    float _t = tmp.getT(d);
+                    float Mom = tmp.getAdamAvgMom(d);
+                    float Vel = tmp.getAdamAvgVel(d);
                     Mom = BETA1 * Mom + (1 - BETA1) * _t;
                     Vel = BETA2 * Vel + (1 - BETA2) * _t * _t;
                     local_weights[d] += ratio * tmplr * Mom / (sqrt(Vel) + EPS);
-                    tmp._adamAvgMom[d] = Mom;
-                    tmp._adamAvgVel[d] = Vel;
-                    tmp._t[d] = 0;
+                    tmp.setAdamAvgMom(d, Mom);
+                    tmp.setAdamAvgVel(d, Vel);
+                    tmp.setT(d, 0);
                 }
 
-                tmp._adamAvgMombias = BETA1 * tmp._adamAvgMombias + (1 - BETA1) * tmp._tbias;
-                tmp._adamAvgVelbias = BETA2 * tmp._adamAvgVelbias + (1 - BETA2) * tmp._tbias * tmp._tbias;
-                tmp._bias += ratio*tmplr * tmp._adamAvgMombias / (sqrt(tmp._adamAvgVelbias) + EPS);
-                tmp._tbias = 0;
+                tmp.getAdamAvgMombias() = BETA1 * tmp.getAdamAvgMombias() + (1 - BETA1) * tmp.getTBias();
+                tmp.getAdamAvgVelbias() = BETA2 * tmp.getAdamAvgVelbias() + (1 - BETA2) * tmp.getTBias() * tmp.getTBias();
+                tmp.getBias() += ratio*tmplr * tmp.getAdamAvgMombias() / (sqrt(tmp.getAdamAvgVelbias()) + EPS);
+                tmp.getTBias() = 0;
             }
             else
             {
-                std::copy(tmp._mirrorWeights, tmp._mirrorWeights+(tmp._dim) , tmp._weights);
-                tmp._bias = tmp._mirrorbias;
+                std::copy(tmp.getMirrorWeights(), tmp.getMirrorWeights()+(tmp.getDim()) , tmp.getWeights());
+                tmp.getBias() = tmp.getMirrorBias();
             }
             if (tmpRehash) {
                 const int *hashes;
@@ -296,7 +296,7 @@ int Network::ProcessInput(int **inputIndices, float **inputValues, int *lengths,
                 delete[] bucketIndices;
             }
 
-            std::copy(local_weights, local_weights + dim, tmp._weights);
+            std::copy(local_weights, local_weights + dim, tmp.getWeights());
             delete[] local_weights;
         }
     }
