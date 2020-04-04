@@ -79,7 +79,6 @@ private:
     float* _adamAvgMom;
     float* _adamAvgVel;
     float* _t; //for adam
-    int* _update;
     float _bias = 0;
     float _tbias = 0;
     float _adamAvgMombias = 0;
