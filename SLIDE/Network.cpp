@@ -8,14 +8,14 @@
 using namespace std;
 
 
-Network::Network(const std::vector<int> &sizesOfLayers, NodeType *layersTypes, int noOfLayers, int batchSize, float lr, int inputdim, const std::vector<int> &K, const std::vector<int> &L, const std::vector<int> &RangePow, const std::vector<float> &Sparsity, cnpy::npz_t arr)
+Network::Network(const std::vector<int> &sizesOfLayers, const std::vector<NodeType> &layersTypes, int noOfLayers, int batchSize, float lr, int inputdim, const std::vector<int> &K, const std::vector<int> &L, const std::vector<int> &RangePow, const std::vector<float> &Sparsity, cnpy::npz_t arr)
 :_sizesOfLayers(sizesOfLayers)
 ,_Sparsity(Sparsity)
+,_layersTypes(layersTypes)
+, _hiddenlayers(noOfLayers)
 {
     
     _numberOfLayers = noOfLayers;
-    _hiddenlayers = new Layer *[noOfLayers];
-    _layersTypes = layersTypes;
     _learningRate = lr;
     _currentBatchSize = batchSize;
 
@@ -322,6 +322,4 @@ Network::~Network() {
     for (int i=0; i< _numberOfLayers; i++){
         delete _hiddenlayers[i];
     }
-    delete[] _hiddenlayers;
-    delete[] _layersTypes;
 }

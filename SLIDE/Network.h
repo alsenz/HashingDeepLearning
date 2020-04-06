@@ -9,18 +9,18 @@ using namespace std;
 class Network
 {
 private:
-	Layer** _hiddenlayers;
+	std::vector<Layer*> _hiddenlayers;
 	float _learningRate;
 	int _numberOfLayers;
   const std::vector<int> &_sizesOfLayers;
-	NodeType* _layersTypes;
+  const std::vector<NodeType> &_layersTypes;
 	const std::vector<float> &_Sparsity;
 	//int* _inputIDs;
 	int  _currentBatchSize;
 
 
 public:
-	Network(const std::vector<int> &sizesOfLayers, NodeType* layersTypes, int noOfLayers, int batchsize, float lr, int inputdim, const std::vector<int> &K, const std::vector<int> &L, const std::vector<int> &RangePow, const std::vector<float> &Sparsity, cnpy::npz_t arr);
+	Network(const std::vector<int> &sizesOfLayers, const std::vector<NodeType> &layersTypes, int noOfLayers, int batchsize, float lr, int inputdim, const std::vector<int> &K, const std::vector<int> &L, const std::vector<int> &RangePow, const std::vector<float> &Sparsity, cnpy::npz_t arr);
 	Layer* getLayer(int LayerID);
 	int predictClass(const vector<int*> &inputIndices, const vector<float*> &inputValues, const vector<int> &length,  const vector<int*> &labels, const vector<int> &labelsize, int numInClass, int numOutClass) const;
 	int ProcessInput(const vector<int*> &inputIndices, const vector<float*> &inputValues, const vector<int> &lengths, const vector<int*> &labels, const vector<int> &labelsize, int iter, bool rehash, bool rebuild) const;

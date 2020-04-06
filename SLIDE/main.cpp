@@ -501,7 +501,7 @@ int main(int argc, char* argv[])
     //***********************************
     int numBatches = totRecords/Batchsize;
     int numBatchesTest = totRecordsTest/Batchsize;
-    NodeType* layersTypes = new NodeType[numLayer];
+    std::vector<NodeType> layersTypes(numLayer);
     cerr << "totRecords=" << totRecords << " Batchsize=" << Batchsize << " numBatches=" << numBatches << endl;
     cerr << "totRecordsTest=" << totRecordsTest << " Batchsize=" << Batchsize << " numBatchesTest=" << numBatchesTest << endl;
 
