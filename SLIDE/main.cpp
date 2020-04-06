@@ -262,8 +262,8 @@ void EvalDataSVM(int numBatchesTest,  Network* _mynet, int iter){
 
     ofstream outputFile(logFile,  std::ios_base::app);
     for (int i = 0; i < numBatchesTest; i++) {
-        int **records = new int *[Batchsize];
-        float **values = new float *[Batchsize];
+        vector<int*> records(Batchsize);
+        vector<float*> values(Batchsize);
         int *sizes = new int[Batchsize];
         int **labels = new int *[Batchsize];
         int *labelsize = new int[Batchsize];
@@ -355,9 +355,6 @@ void EvalDataSVM(int numBatchesTest,  Network* _mynet, int iter){
             delete[] records[d];
             delete[] values[d];
         }
-        delete[] records;
-        delete[] values;
-
     }
     testfile.close();
     cout << "over all " << totCorrect * 1.0 / (numBatchesTest*Batchsize) << endl;
