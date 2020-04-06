@@ -18,7 +18,6 @@ Node::Node()
   , _t(NULL)
   , _train(NULL)
 {
-  cerr << "Node" << endl;
 }
 
 void Node::Update(int dim, int nodeID, int layerID, NodeType type, int batchsize, float *weights, float bias, float *adamAvgMom, float *adamAvgVel, train* train_blob)
@@ -217,7 +216,6 @@ Node::~Node()
 		delete[] _t;
 	}
 
-  cerr << "~Node" << endl;
 }
 
 
