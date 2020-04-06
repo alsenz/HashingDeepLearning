@@ -91,13 +91,13 @@ public:
 	Node(int dim, int nodeID, int layerID, NodeType type, int batchsize, float *weights, float bias, float *adamAvgMom, float *adamAvgVel);
 	void Update(int dim, int nodeID, int layerID, NodeType type, int batchsize, float *weights, float bias, float *adamAvgMom, float *adamAvgVel, train* train_blob);
 	float getLastActivation(int inputID) const;
-	void incrementDelta(int inputID, float incrementValue);
+	void incrementDelta(int inputID, float incrementValue) const;
 	float getActivation(int* indices, float* values, int length, int inputID);
 	bool getInputActive(int inputID) const;
 	bool getActiveInputs(void) const;
 	void SetlastActivation(int inputID, float realActivation);
 	void ComputeExtaStatsForSoftMax(float normalizationConstant, int inputID, int* label, int labelsize) const;
-	void backPropagate(Node* previousNodes,int* previousLayerActiveNodeIds, int previousLayerActiveNodeSize, float learningRate, int inputID);
+	void backPropagate(const std::vector<Node> &previousNodes,int* previousLayerActiveNodeIds, int previousLayerActiveNodeSize, float learningRate, int inputID);
 	void backPropagateFirstLayer(int* nnzindices, float* nnzvalues, int nnzSize, float learningRate, int inputID);
 	~Node();
 

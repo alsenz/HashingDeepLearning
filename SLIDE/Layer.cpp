@@ -16,8 +16,8 @@ Layer::Layer(size_t noOfNodes, int previousLayerNumOfNodes, int layerID, NodeTyp
 :_noOfNodes(noOfNodes)
 ,_layerID(layerID)
 ,_randNode(noOfNodes)
+,_Nodes(noOfNodes)
 {
-    _Nodes = new Node[noOfNodes];
     _type = type;
     _noOfActive = floor(_noOfNodes * Sparsity);
     _K = K;
@@ -155,14 +155,14 @@ void Layer::addtoHashTable(float* weights, int length, float bias, int ID)
 }
 
 
-Node &Layer::getNodebyID(size_t nodeID) const
+Node &Layer::getNodebyID(size_t nodeID)
 {
     assert(("nodeID less than _noOfNodes" , nodeID < _noOfNodes));
     return _Nodes[nodeID];
 }
 
 
-Node* Layer::getAllNodes() const
+const std::vector<Node> &Layer::getAllNodes() const
 {
     return _Nodes;
 }
@@ -490,7 +490,6 @@ void Layer::saveWeights(string file) const
 
 Layer::~Layer()
 {
-    delete [] _Nodes;
     delete [] _weights;
     delete [] _bias;
 

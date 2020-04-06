@@ -14,7 +14,7 @@ class Layer
 {
 private:
 	NodeType _type;
-	Node* _Nodes;
+  std::vector<Node> _Nodes;
   std::vector<int> _randNode;
   std::vector<float> _normalizationConstants;
     int _K, _L, _RangeRow, _previousLayerNumOfNodes, _batchsize;
@@ -38,8 +38,8 @@ private:
 public:
 
   Layer(size_t _numNodex, int previousLayerNumOfNodes, int layerID, NodeType type, int batchsize, int K, int L, int RangePow, float Sparsity, float* weights=NULL, float* bias=NULL, float *adamAvgMom=NULL, float *adamAvgVel=NULL);
-	Node &getNodebyID(size_t nodeID) const;
-	Node* getAllNodes() const;
+	Node &getNodebyID(size_t nodeID);
+	const std::vector<Node> &getAllNodes() const;
 	int getNodeCount() const;
 	void addtoHashTable(float* weights, int length, float bias, int id);
 	float getNomalizationConstant(int inputID) const;
