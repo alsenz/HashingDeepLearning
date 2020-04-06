@@ -101,21 +101,6 @@ public:
 	void backPropagateFirstLayer(int* nnzindices, float* nnzvalues, int nnzSize, float learningRate, int inputID);
 	~Node();
 
-    void * operator new(size_t size);
-    void* operator new (std::size_t size, const std::nothrow_t& nothrow_value){return operator new (size);};
-    void* operator new (std::size_t size, void* ptr){return operator new (size);};
-    void* operator new[](std::size_t size);
-    void* operator new[] (std::size_t size, const std::nothrow_t& nothrow_value){return operator new (size);};
-    void* operator new[] (std::size_t size, void* ptr){return operator new (size);};
-
-    void operator delete(void * ptr){munmap(ptr, sizeof(Node));};
-    void operator delete (void* ptr, const std::nothrow_t& nothrow_constant){munmap(ptr, sizeof(Node));};
-    void operator delete (void* ptr, void* voidptr2){};
-    // TODO: should munmap the size of the entire array, not a single Node
-    void operator delete[](void * ptr){munmap(ptr, sizeof(Node));};
-    void operator delete[] (void* ptr, const std::nothrow_t& nothrow_constant){munmap(ptr, sizeof(Node));};
-    void operator delete[] (void* ptr, void* voidptr2){};
-
 	//only for debugging
 	float purturbWeight(int weightid, float delta);
 	float getGradient(int weightid, int inputID, float InputVal);
