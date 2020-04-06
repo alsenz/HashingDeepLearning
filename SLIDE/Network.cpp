@@ -240,16 +240,16 @@ int Network::ProcessInput(const vector<int*> &inputIndices, const vector<float*>
             tmpRebuild=false;
         }
         if (tmpRehash) {
-            _hiddenlayers[l]->getHashTables().clear();
+          getLayer(l).getHashTables().clear();
         }
         if (tmpRebuild){
-            _hiddenlayers[l]->updateTable();
+          getLayer(l).updateTable();
         }
         int ratio = 1;
 #pragma omp parallel for
-        for (size_t m = 0; m < _hiddenlayers[l]->getNoOfNodes(); m++)
+        for (size_t m = 0; m < getLayer(l).getNoOfNodes(); m++)
         {
-            Node &tmp = _hiddenlayers[l]->getNodebyID(m);
+            Node &tmp = getLayer(l).getNodebyID(m);
             int dim = tmp.getDim();
             float* local_weights = new float[dim];
             std::copy(tmp.getWeights(), tmp.getWeights() + dim, local_weights);
@@ -280,17 +280,17 @@ int Network::ProcessInput(const vector<int*> &inputIndices, const vector<float*>
             if (tmpRehash) {
                 const int *hashes;
                 if(HashFunction==1) {
-                    hashes = _hiddenlayers[l]->getWTAHasher().getHash(local_weights);
+                    hashes = getLayer(l).getWTAHasher().getHash(local_weights);
                 }else if (HashFunction==2){
-                    hashes = _hiddenlayers[l]->getDensifiedWtaHash().getHashEasy(local_weights, dim, TOPK);
+                    hashes = getLayer(l).getDensifiedWtaHash().getHashEasy(local_weights, dim, TOPK);
                 }else if (HashFunction==3){
-                    hashes = _hiddenlayers[l]->getDensifiedMinhash().getHashEasy(_hiddenlayers[l]->getBinIds(), local_weights, dim, TOPK);
+                    hashes = getLayer(l).getDensifiedMinhash().getHashEasy(_hiddenlayers[l]->getBinIds(), local_weights, dim, TOPK);
                 }else if (HashFunction==4){
-                    hashes = _hiddenlayers[l]->getSparseRandomProjection().getHash(local_weights, dim);
+                    hashes = getLayer(l).getSparseRandomProjection().getHash(local_weights, dim);
                 }
 
-                std::vector<int> hashIndices = _hiddenlayers[l]->getHashTables().hashesToIndex(hashes);
-                std::vector<int> bucketIndices = _hiddenlayers[l]->getHashTables().add(hashIndices, m+1);
+                std::vector<int> hashIndices = getLayer(l).getHashTables().hashesToIndex(hashes);
+                std::vector<int> bucketIndices = getLayer(l).getHashTables().add(hashIndices, m+1);
 
                 delete[] hashes;
             }
@@ -312,7 +312,7 @@ int Network::ProcessInput(const vector<int*> &inputIndices, const vector<float*>
 void Network::saveWeights(string file)
 {
     for (int i=0; i< _numberOfLayers; i++){
-        _hiddenlayers[i]->saveWeights(file);
+      getLayer(i).saveWeights(file);
     }
 }
 
