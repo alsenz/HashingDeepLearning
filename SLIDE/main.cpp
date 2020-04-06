@@ -373,7 +373,7 @@ void ReadDataSVM(size_t numBatches,  Network &_mynet, int epoch){
 
     for (size_t i = 0; i < numBatches; i++) {
         if( (i+epoch*numBatches)%Stepsize==0) {
-            EvalDataSVM(2, _mynet, epoch*numBatches+i);
+            EvalDataSVM(20, _mynet, epoch*numBatches+i);
         }
 
         vector<int*> records(Batchsize);
@@ -534,7 +534,7 @@ int main(int argc, char* argv[])
         if(e==Epoch-1) {
             EvalDataSVM(numBatchesTest, _mynet, (e+1)*numBatches);
         }else{
-            EvalDataSVM(2, _mynet, (e+1)*numBatches);
+            EvalDataSVM(50, _mynet, (e+1)*numBatches);
         }
         _mynet.saveWeights(savedWeights);
 
