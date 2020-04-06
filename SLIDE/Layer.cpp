@@ -17,6 +17,15 @@ Layer::Layer(size_t noOfNodes, int previousLayerNumOfNodes, int layerID, NodeTyp
 ,_layerID(layerID)
 ,_randNode(noOfNodes)
 ,_Nodes(noOfNodes)
+, _weights(NULL)
+, _adamAvgMom(NULL)
+, _adamAvgVel(NULL)
+, _bias(NULL)
+, _hashTables(NULL)
+, _wtaHasher(NULL)
+, _MinHasher(NULL)
+, _srp(NULL)
+, _dwtaHasher(NULL)
 {
     _type = type;
     _noOfActive = floor(_noOfNodes * Sparsity);
@@ -490,6 +499,7 @@ void Layer::saveWeights(string file) const
 
 Layer::~Layer()
 {
+    cerr << "~Layer1" << endl;
     delete [] _weights;
     delete [] _bias;
 
@@ -498,4 +508,8 @@ Layer::~Layer()
     delete _srp;
     delete _MinHasher;
     delete[] _train_array;
+
+    delete[] _adamAvgMom;
+    delete[] _adamAvgVel;
+    cerr << "~Layer8" << endl;
 }

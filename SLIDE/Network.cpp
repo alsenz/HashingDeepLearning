@@ -318,7 +318,6 @@ void Network::saveWeights(string file)
 
 
 Network::~Network() {
-
     for (int i=0; i< _numberOfLayers; i++){
         delete _hiddenlayers[i];
     }

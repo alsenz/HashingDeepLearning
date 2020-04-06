@@ -209,13 +209,10 @@ void Node::SetlastActivation(int inputID, float realActivation)
 
 Node::~Node()
 {
-	if (ADAM)
+  if (ADAM)
 	{
-		delete[] _adamAvgMom;
-		delete[] _adamAvgVel;
-		delete[] _t;
-	}
-
+    delete[] _t;
+  }
 }
 
 
