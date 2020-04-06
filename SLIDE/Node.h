@@ -87,8 +87,7 @@ private:
 
 public:
 
-	Node(){};
-	Node(int dim, int nodeID, int layerID, NodeType type, int batchsize, float *weights, float bias, float *adamAvgMom, float *adamAvgVel);
+  Node();
 	void Update(int dim, int nodeID, int layerID, NodeType type, int batchsize, float *weights, float bias, float *adamAvgMom, float *adamAvgVel, train* train_blob);
 	float getLastActivation(int inputID) const;
 	void incrementDelta(int inputID, float incrementValue) const;
