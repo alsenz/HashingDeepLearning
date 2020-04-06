@@ -94,7 +94,7 @@ Layer::Layer(size_t noOfNodes, int previousLayerNumOfNodes, int layerID, NodeTyp
 
     if (type == NodeType::Softmax)
     {
-        _normalizationConstants = new float[batchsize]();
+        _normalizationConstants.resize(batchsize);
     }
 }
 
@@ -204,7 +204,7 @@ float collision(int* hashes, int* table_hashes, int k, int l){
 }
 
 
-int Layer::queryActiveNodeandComputeActivations(int** activenodesperlayer, float** activeValuesperlayer, int* lengths, int layerIndex, int inputID, const int* label, int labelsize, float Sparsity) const
+int Layer::queryActiveNodeandComputeActivations(int** activenodesperlayer, float** activeValuesperlayer, int* lengths, int layerIndex, int inputID, const int* label, int labelsize, float Sparsity)
 {
     //LSH QueryLogic
 
@@ -489,14 +489,6 @@ void Layer::saveWeights(string file) const
 
 Layer::~Layer()
 {
-
-    for (size_t i = 0; i < _noOfNodes; i++)
-    {
-        if (_type == NodeType::Softmax)
-        {
-            delete[] _normalizationConstants;
-        }
-    }
     delete [] _Nodes;
     delete [] _weights;
     delete [] _bias;

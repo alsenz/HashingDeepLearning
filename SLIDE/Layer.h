@@ -16,7 +16,7 @@ private:
 	NodeType _type;
 	Node* _Nodes;
 	int * _randNode;
-	float* _normalizationConstants;
+  std::vector<float> _normalizationConstants;
     int _K, _L, _RangeRow, _previousLayerNumOfNodes, _batchsize;
     train* _train_array;
 
@@ -43,7 +43,7 @@ public:
 	int getNodeCount() const;
 	void addtoHashTable(float* weights, int length, float bias, int id);
 	float getNomalizationConstant(int inputID) const;
-	int queryActiveNodeandComputeActivations(int** activenodesperlayer, float** activeValuesperlayer, int* inlenght, int layerID, int inputID,  const int* label, int labelsize, float Sparsity) const;
+	int queryActiveNodeandComputeActivations(int** activenodesperlayer, float** activeValuesperlayer, int* inlenght, int layerID, int inputID,  const int* label, int labelsize, float Sparsity);
 	void saveWeights(string file) const;
 	void updateTable();
 	void updateRandomNodes();
