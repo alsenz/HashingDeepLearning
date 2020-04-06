@@ -490,10 +490,10 @@ void ReadDataSVM(size_t numBatches,  Network &_mynet, int epoch){
 
 int main(int argc, char* argv[])
 {
-    //***********************************
-    // Parse Config File
-    //***********************************
-    parseconfig(argv[1]);
+  //***********************************
+  // Parse Config File
+  //***********************************
+  parseconfig(argv[1]);
 
     //***********************************
     // Initialize Network
