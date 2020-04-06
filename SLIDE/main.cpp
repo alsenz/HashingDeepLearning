@@ -495,7 +495,6 @@ int main(int argc, char* argv[])
     //***********************************
     parseconfig(argv[1]);
 
-    std::cerr << "HH1" << std::endl;
     //***********************************
     // Initialize Network
     //***********************************
@@ -505,13 +504,11 @@ int main(int argc, char* argv[])
     cerr << "totRecords=" << totRecords << " Batchsize=" << Batchsize << " numBatches=" << numBatches << endl;
     cerr << "totRecordsTest=" << totRecordsTest << " Batchsize=" << Batchsize << " numBatchesTest=" << numBatchesTest << endl;
 
-    std::cerr << "HH2" << std::endl;
     for (int i=0; i<numLayer-1; i++){
         layersTypes[i] = NodeType::ReLU;
     }
     layersTypes[numLayer-1] = NodeType::Softmax;
 
-    std::cerr << "HH3" << std::endl;
     cnpy::npz_t arr;
     if (LOADWEIGHT) {
         arr = cnpy::npz_load(Weights);
@@ -526,7 +523,6 @@ int main(int argc, char* argv[])
     // Start Training
     //***********************************
 
-    std::cerr << "HH4" << std::endl;
     for (int e=0; e< Epoch; e++) {
         ofstream outputFile(logFile);
         std::cerr << "Epoch " << e << " " << logFile << endl;
