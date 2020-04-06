@@ -19,12 +19,6 @@
 #include "Config.h"
 #include "Util.h"
 
-int *RangePow;
-int *K;
-int *L;
-float *Sparsity;
-
-
 int Batchsize = 1000;
 int Rehash = 1000;
 int Rebuild = 1000;
@@ -34,15 +28,22 @@ int totRecordsTest = 10000;
 float Lr = 0.0001;
 int Epoch = 5;
 int Stepsize = 20;
-int *sizesOfLayers;
 int numLayer = 3;
 string trainData = "";
 string testData = "";
 string Weights = "";
 string savedWeights = "";
 string logFile = "";
-using namespace std;
 int globalTime = 0;
+
+
+std::vector<int> sizesOfLayers;
+std::vector<int> RangePow;
+std::vector<int> K;
+std::vector<int> L;
+std::vector<float> Sparsity;
+
+using namespace std;
 
 #define ALL(c) c.begin(), c.end()
 #define FOR(i,c) for(typeof(c.begin())i=c.begin();i!=c.end();++i)
@@ -92,7 +93,7 @@ void parseconfig(string filename)
         if (trim(first) == "RangePow")
         {
             string str = trim(second).c_str();
-            RangePow = new int[numLayer];
+            RangePow.resize(numLayer);
             char *mystring = &str[0];
             char *pch;
             pch = strtok(mystring, ",");
@@ -105,8 +106,8 @@ void parseconfig(string filename)
         }
         else if (trim(first) == "K")
         {
-            string str = trim(second).c_str();
-            K = new int[numLayer];
+          string str = trim(second).c_str();
+            K.resize(numLayer);
             char *mystring = &str[0];
             char *pch;
             pch = strtok(mystring, ",");
@@ -119,8 +120,8 @@ void parseconfig(string filename)
         }
         else if (trim(first) == "L")
         {
-            string str = trim(second).c_str();
-            L = new int[numLayer];
+          string str = trim(second).c_str();
+            L.resize(numLayer);
             char *mystring = &str[0];
             char *pch;
             pch = strtok(mystring, ",");
@@ -133,8 +134,8 @@ void parseconfig(string filename)
         }
         else if (trim(first) == "Sparsity")
         {
-            string str = trim(second).c_str();
-            Sparsity = new float[numLayer*2];
+          string str = trim(second).c_str();
+            Sparsity.resize(numLayer*2);
             char *mystring = &str[0];
             char *pch;
             pch = strtok(mystring, ",");
@@ -192,7 +193,7 @@ void parseconfig(string filename)
         else if (trim(first) == "sizesOfLayers")
         {
             string str = trim(second).c_str();
-            sizesOfLayers = new int[numLayer];
+            sizesOfLayers.resize(numLayer);
             char *mystring = &str[0];
             char *pch;
             pch = strtok(mystring, ",");
@@ -246,7 +247,7 @@ void ReadHeader(const string &str, int &numLines, int &numInClass, int &numOutCl
   cerr << "header " << numLines << " " << numInClass << " " << numOutClass << endl;
 }
 
-void EvalDataSVM(int numBatchesTest,  Network* _mynet, int iter){
+void EvalDataSVM(int numBatchesTest,  Network &_mynet, int iter){
     cerr << "Start EvalDataSVM" << endl;
     int totCorrect = 0;
     int debugnumber = 0;
@@ -342,7 +343,7 @@ void EvalDataSVM(int numBatchesTest,  Network* _mynet, int iter){
         }
 
         std::cout << Batchsize << " records, with "<< num_features << " features and " << num_labels << " labels" << " debugnumber " << debugnumber << std::endl;
-        int correctPredict = _mynet->predictClass(records, values, sizes, labels, labelsize, numInClass, numOutClass);
+        int correctPredict = _mynet.predictClass(records, values, sizes, labels, labelsize, numInClass, numOutClass);
         totCorrect += correctPredict;
         std::cout <<" iter "<< i << ": " << totCorrect*1.0/(Batchsize*(i+1)) << " correct" << std::endl;
 
@@ -358,7 +359,7 @@ void EvalDataSVM(int numBatchesTest,  Network* _mynet, int iter){
     cerr << "Finished EvalDataSVM" << endl;
 }
 
-void ReadDataSVM(size_t numBatches,  Network* _mynet, int epoch){
+void ReadDataSVM(size_t numBatches,  Network &_mynet, int epoch){
     cerr << "Start ReadDataSVM" << endl;
     std::ifstream file(trainData);
     std::string str;
@@ -467,7 +468,7 @@ void ReadDataSVM(size_t numBatches,  Network* _mynet, int epoch){
         auto t1 = std::chrono::high_resolution_clock::now();
 
         // logloss
-        _mynet->ProcessInput(records, values, sizes, labels, labelsize, epoch * numBatches + i,
+        _mynet.ProcessInput(records, values, sizes, labels, labelsize, epoch * numBatches + i,
                                             rehash, rebuild);
 
         auto t2 = std::chrono::high_resolution_clock::now();
@@ -516,7 +517,7 @@ int main(int argc, char* argv[])
         arr = cnpy::npz_load(Weights);
     }
     auto t1 = std::chrono::high_resolution_clock::now();
-    Network *_mynet = new Network(sizesOfLayers, layersTypes, numLayer, Batchsize, Lr, InputDim, K, L, RangePow, Sparsity, arr);
+    Network _mynet(sizesOfLayers, layersTypes, numLayer, Batchsize, Lr, InputDim, K, L, RangePow, Sparsity, arr);
     auto t2 = std::chrono::high_resolution_clock::now();
     float timeDiffInMiliseconds = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
     std::cout << "Network Initialization takes " << timeDiffInMiliseconds/1000 << " milliseconds" << std::endl;
@@ -539,14 +540,9 @@ int main(int argc, char* argv[])
         }else{
             EvalDataSVM(50, _mynet, (e+1)*numBatches);
         }
-        _mynet->saveWeights(savedWeights);
+        _mynet.saveWeights(savedWeights);
 
     }
-
-    delete [] RangePow;
-    delete [] K;
-    delete [] L;
-    delete [] Sparsity;
 
     return 0;
 

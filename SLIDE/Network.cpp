@@ -8,15 +8,16 @@
 using namespace std;
 
 
-Network::Network(int *sizesOfLayers, NodeType *layersTypes, int noOfLayers, int batchSize, float lr, int inputdim,  int* K, int* L, int* RangePow, float* Sparsity, cnpy::npz_t arr) {
-
+Network::Network(const std::vector<int> &sizesOfLayers, NodeType *layersTypes, int noOfLayers, int batchSize, float lr, int inputdim, const std::vector<int> &K, const std::vector<int> &L, const std::vector<int> &RangePow, const std::vector<float> &Sparsity, cnpy::npz_t arr)
+:_sizesOfLayers(sizesOfLayers)
+,_Sparsity(Sparsity)
+{
+    
     _numberOfLayers = noOfLayers;
     _hiddenlayers = new Layer *[noOfLayers];
-    _sizesOfLayers = sizesOfLayers;
     _layersTypes = layersTypes;
     _learningRate = lr;
     _currentBatchSize = batchSize;
-    _Sparsity = Sparsity;
 
 
     for (int i = 0; i < noOfLayers; i++) {
@@ -318,7 +319,6 @@ void Network::saveWeights(string file)
 
 Network::~Network() {
 
-    delete[] _sizesOfLayers;
     for (int i=0; i< _numberOfLayers; i++){
         delete _hiddenlayers[i];
     }
