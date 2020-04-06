@@ -19,7 +19,7 @@ public:
     DensifiedMinhash(int numHashes, int noOfBitsToHash);
     const int * getHash(int* indices, float* data, int* binids, int dataLen);
     int getRandDoubleHash(int binid, int count);
-    const int * getHashEasy(int* binids, float* data, int dataLen, int topK);
-    void getMap(int n, int* binid);
+    const int * getHashEasy(const std::vector<int> &binids, float* data, int dataLen, int topK);
+    void getMap(int n, std::vector<int> &binid);
     ~DensifiedMinhash();
 };

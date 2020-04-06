@@ -38,10 +38,10 @@ Layer::Layer(size_t noOfNodes, int previousLayerNumOfNodes, int layerID, NodeTyp
     if (HashFunction == 1) {
         _wtaHasher = new WtaHash(_K * _L, previousLayerNumOfNodes);
     } else if (HashFunction == 2) {
-        _binids = new int[previousLayerNumOfNodes];
+        _binids.resize(previousLayerNumOfNodes);
         _dwtaHasher = new DensifiedWtaHash(_K * _L, previousLayerNumOfNodes);
     } else if (HashFunction == 3) {
-        _binids = new int[previousLayerNumOfNodes];
+        _binids.resize(previousLayerNumOfNodes);
         _MinHasher = new DensifiedMinhash(_K * _L, previousLayerNumOfNodes);
         _MinHasher->getMap(previousLayerNumOfNodes, _binids);
     } else if (HashFunction == 4) {
@@ -107,12 +107,12 @@ void Layer::updateTable()
         _wtaHasher = new WtaHash(_K * _L, _previousLayerNumOfNodes);
     } else if (HashFunction == 2) {
          delete _dwtaHasher, _binids;
-        _binids = new int[_previousLayerNumOfNodes];
+        _binids.resize(_previousLayerNumOfNodes);
         _dwtaHasher = new DensifiedWtaHash(_K * _L, _previousLayerNumOfNodes);
     } else if (HashFunction == 3) {
 
          delete _MinHasher,  _binids;
-        _binids = new int[_previousLayerNumOfNodes];
+        _binids.resize(_previousLayerNumOfNodes);
         _MinHasher = new DensifiedMinhash(_K * _L, _previousLayerNumOfNodes);
         _MinHasher->getMap(_previousLayerNumOfNodes, _binids);
     } else if (HashFunction == 4) {

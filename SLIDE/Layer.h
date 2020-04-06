@@ -28,7 +28,7 @@ private:
     float* _adamAvgVel;
     float* _bias;
     LSH *_hashTables;
-    int * _binids;
+    std::vector<int> _binids;
 
     WtaHash *_wtaHasher;
     DensifiedMinhash *_MinHasher;
@@ -75,7 +75,7 @@ public:
       return *_hashTables;
     }
 
-    int *getBinIds() const 
+    const std::vector<int> &getBinIds() const
     {
       return _binids;
     }
