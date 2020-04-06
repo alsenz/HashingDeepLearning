@@ -515,6 +515,11 @@ int main(int argc, char* argv[])
     }
     auto t1 = std::chrono::high_resolution_clock::now();
 
+    {
+      Network a(sizesOfLayers, layersTypes, numLayer, Batchsize, Lr, InputDim, K, L, RangePow, Sparsity, arr);
+      
+    }
+
     Network _mynet(sizesOfLayers, layersTypes, numLayer, Batchsize, Lr, InputDim, K, L, RangePow, Sparsity, arr);
     auto t2 = std::chrono::high_resolution_clock::now();
     float timeDiffInMiliseconds = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();

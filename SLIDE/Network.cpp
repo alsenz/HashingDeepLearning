@@ -58,17 +58,17 @@ Network::Network(const std::vector<int> &sizesOfLayers, const std::vector<NodeTy
 }
 
 
-Layer *Network::getLayer(int LayerID) {
-    if (LayerID < _numberOfLayers)
-        return _hiddenlayers[LayerID];
-    else {
-        cout << "LayerID out of bounds" << endl;
-        //TODO:Handle
-    }
+Layer &Network::getLayer(int LayerID) {
+  assert(LayerID < _numberOfLayers);
+  return *_hiddenlayers[LayerID];
 }
 
+const Layer &Network::getLayer(int LayerID) const {
+  assert(LayerID < _numberOfLayers);
+  return *_hiddenlayers[LayerID];
+}
 
-int Network::predictClass(const vector<int*> &inputIndices, const vector<float*> &inputValues, const vector<int> &length, const vector<int*> &labels, const vector<int> &labelsize, int numInClass, int numOutClass) const {
+int Network::predictClass(const vector<int*> &inputIndices, const vector<float*> &inputValues, const vector<int> &length, const vector<int*> &labels, const vector<int> &labelsize, int numInClass, int numOutClass) {
     int correctPred = 0;
     //cerr << "start Network::predictClass " << _currentBatchSize << endl;
     //cerr << "_currentBatchSize=" << _currentBatchSize << endl;
@@ -87,7 +87,7 @@ int Network::predictClass(const vector<int*> &inputIndices, const vector<float*>
 
         //inference
         for (int j = 0; j < _numberOfLayers; j++) {
-            _hiddenlayers[j]->queryActiveNodeandComputeActivations(activenodesperlayer, activeValuesperlayer, sizes, j, i, labels[i], 0,
+          getLayer(j).queryActiveNodeandComputeActivations(activenodesperlayer, activeValuesperlayer, sizes, j, i, labels[i], 0,
                     _Sparsity[_numberOfLayers+j]);
         }
 
@@ -98,7 +98,7 @@ int Network::predictClass(const vector<int*> &inputIndices, const vector<float*>
         int predict_class = -1;
         for (int k = 0; k < noOfClasses; k++) {
             size_t nodeId = activenodesperlayer[_numberOfLayers][k];
-            Node &node = _hiddenlayers[_numberOfLayers - 1]->getNodebyID(nodeId);
+            Node &node = getLayer(_numberOfLayers - 1).getNodebyID(nodeId);
             float cur_act = node.getLastActivation(i);
             if (max_act < cur_act) {
                 max_act = cur_act;
@@ -138,7 +138,7 @@ int Network::predictClass(const vector<int*> &inputIndices, const vector<float*>
 }
 
 
-int Network::ProcessInput(const vector<int*> &inputIndices, const vector<float*> &inputValues, const vector<int> &lengths, const vector<int*> &labels, const vector<int> &labelsize, int iter, bool rehash, bool rebuild) const {
+int Network::ProcessInput(const vector<int*> &inputIndices, const vector<float*> &inputValues, const vector<int> &lengths, const vector<int*> &labels, const vector<int> &labelsize, int iter, bool rehash, bool rebuild) {
     //cerr << "start Network::ProcessInput" << endl;
     float logloss = 0.0;
     int* avg_retrieval = new int[_numberOfLayers]();
@@ -149,7 +149,7 @@ int Network::ProcessInput(const vector<int*> &inputIndices, const vector<float*>
 
     if(iter%6946==6945 ){
         //_learningRate *= 0.5;
-        _hiddenlayers[1]->updateRandomNodes();
+      getLayer(1).updateRandomNodes();
     }
     float tmplr = _learningRate;
     if (ADAM) {
@@ -178,7 +178,7 @@ int Network::ProcessInput(const vector<int*> &inputIndices, const vector<float*>
         int in;
         //auto t1 = std::chrono::high_resolution_clock::now();
         for (int j = 0; j < _numberOfLayers; j++) {
-            in = _hiddenlayers[j]->queryActiveNodeandComputeActivations(activenodesperlayer, activeValuesperlayer, sizes, j, i, labels[i], labelsize[i],
+            in = getLayer(j).queryActiveNodeandComputeActivations(activenodesperlayer, activeValuesperlayer, sizes, j, i, labels[i], labelsize[i],
                     _Sparsity[j]);
             avg_retrieval[j] += in;
         }
@@ -191,17 +191,17 @@ int Network::ProcessInput(const vector<int*> &inputIndices, const vector<float*>
         //Now backpropagate.
         // layers
         for (int j = _numberOfLayers - 1; j >= 0; j--) {
-            Layer* layer = _hiddenlayers[j];
-            Layer* prev_layer = _hiddenlayers[j - 1];
+            Layer &layer = getLayer(j);
+            Layer &prev_layer = getLayer(j - 1);
             // nodes
             for (int k = 0; k < sizesPerBatch[i][j + 1]; k++) {
-                Node &node = layer->getNodebyID(activeNodesPerBatch[i][j + 1][k]);
+                Node &node = layer.getNodebyID(activeNodesPerBatch[i][j + 1][k]);
                 if (j == _numberOfLayers - 1) {
                     //TODO: Compute Extra stats: labels[i];
-                    node.ComputeExtaStatsForSoftMax(layer->getNomalizationConstant(i), i, labels[i], labelsize[i]);
+                    node.ComputeExtaStatsForSoftMax(layer.getNomalizationConstant(i), i, labels[i], labelsize[i]);
                 }
                 if (j != 0) {
-                    node.backPropagate(prev_layer->getAllNodes(), activeNodesPerBatch[i][j], sizesPerBatch[i][j], tmplr, i);
+                    node.backPropagate(prev_layer.getAllNodes(), activeNodesPerBatch[i][j], sizesPerBatch[i][j], tmplr, i);
                 } else {
                     node.backPropagateFirstLayer(inputIndices[i], inputValues[i], lengths[i], tmplr, i);
                 }
