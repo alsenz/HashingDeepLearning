@@ -67,7 +67,7 @@ Layer *Network::getLayer(int LayerID) {
 }
 
 
-int Network::predictClass(const vector<int*> &inputIndices, const vector<float*> &inputValues, int *length, int **labels, int *labelsize, int numInClass, int numOutClass) const {
+int Network::predictClass(const vector<int*> &inputIndices, const vector<float*> &inputValues, const vector<int> &length, const vector<int*> &labels, const vector<int> &labelsize, int numInClass, int numOutClass) const {
     int correctPred = 0;
     //cerr << "start Network::predictClass " << _currentBatchSize << endl;
     //cerr << "_currentBatchSize=" << _currentBatchSize << endl;

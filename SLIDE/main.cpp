@@ -264,9 +264,9 @@ void EvalDataSVM(int numBatchesTest,  Network* _mynet, int iter){
     for (int i = 0; i < numBatchesTest; i++) {
         vector<int*> records(Batchsize);
         vector<float*> values(Batchsize);
-        int *sizes = new int[Batchsize];
-        int **labels = new int *[Batchsize];
-        int *labelsize = new int[Batchsize];
+        vector<int> sizes(Batchsize);
+        vector<int*> labels(Batchsize);
+        vector<int> labelsize(Batchsize);
         int nonzeros = 0;
         int count = 0;
         vector<string> list;
@@ -349,8 +349,6 @@ void EvalDataSVM(int numBatchesTest,  Network* _mynet, int iter){
         totCorrect += correctPredict;
         std::cout <<" iter "<< i << ": " << totCorrect*1.0/(Batchsize*(i+1)) << " correct" << std::endl;
 
-        delete[] sizes;
-        delete[] labels;
         for (int d = 0; d < Batchsize; d++) {
             delete[] records[d];
             delete[] values[d];
