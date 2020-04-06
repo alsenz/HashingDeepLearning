@@ -269,17 +269,14 @@ void EvalDataSVM(int numBatchesTest,  Network* _mynet, int iter){
         vector<int> labelsize(Batchsize);
         int nonzeros = 0;
         int count = 0;
-        vector<string> list;
-        vector<string> value;
-        vector<string> label;
         while (std::getline(testfile, str)) {
             //cerr << "str=" << str << endl;
             char *mystring = &str[0];
             char *pch, *pchlabel;
             int track = 0;
-            list.clear();
-            value.clear();
-            label.clear();
+            vector<string> list;
+            vector<string> value;
+            vector<string> label;
             pch = strtok(mystring, " ");
             pch = strtok(NULL, " :");
             while (pch != NULL) {
@@ -377,11 +374,18 @@ void ReadDataSVM(size_t numBatches,  Network* _mynet, int epoch){
         if( (i+epoch*numBatches)%Stepsize==0) {
             EvalDataSVM(20, _mynet, epoch*numBatches+i);
         }
-        int **records = new int *[Batchsize];
-        float **values = new float *[Batchsize];
-        int *sizes = new int[Batchsize];
-        int **labels = new int *[Batchsize];
-        int *labelsize = new int[Batchsize];
+
+        vector<int*> records(Batchsize);
+        vector<float*> values(Batchsize);
+        vector<int> sizes(Batchsize);
+        vector<int*> labels(Batchsize);
+        vector<int> labelsize(Batchsize);
+
+        //int **records = new int *[Batchsize];
+        //float **values = new float *[Batchsize];
+        //int *sizes = new int[Batchsize];
+        //int **labels = new int *[Batchsize];
+        //int *labelsize = new int[Batchsize];
         int nonzeros = 0;
         int count = 0;
         vector<string> list;
@@ -471,17 +475,11 @@ void ReadDataSVM(size_t numBatches,  Network* _mynet, int epoch){
         int timeDiffInMiliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count();
         globalTime+= timeDiffInMiliseconds;
 
-        delete[] sizes;
-
         for (int d = 0; d < Batchsize; d++) {
             delete[] records[d];
             delete[] values[d];
             delete[] labels[d];
         }
-        delete[] records;
-        delete[] values;
-        delete[] labels;
-
     }
     file.close();
 

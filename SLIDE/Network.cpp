@@ -137,7 +137,7 @@ int Network::predictClass(const vector<int*> &inputIndices, const vector<float*>
 }
 
 
-int Network::ProcessInput(int **inputIndices, float **inputValues, int *lengths, int **labels, int *labelsize, int iter, bool rehash, bool rebuild) const {
+int Network::ProcessInput(const vector<int*> &inputIndices, const vector<float*> &inputValues, const vector<int> &lengths, const vector<int*> &labels, const vector<int> &labelsize, int iter, bool rehash, bool rebuild) const {
     //cerr << "start Network::ProcessInput" << endl;
     float logloss = 0.0;
     int* avg_retrieval = new int[_numberOfLayers]();
