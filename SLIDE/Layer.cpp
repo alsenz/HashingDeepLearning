@@ -18,8 +18,6 @@ Layer::Layer(size_t noOfNodes, int previousLayerNumOfNodes, int layerID, NodeTyp
 ,_randNode(noOfNodes)
 ,_Nodes(noOfNodes)
 , _weights(NULL)
-, _adamAvgMom(NULL)
-, _adamAvgVel(NULL)
 , _bias(NULL)
 , _hashTables(NULL)
 , _wtaHasher(NULL)
@@ -73,8 +71,8 @@ Layer::Layer(size_t noOfNodes, int previousLayerNumOfNodes, int layerID, NodeTyp
 
         if (ADAM)
         {
-            _adamAvgMom = new float[_noOfNodes * previousLayerNumOfNodes]();
-            _adamAvgVel = new float[_noOfNodes * previousLayerNumOfNodes]();
+            _adamAvgMom.resize(_noOfNodes * previousLayerNumOfNodes);
+            _adamAvgVel.resize(_noOfNodes * previousLayerNumOfNodes);
 
         }
     }
@@ -86,7 +84,7 @@ Layer::Layer(size_t noOfNodes, int previousLayerNumOfNodes, int layerID, NodeTyp
     for (size_t i = 0; i < noOfNodes; i++)
     {
         _Nodes[i].Update(previousLayerNumOfNodes, i, _layerID, type, batchsize, _weights+previousLayerNumOfNodes*i,
-                _bias[i], _adamAvgMom+previousLayerNumOfNodes*i , _adamAvgVel+previousLayerNumOfNodes*i);
+                _bias[i], _adamAvgMom.data()+previousLayerNumOfNodes*i , _adamAvgVel.data()+previousLayerNumOfNodes*i);
         addtoHashTable(_Nodes[i].getWeights(), previousLayerNumOfNodes, _Nodes[i].getBias(), i);
     }
     auto t2 = std::chrono::high_resolution_clock::now();
@@ -477,15 +475,15 @@ void Layer::saveWeights(string file) const
     if (_layerID==0) {
         cnpy::npz_save(file, "w_layer_0", _weights, {_noOfNodes, _Nodes[0].getDim() }, "w");
         cnpy::npz_save(file, "b_layer_0", _bias, {_noOfNodes}, "a");
-        cnpy::npz_save(file, "am_layer_0", _adamAvgMom, {_noOfNodes, _Nodes[0].getDim() }, "a");
-        cnpy::npz_save(file, "av_layer_0", _adamAvgVel, {_noOfNodes, _Nodes[0].getDim() }, "a");
+        cnpy::npz_save(file, "am_layer_0", _adamAvgMom.data(), {_noOfNodes, _Nodes[0].getDim() }, "a");
+        cnpy::npz_save(file, "av_layer_0", _adamAvgVel.data(), {_noOfNodes, _Nodes[0].getDim() }, "a");
         cout<<"save for layer 0"<<endl;
         cout<<_weights[0]<<" "<<_weights[1]<<endl;
     }else{
         cnpy::npz_save(file, "w_layer_"+ to_string(_layerID), _weights, {_noOfNodes, _Nodes[0].getDim() }, "a");
         cnpy::npz_save(file, "b_layer_"+ to_string(_layerID), _bias, {_noOfNodes}, "a");
-        cnpy::npz_save(file, "am_layer_"+ to_string(_layerID), _adamAvgMom, {_noOfNodes, _Nodes[0].getDim() }, "a");
-        cnpy::npz_save(file, "av_layer_"+ to_string(_layerID), _adamAvgVel, {_noOfNodes, _Nodes[0].getDim() }, "a");
+        cnpy::npz_save(file, "am_layer_"+ to_string(_layerID), _adamAvgMom.data(), {_noOfNodes, _Nodes[0].getDim() }, "a");
+        cnpy::npz_save(file, "av_layer_"+ to_string(_layerID), _adamAvgVel.data(), {_noOfNodes, _Nodes[0].getDim() }, "a");
         cout<<"save for layer "<<to_string(_layerID)<<endl;
         cout<<_weights[0]<<" "<<_weights[1]<<endl;
     }
@@ -501,6 +499,4 @@ Layer::~Layer()
     delete _dwtaHasher;
     delete _srp;
     delete _MinHasher;
-    delete[] _adamAvgMom;
-    delete[] _adamAvgVel;
 }

@@ -23,8 +23,8 @@ private:
     int _layerID, _noOfActive;
     size_t _noOfNodes;
     float* _weights;
-    float* _adamAvgMom;
-    float* _adamAvgVel;
+    std::vector<float> _adamAvgMom;
+    std::vector<float> _adamAvgVel;
     float* _bias;
     LSH *_hashTables;
     std::vector<int> _binids;
