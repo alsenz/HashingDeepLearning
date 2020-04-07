@@ -173,7 +173,7 @@ Node &Layer::getNodebyID(size_t nodeID)
   return _Nodes[nodeID];
 }
 
-const std::vector<Node> &Layer::getAllNodes() const
+std::vector<Node> &Layer::getAllNodes()
 {
     return _Nodes;
 }

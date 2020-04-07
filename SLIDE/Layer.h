@@ -41,7 +41,7 @@ public:
   const Node &getNodebyID(size_t nodeID) const;
   Node &getNodebyID(size_t nodeID);
 
-	const std::vector<Node> &getAllNodes() const;
+	std::vector<Node> &getAllNodes();
 	int getNodeCount() const;
 	void addtoHashTable(float* weights, int length, float bias, int id);
 	float getNomalizationConstant(int inputID) const;
