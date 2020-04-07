@@ -163,13 +163,17 @@ void Layer::addtoHashTable(float* weights, int length, float bias, int ID)
 
 }
 
-
-Node &Layer::getNodebyID(size_t nodeID)
+const Node &Layer::getNodebyID(size_t nodeID) const
 {
     assert(("nodeID less than _noOfNodes" , nodeID < _noOfNodes));
     return _Nodes[nodeID];
 }
 
+Node &Layer::getNodebyID(size_t nodeID)
+{
+  assert(("nodeID less than _noOfNodes", nodeID < _noOfNodes));
+  return _Nodes[nodeID];
+}
 
 const std::vector<Node> &Layer::getAllNodes() const
 {

@@ -97,7 +97,7 @@ int Network::predictClass(const vector<int*> &inputIndices, const vector<float*>
         int predict_class = -1;
         for (int k = 0; k < noOfClasses; k++) {
             size_t nodeId = activenodesperlayer[_numberOfLayers][k];
-            Node &node = getLayer(_numberOfLayers - 1).getNodebyID(nodeId);
+            const Node &node = getLayer(_numberOfLayers - 1).getNodebyID(nodeId);
             float cur_act = node.getLastActivation(i);
             if (max_act < cur_act) {
                 max_act = cur_act;
