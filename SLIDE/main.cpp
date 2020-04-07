@@ -219,6 +219,7 @@ void parseconfig(string filename)
         else if (trim(first) == "savedweight")
         {
             savedWeights = trim(second).c_str();
+            cerr << "savedWeights=" << savedWeights << endl;
         }
         else
         {

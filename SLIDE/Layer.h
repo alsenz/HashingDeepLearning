@@ -36,7 +36,7 @@ private:
 
 public:
   Layer(const Layer&) = delete;
-  Layer(size_t _numNodex, int previousLayerNumOfNodes, int layerID, NodeType type, int batchsize, int K, int L, int RangePow, float Sparsity, float* weights=NULL, float* bias=NULL, float *adamAvgMom=NULL, float *adamAvgVel=NULL);
+  Layer(size_t _numNodex, int previousLayerNumOfNodes, int layerID, NodeType type, int batchsize, int K, int L, int RangePow, float Sparsity);
 	
   const Node &getNodebyID(size_t nodeID) const;
   Node &getNodebyID(size_t nodeID);
