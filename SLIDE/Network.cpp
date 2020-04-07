@@ -12,7 +12,6 @@ Network::Network(const std::vector<int> &sizesOfLayers, const std::vector<NodeTy
 :_sizesOfLayers(sizesOfLayers)
 ,_Sparsity(Sparsity)
 ,_layersTypes(layersTypes)
-, _hiddenlayers(noOfLayers)
 {
     
     _numberOfLayers = noOfLayers;
@@ -35,7 +34,7 @@ Network::Network(const std::vector<int> &sizesOfLayers, const std::vector<NodeTy
                 adamvArr = arr["av_layer_"+to_string(i)];
                 adamAvgVel = adamvArr.data<float>();
             }
-            _hiddenlayers[i] = new Layer(sizesOfLayers[i], sizesOfLayers[i - 1], i, _layersTypes[i], _currentBatchSize,  K[i], L[i], RangePow[i], Sparsity[i], weight, bias, adamAvgMom, adamAvgVel);
+            _hiddenlayers.emplace_back(new Layer(sizesOfLayers[i], sizesOfLayers[i - 1], i, _layersTypes[i], _currentBatchSize,  K[i], L[i], RangePow[i], Sparsity[i], weight, bias, adamAvgMom, adamAvgVel));
         } else {
 
             cnpy::NpyArray weightArr, biasArr, adamArr, adamvArr;
@@ -51,7 +50,7 @@ Network::Network(const std::vector<int> &sizesOfLayers, const std::vector<NodeTy
                 adamvArr = arr["av_layer_"+to_string(i)];
                 adamAvgVel = adamvArr.data<float>();
             }
-            _hiddenlayers[i] = new Layer(sizesOfLayers[i], inputdim, i, _layersTypes[i], _currentBatchSize, K[i], L[i], RangePow[i], Sparsity[i], weight, bias, adamAvgMom, adamAvgVel);
+            _hiddenlayers.emplace_back(new Layer(sizesOfLayers[i], inputdim, i, _layersTypes[i], _currentBatchSize, K[i], L[i], RangePow[i], Sparsity[i], weight, bias, adamAvgMom, adamAvgVel));
         }
     }
     cout << "after layer" << endl;
@@ -284,7 +283,7 @@ int Network::ProcessInput(const vector<int*> &inputIndices, const vector<float*>
                 }else if (HashFunction==2){
                     hashes = getLayer(l).getDensifiedWtaHash().getHashEasy(local_weights, dim, TOPK);
                 }else if (HashFunction==3){
-                    hashes = getLayer(l).getDensifiedMinhash().getHashEasy(_hiddenlayers[l]->getBinIds(), local_weights, dim, TOPK);
+                    hashes = getLayer(l).getDensifiedMinhash().getHashEasy(getLayer(l).getBinIds(), local_weights, dim, TOPK);
                 }else if (HashFunction==4){
                     hashes = getLayer(l).getSparseRandomProjection().getHash(local_weights, dim);
                 }
@@ -318,7 +317,7 @@ void Network::saveWeights(string file)
 
 
 Network::~Network() {
-    for (int i=0; i< _numberOfLayers; i++){
-        delete _hiddenlayers[i];
-    }
+  for (int i = 0; i < _numberOfLayers; i++) {
+    delete _hiddenlayers[i];
+  }
 }

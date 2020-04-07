@@ -59,7 +59,7 @@ Layer::Layer(size_t noOfNodes, int previousLayerNumOfNodes, int layerID, NodeTyp
     }
 
     if (LOADWEIGHT) {
-        _weights = weights;
+      _weights = weights;
         _bias = bias;
 
         if (ADAM){
@@ -68,7 +68,7 @@ Layer::Layer(size_t noOfNodes, int previousLayerNumOfNodes, int layerID, NodeTyp
         }
 
     }else{
-        _weights = new float[_noOfNodes * previousLayerNumOfNodes]();
+      _weights = new float[_noOfNodes * previousLayerNumOfNodes]();
         _bias = new float[_noOfNodes];
         random_device rd;
         default_random_engine dre(rd());
@@ -499,7 +499,6 @@ void Layer::saveWeights(string file) const
 
 Layer::~Layer()
 {
-    cerr << "~Layer1" << endl;
     delete [] _weights;
     delete [] _bias;
 
@@ -508,8 +507,6 @@ Layer::~Layer()
     delete _srp;
     delete _MinHasher;
     delete[] _train_array;
-
     delete[] _adamAvgMom;
     delete[] _adamAvgVel;
-    cerr << "~Layer8" << endl;
 }

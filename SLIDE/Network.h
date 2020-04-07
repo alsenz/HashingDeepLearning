@@ -22,7 +22,9 @@ private:
   const Layer &getLayer(int LayerID) const;
 
 public:
-	Network(const std::vector<int> &sizesOfLayers, const std::vector<NodeType> &layersTypes, int noOfLayers, int batchsize, float lr, int inputdim, const std::vector<int> &K, const std::vector<int> &L, const std::vector<int> &RangePow, const std::vector<float> &Sparsity, cnpy::npz_t arr);
+  Network() = delete;
+  Network(const Network&) = delete;
+  Network(const std::vector<int> &sizesOfLayers, const std::vector<NodeType> &layersTypes, int noOfLayers, int batchsize, float lr, int inputdim, const std::vector<int> &K, const std::vector<int> &L, const std::vector<int> &RangePow, const std::vector<float> &Sparsity, cnpy::npz_t arr);
 	int predictClass(const vector<int*> &inputIndices, const vector<float*> &inputValues, const vector<int> &length,  const vector<int*> &labels, const vector<int> &labelsize, int numInClass, int numOutClass);
 	int ProcessInput(const vector<int*> &inputIndices, const vector<float*> &inputValues, const vector<int> &lengths, const vector<int*> &labels, const vector<int> &labelsize, int iter, bool rehash, bool rebuild);
 	void saveWeights(string file);
