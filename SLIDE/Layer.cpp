@@ -88,14 +88,12 @@ Layer::Layer(size_t noOfNodes, int previousLayerNumOfNodes, int layerID, NodeTyp
 
     auto t1 = std::chrono::high_resolution_clock::now();
 
-    _train_array = new train[noOfNodes*batchsize];
-
     // create nodes for this layer
 #pragma omp parallel for
     for (size_t i = 0; i < noOfNodes; i++)
     {
         _Nodes[i].Update(previousLayerNumOfNodes, i, _layerID, type, batchsize, _weights+previousLayerNumOfNodes*i,
-                _bias[i], _adamAvgMom+previousLayerNumOfNodes*i , _adamAvgVel+previousLayerNumOfNodes*i, _train_array);
+                _bias[i], _adamAvgMom+previousLayerNumOfNodes*i , _adamAvgVel+previousLayerNumOfNodes*i);
         addtoHashTable(_Nodes[i].getWeights(), previousLayerNumOfNodes, _Nodes[i].getBias(), i);
     }
     auto t2 = std::chrono::high_resolution_clock::now();
@@ -510,7 +508,6 @@ Layer::~Layer()
     delete _dwtaHasher;
     delete _srp;
     delete _MinHasher;
-    delete[] _train_array;
     delete[] _adamAvgMom;
     delete[] _adamAvgVel;
 }

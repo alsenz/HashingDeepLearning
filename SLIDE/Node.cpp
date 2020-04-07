@@ -20,7 +20,7 @@ Node::Node()
 {
 }
 
-void Node::Update(int dim, int nodeID, int layerID, NodeType type, int batchsize, float *weights, float bias, float *adamAvgMom, float *adamAvgVel, train* train_blob)
+void Node::Update(int dim, int nodeID, int layerID, NodeType type, int batchsize, float *weights, float bias, float *adamAvgMom, float *adamAvgVel)
 {
     _dim = dim;
     _IDinLayer = nodeID;
@@ -36,7 +36,8 @@ void Node::Update(int dim, int nodeID, int layerID, NodeType type, int batchsize
 
     }
 
-    _train = train_blob + nodeID * batchsize;
+    _train = new train[batchsize];
+    //_train = train_blob + nodeID * batchsize;
     _activeInputs = 0;
 
     _weights = weights;
@@ -213,6 +214,7 @@ Node::~Node()
 	{
     delete[] _t;
   }
+  delete[] _train;
 }
 
 

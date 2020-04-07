@@ -516,8 +516,7 @@ int main(int argc, char* argv[])
     auto t1 = std::chrono::high_resolution_clock::now();
 
     {
-      Network a(sizesOfLayers, layersTypes, numLayer, Batchsize, Lr, InputDim, K, L, RangePow, Sparsity, arr);
-      
+      //Network a(sizesOfLayers, layersTypes, numLayer, Batchsize, Lr, InputDim, K, L, RangePow, Sparsity, arr);
     }
 
     Network _mynet(sizesOfLayers, layersTypes, numLayer, Batchsize, Lr, InputDim, K, L, RangePow, Sparsity, arr);

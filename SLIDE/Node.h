@@ -49,7 +49,7 @@ public:
   Node();
   Node(const Node&) = delete;
 
-	void Update(int dim, int nodeID, int layerID, NodeType type, int batchsize, float *weights, float bias, float *adamAvgMom, float *adamAvgVel, train* train_blob);
+	void Update(int dim, int nodeID, int layerID, NodeType type, int batchsize, float *weights, float bias, float *adamAvgMom, float *adamAvgVel);
 	float getLastActivation(int inputID) const;
 	void incrementDelta(int inputID, float incrementValue) const;
 	float getActivation(int* indices, float* values, int length, int inputID);
