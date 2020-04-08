@@ -46,9 +46,9 @@ public:
 
   Node();
   Node(const Node&) = delete;
-
-	void Update(int dim, int nodeID, int layerID, NodeType type, int batchsize, std::vector<float> &weights, float bias, std::vector<float> &adamAvgMom, std::vector<float> &adamAvgVel);
-	float getLastActivation(int inputID) const;
+  Node(int dim, int nodeID, int layerID, NodeType type, int batchsize, std::vector<float> &weights, float bias, std::vector<float> &adamAvgMom, std::vector<float> &adamAvgVel);
+	
+  float getLastActivation(int inputID) const;
 	void incrementDelta(int inputID, float incrementValue);
 	float getActivation(int* indices, float* values, int length, int inputID);
 	bool getInputActive(int inputID) const;

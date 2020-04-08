@@ -18,29 +18,24 @@ Node::Node()
 {
 }
 
-void Node::Update(int dim, int nodeID, int layerID, NodeType type, int batchsize, std::vector<float> &weights, float bias, std::vector<float> &adamAvgMom, std::vector<float> &adamAvgVel)
+Node::Node(int dim, int nodeID, int layerID, NodeType type, int batchsize, std::vector<float> &weights, float bias, std::vector<float> &adamAvgMom, std::vector<float> &adamAvgVel)
+:_train(batchsize)
+,_weights(weights, dim * nodeID, dim)
+,_bias(bias)
+,_mirrorbias(bias)
+,_dim(dim)
+,_IDinLayer(nodeID)
+,_type(type)
+,_layerNum(layerID)
+,_currentBatchsize(batchsize)
+,_activeInputs(0)
 {
-    _dim = dim;
-    _IDinLayer = nodeID;
-    _type = type;
-    _layerNum = layerID;
-    _currentBatchsize = batchsize;
-
     if (ADAM)
     {
         _adamAvgMom = SubVector<float>(adamAvgMom, dim * nodeID, dim);
         _adamAvgVel = SubVector<float>(adamAvgVel, dim * nodeID, dim);
         _t.resize(_dim);
     }
-
-    _train.resize(batchsize);
-    //_train = train_blob + nodeID * batchsize;
-    _activeInputs = 0;
-
-    _weights = SubVector<float>(weights, dim * nodeID, dim);
-    _bias = bias;
-    _mirrorbias = _bias;
-
 }
 
 float Node::getLastActivation(int inputID) const

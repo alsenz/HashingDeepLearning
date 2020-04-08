@@ -81,7 +81,7 @@ Layer::Layer(size_t noOfNodes, int previousLayerNumOfNodes, int layerID, NodeTyp
 #pragma omp parallel for
     for (size_t i = 0; i < noOfNodes; i++)
     {
-        _Nodes[i].Update(previousLayerNumOfNodes, i, _layerID, type, batchsize, _weights, _bias[i], _adamAvgMom, _adamAvgVel);
+        _Nodes[i] = Node(previousLayerNumOfNodes, i, _layerID, type, batchsize, _weights, _bias[i], _adamAvgMom, _adamAvgVel);
 
         addtoHashTable(_Nodes[i].getWeights(), previousLayerNumOfNodes, _Nodes[i].getBias(), i);
     }
