@@ -87,4 +87,9 @@ public:
     assert(idx < _size);
     return _vec[_startIdx + idx];
   }
+
+  T *data()
+  {
+    return _vec.data() + _startIdx;
+  }
 };

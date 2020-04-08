@@ -16,11 +16,10 @@ Node::Node()
   , _adamAvgMom(NULL)
   , _adamAvgVel(NULL)
   , _t(NULL)
-  , _train(NULL)
 {
 }
 
-void Node::Update(int dim, int nodeID, int layerID, NodeType type, int batchsize, float *weights, float bias, float *adamAvgMom, float *adamAvgVel)
+void Node::Update(int dim, int nodeID, int layerID, NodeType type, int batchsize, SubVector<float> *weights, float bias, float *adamAvgMom, float *adamAvgVel)
 {
     _dim = dim;
     _IDinLayer = nodeID;
@@ -84,7 +83,7 @@ float Node::getActivation(int* indices, float* values, int length, int inputID)
 	_train[inputID]._lastActivations = 0;
 	for (int i = 0; i < length; i++)
 	{
-	    _train[inputID]._lastActivations += _weights[indices[i]] * values[i];
+	    _train[inputID]._lastActivations += (*_weights)[indices[i]] * values[i];
 	}
 	_train[inputID]._lastActivations += _bias;
 
@@ -136,7 +135,7 @@ void Node::backPropagate(std::vector<Node> &previousNodes, int* previousLayerAct
 	{
 		//UpdateDelta before updating weights
 	    Node &prev_node = previousNodes[previousLayerActiveNodeIds[i]];
-	    prev_node.incrementDelta(inputID, _train[inputID]._lastDeltaforBPs * _weights[previousLayerActiveNodeIds[i]]);
+	    prev_node.incrementDelta(inputID, _train[inputID]._lastDeltaforBPs * (*_weights)[previousLayerActiveNodeIds[i]]);
 
 		float grad_t = _train[inputID]._lastDeltaforBPs * prev_node.getLastActivation(inputID);
 
@@ -220,8 +219,8 @@ Node::~Node()
 // for debugging gradients.
 float Node::purturbWeight(int weightid, float delta)
 {
-	_weights[weightid] += delta;
-	return _weights[weightid];
+  (*_weights)[weightid] += delta;
+	return (*_weights)[weightid];
 }
 
 

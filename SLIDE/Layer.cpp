@@ -1,4 +1,5 @@
 #include "Layer.h"
+#include "Util.h"
 #include <iostream>
 #include <algorithm>
 #include <vector>
@@ -80,7 +81,8 @@ Layer::Layer(size_t noOfNodes, int previousLayerNumOfNodes, int layerID, NodeTyp
 #pragma omp parallel for
     for (size_t i = 0; i < noOfNodes; i++)
     {
-        _Nodes[i].Update(previousLayerNumOfNodes, i, _layerID, type, batchsize, _weights.data()+previousLayerNumOfNodes*i,
+        SubVector<float> *weightsSubVec = new SubVector<float>(_weights, previousLayerNumOfNodes * i, previousLayerNumOfNodes);
+        _Nodes[i].Update(previousLayerNumOfNodes, i, _layerID, type, batchsize, weightsSubVec,
                 _bias[i], _adamAvgMom.data()+previousLayerNumOfNodes*i , _adamAvgVel.data()+previousLayerNumOfNodes*i);
         addtoHashTable(_Nodes[i].getWeights(), previousLayerNumOfNodes, _Nodes[i].getBias(), i);
     }

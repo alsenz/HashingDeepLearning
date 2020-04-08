@@ -7,6 +7,7 @@
 #include <linux/mman.h>
 #include <sys/mman.h>
 #include <asm-generic/mman-common.h>
+#include "Util.h"
 
 enum NodeType
 { ReLU, Softmax};
@@ -30,7 +31,7 @@ private:
     size_t _dim, _layerNum, _IDinLayer;
     std::vector<int> _indicesInTables;
     std::vector<int> _indicesInBuckets;
-    float* _weights;
+    SubVector<float> *_weights;
     float* _mirrorWeights;
     float* _adamAvgMom;
     float* _adamAvgVel;
@@ -46,7 +47,7 @@ public:
   Node();
   Node(const Node&) = delete;
 
-	void Update(int dim, int nodeID, int layerID, NodeType type, int batchsize, float *weights, float bias, float *adamAvgMom, float *adamAvgVel);
+	void Update(int dim, int nodeID, int layerID, NodeType type, int batchsize, SubVector<float> *weights, float bias, float *adamAvgMom, float *adamAvgVel);
 	float getLastActivation(int inputID) const;
 	void incrementDelta(int inputID, float incrementValue);
 	float getActivation(int* indices, float* values, int length, int inputID);
@@ -77,9 +78,9 @@ public:
     _indicesInBuckets = val;
   }
 
-  float *getWeights() const
+  float *getWeights()
   {
-    return _weights;
+    return _weights->data();
   }
 
   float *getMirrorWeights() const
