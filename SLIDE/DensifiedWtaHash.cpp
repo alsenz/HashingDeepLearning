@@ -55,7 +55,7 @@ DensifiedWtaHash::DensifiedWtaHash(int numHashes, int noOfBitsToHash)
 }
 
 
-const int * DensifiedWtaHash::getHashEasy(float* data, int dataLen, int topk) const
+const int * DensifiedWtaHash::getHashEasy(const float* data, int dataLen, int topk) const
 {
     // binsize is the number of times the range is larger than the total number of hashes we need.
 

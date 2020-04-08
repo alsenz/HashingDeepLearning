@@ -225,7 +225,7 @@ int Network::ProcessInput(const vector<int*> &inputIndices, const vector<float*>
             Node &tmp = getLayer(l).getNodebyID(m);
             int dim = tmp.getDim();
             float* local_weights = new float[dim];
-            std::copy(tmp.getWeights(), tmp.getWeights() + dim, local_weights);
+            std::copy(tmp.getWeights().data(), tmp.getWeights().data() + dim, local_weights);
 
             if(ADAM){
                 for (int d=0; d < dim;d++){
@@ -247,7 +247,7 @@ int Network::ProcessInput(const vector<int*> &inputIndices, const vector<float*>
             }
             else
             {
-                std::copy(tmp.getMirrorWeights(), tmp.getMirrorWeights()+(tmp.getDim()) , tmp.getWeights());
+                std::copy(tmp.getMirrorWeights(), tmp.getMirrorWeights()+(tmp.getDim()) , tmp.getWeights().data());
                 tmp.getBias() = tmp.getMirrorBias();
             }
             if (tmpRehash) {
@@ -268,7 +268,7 @@ int Network::ProcessInput(const vector<int*> &inputIndices, const vector<float*>
                 delete[] hashes;
             }
 
-            std::copy(local_weights, local_weights + dim, tmp.getWeights());
+            std::copy(local_weights, local_weights + dim, tmp.getWeights().data());
             delete[] local_weights;
         }
     }

@@ -78,9 +78,14 @@ public:
     _indicesInBuckets = val;
   }
 
-  float *getWeights()
+  const SubVector<float> &getWeights() const
   {
-    return _weights->data();
+    return *_weights;
+  }
+
+  SubVector<float> &getWeights()
+  {
+    return *_weights;
   }
 
   float *getMirrorWeights() const

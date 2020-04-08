@@ -19,6 +19,6 @@ public:
     DensifiedWtaHash(int numHashes, int noOfBitsToHash);
     const int * getHash(int* indices, float* data, int dataLen) const;
     const int getRandDoubleHash(int binid, int count) const;
-    const int * getHashEasy(float* data, int dataLen, int topK) const;
+    const int * getHashEasy(const float* data, int dataLen, int topK) const;
     ~DensifiedWtaHash();
 };

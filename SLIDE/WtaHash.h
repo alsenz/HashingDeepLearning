@@ -18,6 +18,6 @@ private:
     int *_indices, _numhashes, _rangePow;
 public:
     WtaHash(int numHashes, int noOfBitsToHash);
-    const int * getHash(float* data) const;
+    const int * getHash(const float* data) const;
     ~WtaHash();
 };

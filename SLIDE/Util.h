@@ -88,8 +88,6 @@ public:
     return _vec[_startIdx + idx];
   }
 
-  T *data()
-  {
-    return _vec.data() + _startIdx;
-  }
+  T *data() { return _vec.data() + _startIdx; }
+  const T *data() const { return _vec.data() + _startIdx; }
 };
