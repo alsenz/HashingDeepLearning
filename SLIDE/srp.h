@@ -1,6 +1,5 @@
 #include <vector>
 #pragma once
-using namespace std;
 
 class SparseRandomProjection 
 {

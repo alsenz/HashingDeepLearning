@@ -19,6 +19,8 @@
 #include "Config.h"
 #include "Util.h"
 
+using namespace std;
+
 int Batchsize = 1000;
 int Rehash = 1000;
 int Rebuild = 1000;
@@ -42,8 +44,6 @@ std::vector<int> RangePow;
 std::vector<int> K;
 std::vector<int> L;
 std::vector<float> Sparsity;
-
-using namespace std;
 
 #define ALL(c) c.begin(), c.end()
 #define FOR(i,c) for(typeof(c.begin())i=c.begin();i!=c.end();++i)

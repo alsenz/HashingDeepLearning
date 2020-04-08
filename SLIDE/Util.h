@@ -57,3 +57,14 @@ inline std::vector<T> Tokenize(const std::string &input
   std::vector<std::string> stringVector = Tokenize(input, delimiters);
   return Scan<T>(stringVector);
 }
+
+///////////////////////////////////
+template<typename T>
+class SubVector
+{
+protected:
+  std::vector<T> &vec;
+
+public:
+
+};

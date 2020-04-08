@@ -8,8 +8,6 @@
 #include "cnpy.h"
 #include <sys/mman.h>
 
-using namespace std;
-
 class Layer
 {
 private:
@@ -46,7 +44,7 @@ public:
 	void addtoHashTable(float* weights, int length, float bias, int id);
 	float getNomalizationConstant(int inputID) const;
 	int queryActiveNodeandComputeActivations(int** activenodesperlayer, float** activeValuesperlayer, int* inlenght, int layerID, int inputID,  const int* label, int labelsize, float Sparsity);
-	void saveWeights(string file) const;
+	void saveWeights(const std::string &file) const;
 	void updateTable();
 	void updateRandomNodes();
 

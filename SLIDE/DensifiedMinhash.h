@@ -10,7 +10,6 @@
 #include "MurmurHash.h"
 
 
-using namespace std;
 class DensifiedMinhash
 {
 private:
