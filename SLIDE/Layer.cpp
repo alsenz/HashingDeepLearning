@@ -81,9 +81,9 @@ Layer::Layer(size_t noOfNodes, int previousLayerNumOfNodes, int layerID, NodeTyp
 #pragma omp parallel for
     for (size_t i = 0; i < noOfNodes; i++)
     {
-        SubVector<float> *weightsSubVec = new SubVector<float>(_weights, previousLayerNumOfNodes * i, previousLayerNumOfNodes);
-        _Nodes[i].Update(previousLayerNumOfNodes, i, _layerID, type, batchsize, weightsSubVec,
+        _Nodes[i].Update(previousLayerNumOfNodes, i, _layerID, type, batchsize, _weights,
                 _bias[i], _adamAvgMom.data()+previousLayerNumOfNodes*i , _adamAvgVel.data()+previousLayerNumOfNodes*i);
+
         addtoHashTable(_Nodes[i].getWeights(), previousLayerNumOfNodes, _Nodes[i].getBias(), i);
     }
     auto t2 = std::chrono::high_resolution_clock::now();

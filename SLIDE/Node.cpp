@@ -11,7 +11,7 @@
 using namespace std;
 
 Node::Node()
-  :_weights(NULL)
+  :_weights()
   , _mirrorWeights(NULL)
   , _adamAvgMom(NULL)
   , _adamAvgVel(NULL)
@@ -19,7 +19,7 @@ Node::Node()
 {
 }
 
-void Node::Update(int dim, int nodeID, int layerID, NodeType type, int batchsize, SubVector<float> *weights, float bias, float *adamAvgMom, float *adamAvgVel)
+void Node::Update(int dim, int nodeID, int layerID, NodeType type, int batchsize, std::vector<float> &weights, float bias, float *adamAvgMom, float *adamAvgVel)
 {
     _dim = dim;
     _IDinLayer = nodeID;
@@ -39,7 +39,7 @@ void Node::Update(int dim, int nodeID, int layerID, NodeType type, int batchsize
     //_train = train_blob + nodeID * batchsize;
     _activeInputs = 0;
 
-    _weights = weights;
+    _weights = SubVector<float>(weights, dim * nodeID, dim);
     _bias = bias;
     _mirrorbias = _bias;
 
@@ -83,7 +83,7 @@ float Node::getActivation(int* indices, float* values, int length, int inputID)
 	_train[inputID]._lastActivations = 0;
 	for (int i = 0; i < length; i++)
 	{
-	    _train[inputID]._lastActivations += (*_weights)[indices[i]] * values[i];
+	    _train[inputID]._lastActivations += _weights[indices[i]] * values[i];
 	}
 	_train[inputID]._lastActivations += _bias;
 
@@ -135,7 +135,7 @@ void Node::backPropagate(std::vector<Node> &previousNodes, int* previousLayerAct
 	{
 		//UpdateDelta before updating weights
 	    Node &prev_node = previousNodes[previousLayerActiveNodeIds[i]];
-	    prev_node.incrementDelta(inputID, _train[inputID]._lastDeltaforBPs * (*_weights)[previousLayerActiveNodeIds[i]]);
+	    prev_node.incrementDelta(inputID, _train[inputID]._lastDeltaforBPs * _weights[previousLayerActiveNodeIds[i]]);
 
 		float grad_t = _train[inputID]._lastDeltaforBPs * prev_node.getLastActivation(inputID);
 
@@ -219,8 +219,8 @@ Node::~Node()
 // for debugging gradients.
 float Node::purturbWeight(int weightid, float delta)
 {
-  (*_weights)[weightid] += delta;
-	return (*_weights)[weightid];
+  _weights[weightid] += delta;
+	return _weights[weightid];
 }
 
 
