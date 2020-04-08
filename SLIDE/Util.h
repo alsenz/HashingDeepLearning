@@ -63,8 +63,27 @@ template<typename T>
 class SubVector
 {
 protected:
-  std::vector<T> &vec;
+  std::vector<T> &_vec;
+  size_t _startIdx, _size;
 
 public:
+  SubVector(std::vector<T> &vec, size_t startIdx, size_t size)
+    : _vec(vec)
+    , _startIdx(startIdx)
+    , _size(size)
+  {
+    assert(_startIdx + _size =< vec.size());
+  }
 
+  const T &operator[](size_t idx) const
+  { 
+    assert(idx < _size);
+    return _vec[_startIdx + idx];
+  }
+
+  T &operator[](size_t idx)
+  {
+    assert(idx < _size);
+    return _vec[_startIdx + idx];
+  }
 };
