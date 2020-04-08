@@ -72,6 +72,7 @@ public:
     , _startIdx(startIdx)
     , _size(size)
   {
+    assert(_startIdx < vec.size());
     assert(_startIdx + _size <= vec.size());
   }
 

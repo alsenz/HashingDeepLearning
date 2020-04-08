@@ -123,7 +123,7 @@ public:
     return _bias;
   }
 
-  float getTBias() const
+  const float &getTBias() const
   {
     return _tbias;
   }
