@@ -17,11 +17,11 @@ Layer::Layer(size_t noOfNodes, int previousLayerNumOfNodes, int layerID, NodeTyp
 ,_layerID(layerID)
 ,_randNode(noOfNodes)
 ,_Nodes(noOfNodes)
-, _hashTables(NULL)
 , _wtaHasher(NULL)
 , _MinHasher(NULL)
 , _srp(NULL)
 , _dwtaHasher(NULL)
+, _hashTables(K, L, RangePow)
 {
     _type = type;
     _noOfActive = floor(_noOfNodes * Sparsity);
@@ -39,7 +39,6 @@ Layer::Layer(size_t noOfNodes, int previousLayerNumOfNodes, int layerID, NodeTyp
     std::random_shuffle(_randNode.begin(), _randNode.begin() + _noOfNodes);
 
 //TODO: Initialize Hash Tables and add the nodes. Done by Beidi
-    _hashTables = new LSH(_K, _L, RangePow);
 
     if (HashFunction == 1) {
         _wtaHasher = new WtaHash(_K * _L, previousLayerNumOfNodes);
@@ -140,8 +139,8 @@ void Layer::addtoHashTable(float* weights, int length, float bias, int ID)
         hashes = _srp->getHash(weights, length);
     }
 
-    std::vector<int> hashIndices = _hashTables->hashesToIndex(hashes);
-    std::vector<int> bucketIndices = _hashTables->add(hashIndices, ID+1);
+    std::vector<int> hashIndices = _hashTables.hashesToIndex(hashes);
+    std::vector<int> bucketIndices = _hashTables.add(hashIndices, ID+1);
 
     _Nodes[ID].setIndicesInTables(hashIndices);
     _Nodes[ID].setIndicesInBuckets(bucketIndices);
@@ -238,8 +237,8 @@ int Layer::queryActiveNodeandComputeActivations(int** activenodesperlayer, float
             } else if (HashFunction == 4) {
                 hashes = _srp->getHashSparse(activenodesperlayer[layerIndex], activeValuesperlayer[layerIndex], lengths[layerIndex]);
             }
-            std::vector<int> hashIndices = _hashTables->hashesToIndex(hashes);
-            const int **actives = _hashTables->retrieveRaw(hashIndices);
+            std::vector<int> hashIndices = _hashTables.hashesToIndex(hashes);
+            const int **actives = _hashTables.retrieveRaw(hashIndices);
 
             // Get candidates from hashtable
             auto t00 = std::chrono::high_resolution_clock::now();
@@ -305,8 +304,8 @@ int Layer::queryActiveNodeandComputeActivations(int** activenodesperlayer, float
             } else if (HashFunction == 4) {
                 hashes = _srp->getHashSparse(activenodesperlayer[layerIndex], activeValuesperlayer[layerIndex], lengths[layerIndex]);
             }
-            std::vector<int> hashIndices = _hashTables->hashesToIndex(hashes);
-            const int **actives = _hashTables->retrieveRaw(hashIndices);
+            std::vector<int> hashIndices = _hashTables.hashesToIndex(hashes);
+            const int **actives = _hashTables.retrieveRaw(hashIndices);
             // we now have a sparse array of indices of active nodes
 
             // Get candidates from hashtable

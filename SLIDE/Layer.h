@@ -26,7 +26,7 @@ private:
     std::vector<float> _bias;
     std::vector<float> _adamAvgMom;
     std::vector<float> _adamAvgVel;
-    LSH *_hashTables;
+    LSH _hashTables;
     std::vector<int> _binids;
 
     WtaHash *_wtaHasher;
@@ -57,9 +57,9 @@ public:
       return _noOfNodes; 
     }
 
-    LSH &getHashTables() const
+    LSH &getHashTables()
     {
-      return *_hashTables;
+      return _hashTables;
     }
 
     const std::vector<int> &getBinIds() const
