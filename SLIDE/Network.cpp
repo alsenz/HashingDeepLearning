@@ -50,8 +50,8 @@ int Network::predictClass(const vector<int*> &inputIndices, const vector<float*>
     auto t1 = std::chrono::high_resolution_clock::now();
     #pragma omp parallel for reduction(+:correctPred)
     for (int i = 0; i < _currentBatchSize; i++) {
-        vector<int*> activenodesperlayer(_numberOfLayers + 1);
-        float **activeValuesperlayer = new float *[_numberOfLayers + 1]();
+      std::vector<int*> activenodesperlayer(_numberOfLayers + 1);
+      std::vector<float*> activeValuesperlayer(_numberOfLayers + 1);
         std::vector<int> sizes(_numberOfLayers + 1);
 
         activenodesperlayer[0] = inputIndices[i];
@@ -98,7 +98,6 @@ int Network::predictClass(const vector<int*> &inputIndices, const vector<float*>
             delete[] activenodesperlayer[j];
             delete[] activeValuesperlayer[j];
         }
-        delete[] activeValuesperlayer;
     }
     auto t2 = std::chrono::high_resolution_clock::now();
     float timeDiffInMiliseconds = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
@@ -131,12 +130,12 @@ int Network::ProcessInput(const vector<int*> &inputIndices, const vector<float*>
     }
 
     vector < vector<int*> > activeNodesPerBatch(_currentBatchSize);      // batch, layer, node
-    float*** activeValuesPerBatch = new float**[_currentBatchSize]; // batch, layer, node ???
+    vector < vector<float*> > activeValuesPerBatch(_currentBatchSize); // batch, layer, node ???
     std::vector < std::vector<int> > sizesPerBatch(_currentBatchSize);
 #pragma omp parallel for
     for (int i = 0; i < _currentBatchSize; i++) {
         vector<int*> activenodesperlayer(_numberOfLayers + 1);     // layer, node
-        float **activeValuesperlayer = new float *[_numberOfLayers + 1]();  // layer, node ???
+        vector<float*> activeValuesperlayer(_numberOfLayers + 1);  // layer, node ???
         std::vector<int> sizes(_numberOfLayers + 1);
 
         activeNodesPerBatch[i] = activenodesperlayer;
@@ -185,11 +184,7 @@ int Network::ProcessInput(const vector<int*> &inputIndices, const vector<float*>
             delete[] activeNodesPerBatch[i][j];
             delete[] activeValuesPerBatch[i][j];
         }
-        delete[] activeValuesPerBatch[i];
     }
-
-    delete[] activeValuesPerBatch;
-
 
     auto t1 = std::chrono::high_resolution_clock::now();
     bool tmpRehash;
