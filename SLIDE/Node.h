@@ -35,7 +35,7 @@ private:
     float* _mirrorWeights;
     SubVector<float> _adamAvgMom;
     SubVector<float> _adamAvgVel;
-    float* _t; //for adam
+    std::vector<float> _t; //for adam
     float _bias = 0;
     float _tbias = 0;
     float _adamAvgMombias = 0;

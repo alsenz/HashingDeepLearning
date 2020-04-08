@@ -15,7 +15,6 @@ Node::Node()
   , _mirrorWeights(NULL)
   , _adamAvgMom()
   , _adamAvgVel()
-  , _t(NULL)
 {
 }
 
@@ -31,7 +30,7 @@ void Node::Update(int dim, int nodeID, int layerID, NodeType type, int batchsize
     {
         _adamAvgMom = SubVector<float>(adamAvgMom, dim * nodeID, dim);
         _adamAvgVel = SubVector<float>(adamAvgVel, dim * nodeID, dim);
-        _t = new float[_dim]();
+        _t.resize(_dim);
     }
 
     _train.resize(batchsize);
@@ -208,10 +207,6 @@ void Node::SetlastActivation(int inputID, float realActivation)
 
 Node::~Node()
 {
-  if (ADAM)
-	{
-    delete[] _t;
-  }
 }
 
 
