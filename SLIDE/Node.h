@@ -33,8 +33,8 @@ private:
     std::vector<int> _indicesInBuckets;
     SubVector<float> _weights;
     float* _mirrorWeights;
-    float* _adamAvgMom;
-    float* _adamAvgVel;
+    SubVector<float> _adamAvgMom;
+    SubVector<float> _adamAvgVel;
     float* _t; //for adam
     float _bias = 0;
     float _tbias = 0;
@@ -47,7 +47,7 @@ public:
   Node();
   Node(const Node&) = delete;
 
-	void Update(int dim, int nodeID, int layerID, NodeType type, int batchsize, std::vector<float> &weights, float bias, float *adamAvgMom, float *adamAvgVel);
+	void Update(int dim, int nodeID, int layerID, NodeType type, int batchsize, std::vector<float> &weights, float bias, std::vector<float> &adamAvgMom, std::vector<float> &adamAvgVel);
 	float getLastActivation(int inputID) const;
 	void incrementDelta(int inputID, float incrementValue);
 	float getActivation(int* indices, float* values, int length, int inputID);

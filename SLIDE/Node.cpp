@@ -13,13 +13,13 @@ using namespace std;
 Node::Node()
   :_weights()
   , _mirrorWeights(NULL)
-  , _adamAvgMom(NULL)
-  , _adamAvgVel(NULL)
+  , _adamAvgMom()
+  , _adamAvgVel()
   , _t(NULL)
 {
 }
 
-void Node::Update(int dim, int nodeID, int layerID, NodeType type, int batchsize, std::vector<float> &weights, float bias, float *adamAvgMom, float *adamAvgVel)
+void Node::Update(int dim, int nodeID, int layerID, NodeType type, int batchsize, std::vector<float> &weights, float bias, std::vector<float> &adamAvgMom, std::vector<float> &adamAvgVel)
 {
     _dim = dim;
     _IDinLayer = nodeID;
@@ -29,10 +29,9 @@ void Node::Update(int dim, int nodeID, int layerID, NodeType type, int batchsize
 
     if (ADAM)
     {
-        _adamAvgMom = adamAvgMom;
-        _adamAvgVel = adamAvgVel;
+        _adamAvgMom = SubVector<float>(adamAvgMom, dim * nodeID, dim);
+        _adamAvgVel = SubVector<float>(adamAvgVel, dim * nodeID, dim);
         _t = new float[_dim]();
-
     }
 
     _train.resize(batchsize);
