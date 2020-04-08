@@ -72,7 +72,7 @@ public:
     , _startIdx(startIdx)
     , _size(size)
   {
-    assert(_startIdx + _size =< vec.size());
+    assert(_startIdx + _size <= vec.size());
   }
 
   const T &operator[](size_t idx) const
