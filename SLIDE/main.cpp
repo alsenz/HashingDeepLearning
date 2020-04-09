@@ -219,7 +219,6 @@ void parseconfig(string filename)
         else if (trim(first) == "savedweight")
         {
             savedWeights = trim(second).c_str();
-            cerr << "savedWeights=" << savedWeights << endl;
         }
         else
         {
@@ -245,7 +244,7 @@ void ReadHeader(const string &str, int &numLines, int &numInClass, int &numOutCl
   numLines = vec[0];
   numInClass = vec[1];
   numOutClass = vec[2];
-  cerr << "header " << numLines << " " << numInClass << " " << numOutClass << endl;
+  //cerr << "header " << numLines << " " << numInClass << " " << numOutClass << endl;
 }
 
 void CreateData(const std::string &filePath, 
