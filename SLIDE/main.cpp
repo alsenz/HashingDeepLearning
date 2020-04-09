@@ -248,7 +248,7 @@ void ReadHeader(const string &str, int &numLines, int &numInClass, int &numOutCl
   cerr << "header " << numLines << " " << numInClass << " " << numOutClass << endl;
 }
 
-void CreateData(std::ifstream &file, 
+void CreateData(const std::string &filePath, 
               std::vector<int*> &records,
               std::vector<float*> &values,
               std::vector<int> &sizes,
@@ -256,9 +256,10 @@ void CreateData(std::ifstream &file,
               std::vector<int> &labelsize
               )
 {
+  std::ifstream file(filePath);
   string str;
 
-  //Skipe header
+  //Skip header
   std::getline(file, str);
 
   int numLines;
@@ -335,7 +336,6 @@ void CreateData(std::ifstream &file,
 void EvalDataSVM(int numBatchesTest,  Network &_mynet, int iter){
     cerr << "Start EvalDataSVM" << endl;
     int totCorrect = 0;
-    std::ifstream file(testData);
 
     ofstream outputFile(logFile,  std::ios_base::app);
     for (int i = 0; i < numBatchesTest; i++) {
@@ -345,7 +345,7 @@ void EvalDataSVM(int numBatchesTest,  Network &_mynet, int iter){
         vector<int*> labels(Batchsize);
         vector<int> labelsize(Batchsize);
 
-        CreateData(file, records, values, sizes, labels, labelsize);
+        CreateData(testData, records, values, sizes, labels, labelsize);
 
         int num_features = 0, num_labels = 0;
         for (int i = 0; i < Batchsize; i++)
@@ -364,7 +364,6 @@ void EvalDataSVM(int numBatchesTest,  Network &_mynet, int iter){
             delete[] values[d];
         }
     }
-    file.close();
     cout << "over all " << totCorrect * 1.0 / (numBatchesTest*Batchsize) << endl;
     outputFile << iter << " " << globalTime/1000 << " " << totCorrect * 1.0 / (numBatchesTest*Batchsize) << endl;
 
@@ -373,8 +372,6 @@ void EvalDataSVM(int numBatchesTest,  Network &_mynet, int iter){
 
 void ReadDataSVM(size_t numBatches,  Network &_mynet, int epoch){
     cerr << "Start ReadDataSVM" << endl;
-    std::ifstream file(trainData);
-
     for (size_t i = 0; i < numBatches; i++) {
         if( (i+epoch*numBatches)%Stepsize==0) {
             EvalDataSVM(20, _mynet, epoch*numBatches+i);
@@ -386,7 +383,7 @@ void ReadDataSVM(size_t numBatches,  Network &_mynet, int epoch){
         vector<int*> labels(Batchsize);
         vector<int> labelsize(Batchsize);
 
-        CreateData(file, records, values, sizes, labels, labelsize);
+        CreateData(trainData, records, values, sizes, labels, labelsize);
 
         bool rehash = false;
         bool rebuild = false;
@@ -419,7 +416,6 @@ void ReadDataSVM(size_t numBatches,  Network &_mynet, int epoch){
             delete[] labels[d];
         }
     }
-    file.close();
 
     cerr << "Finished ReadDataSVM" << endl;
 }
