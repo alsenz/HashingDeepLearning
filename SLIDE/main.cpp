@@ -257,6 +257,15 @@ void CreateData(std::ifstream &file,
               )
 {
   string str;
+
+  //Skipe header
+  std::getline(file, str);
+
+  int numLines;
+  int numInClass;
+  int numOutClass;
+  ReadHeader(str, numLines, numInClass, numOutClass);
+
   int count = 0;
   while (std::getline(file, str)) {
     //cerr << "str=" << str << endl;
@@ -297,7 +306,8 @@ void CreateData(std::ifstream &file,
     vector<string>::iterator it;
     for (it = list.begin(); it < list.end(); it++) {
       int inClass = stoi(*it);
-      cerr << "inClass=" << count << " " << currcount << " " << inClass << endl;
+      //cerr << "inClass=" << count << " " << currcount << " " << inClass << endl;
+      assert(inClass < numInClass);
       records[count][currcount] = inClass;
       currcount++;
     }
@@ -309,6 +319,7 @@ void CreateData(std::ifstream &file,
     currcount = 0;
     for (it = label.begin(); it < label.end(); it++) {
       int label = stoi(*it);
+      assert(label < numOutClass);
       //cerr << "label=" << label << endl;
       labels[count][currcount] = label;
       currcount++;
@@ -325,15 +336,6 @@ void EvalDataSVM(int numBatchesTest,  Network &_mynet, int iter){
     cerr << "Start EvalDataSVM" << endl;
     int totCorrect = 0;
     std::ifstream file(testData);
-    string str;
-
-    //Skipe header
-    std::getline(file, str );
-
-    int numLines;
-    int numInClass;
-    int numOutClass;
-    ReadHeader(str, numLines, numInClass, numOutClass);
 
     ofstream outputFile(logFile,  std::ios_base::app);
     for (int i = 0; i < numBatchesTest; i++) {
@@ -353,7 +355,7 @@ void EvalDataSVM(int numBatchesTest,  Network &_mynet, int iter){
         }
 
         std::cout << Batchsize << " records, with "<< num_features << " features and " << num_labels << " labels" << std::endl;
-        int correctPredict = _mynet.predictClass(records, values, sizes, labels, labelsize, numInClass, numOutClass);
+        int correctPredict = _mynet.predictClass(records, values, sizes, labels, labelsize);
         totCorrect += correctPredict;
         std::cout <<" iter "<< i << ": " << totCorrect*1.0/(Batchsize*(i+1)) << " correct" << std::endl;
 
@@ -372,14 +374,6 @@ void EvalDataSVM(int numBatchesTest,  Network &_mynet, int iter){
 void ReadDataSVM(size_t numBatches,  Network &_mynet, int epoch){
     cerr << "Start ReadDataSVM" << endl;
     std::ifstream file(trainData);
-    std::string str;
-    //skipe header
-    std::getline( file, str );
-
-    int numLines;
-    int numInClass;
-    int numOutClass;
-    ReadHeader(str, numLines, numInClass, numOutClass);
 
     for (size_t i = 0; i < numBatches; i++) {
         if( (i+epoch*numBatches)%Stepsize==0) {

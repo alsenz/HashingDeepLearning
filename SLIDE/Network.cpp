@@ -41,7 +41,7 @@ const Layer &Network::getLayer(int LayerID) const {
   return *_hiddenlayers[LayerID];
 }
 
-int Network::predictClass(const vector<int*> &inputIndices, const vector<float*> &inputValues, const vector<int> &length, const vector<int*> &labels, const vector<int> &labelsize, int numInClass, int numOutClass) {
+int Network::predictClass(const vector<int*> &inputIndices, const vector<float*> &inputValues, const vector<int> &length, const vector<int*> &labels, const vector<int> &labelsize) {
     int correctPred = 0;
     //cerr << "start Network::predictClass " << _currentBatchSize << endl;
     //cerr << "_currentBatchSize=" << _currentBatchSize << endl;
@@ -66,7 +66,6 @@ int Network::predictClass(const vector<int*> &inputIndices, const vector<float*>
 
         //compute softmax
         int noOfClasses = sizes[_numberOfLayers];
-        assert(noOfClasses == numOutClass);
         float max_act = -222222222;
         int predict_class = -1;
         for (int k = 0; k < noOfClasses; k++) {
