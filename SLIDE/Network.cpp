@@ -41,7 +41,7 @@ const Layer &Network::getLayer(int LayerID) const {
   return *_hiddenlayers[LayerID];
 }
 
-int Network::predictClass(const vector<int*> &inputIndices, const vector<float*> &inputValues, const vector<int> &length, const vector<int*> &labels, const vector<int> &labelsize) {
+int Network::predictClass(std::vector< std::vector<int> > &inputIndices, const vector<float*> &inputValues, const vector<int> &length, const vector<int*> &labels, const vector<int> &labelsize) {
     int correctPred = 0;
     //cerr << "start Network::predictClass " << _currentBatchSize << endl;
     //cerr << "_currentBatchSize=" << _currentBatchSize << endl;
@@ -54,7 +54,7 @@ int Network::predictClass(const vector<int*> &inputIndices, const vector<float*>
       std::vector<float*> activeValuesperlayer(_numberOfLayers + 1);
         std::vector<int> sizes(_numberOfLayers + 1);
 
-        activenodesperlayer[0] = inputIndices[i];
+        activenodesperlayer[0] = inputIndices[i].data();
         activeValuesperlayer[0] = inputValues[i];
         sizes[0] = length[i];
 
@@ -107,7 +107,7 @@ int Network::predictClass(const vector<int*> &inputIndices, const vector<float*>
 }
 
 
-int Network::ProcessInput(const vector<int*> &inputIndices, const vector<float*> &inputValues, const vector<int> &lengths, const vector<int*> &labels, const vector<int> &labelsize, int iter, bool rehash, bool rebuild) {
+int Network::ProcessInput(std::vector< std::vector<int> > &inputIndices, const vector<float*> &inputValues, const vector<int> &lengths, const vector<int*> &labels, const vector<int> &labelsize, int iter, bool rehash, bool rebuild) {
     //cerr << "start Network::ProcessInput" << endl;
     float logloss = 0.0;
     int* avg_retrieval = new int[_numberOfLayers]();
@@ -141,7 +141,7 @@ int Network::ProcessInput(const vector<int*> &inputIndices, const vector<float*>
         activeValuesPerBatch[i] = activeValuesperlayer;
         sizesPerBatch[i] = sizes;
 
-        activenodesperlayer[0] = inputIndices[i];  // inputs parsed from training data file
+        activenodesperlayer[0] = inputIndices[i].data();  // inputs parsed from training data file
         activeValuesperlayer[0] = inputValues[i];
         sizes[0] = lengths[i];
         int in;
@@ -172,7 +172,7 @@ int Network::ProcessInput(const vector<int*> &inputIndices, const vector<float*>
                 if (j != 0) {
                     node.backPropagate(prev_layer.getAllNodes(), activeNodesPerBatch[i][j], sizesPerBatch[i][j], tmplr, i);
                 } else {
-                    node.backPropagateFirstLayer(inputIndices[i], inputValues[i], lengths[i], tmplr, i);
+                    node.backPropagateFirstLayer(inputIndices[i].data(), inputValues[i], lengths[i], tmplr, i);
                 }
             }
         }

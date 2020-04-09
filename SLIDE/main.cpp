@@ -249,7 +249,7 @@ void ReadHeader(const string &str, int &numLines, int &numInClass, int &numOutCl
 }
 
 void CreateData(const std::string &filePath, 
-              std::vector<int*> &records,
+              std::vector< vector<int> > &records,
               std::vector<float*> &values,
               std::vector<int> &sizes,
               std::vector<int*> &labels,
@@ -297,7 +297,7 @@ void CreateData(const std::string &filePath,
     //cerr << "   value=" << PrintVec(value) << endl;
     //cerr << "   label=" << PrintVec(label) << endl;
 
-    records[count] = new int[list.size()];
+    records[count] = vector<int>(list.size());
     values[count] = new float[list.size()];
     labels[count] = new int[label.size()];
     sizes[count] = list.size();
@@ -339,7 +339,7 @@ void EvalDataSVM(int numBatchesTest,  Network &_mynet, int iter){
 
     ofstream outputFile(logFile,  std::ios_base::app);
     for (int i = 0; i < numBatchesTest; i++) {
-        vector<int*> records(Batchsize);
+        vector< vector<int> > records(Batchsize);
         vector<float*> values(Batchsize);
         vector<int> sizes(Batchsize);
         vector<int*> labels(Batchsize);
@@ -360,7 +360,6 @@ void EvalDataSVM(int numBatchesTest,  Network &_mynet, int iter){
         std::cout <<" iter "<< i << ": " << totCorrect*1.0/(Batchsize*(i+1)) << " correct" << std::endl;
 
         for (int d = 0; d < Batchsize; d++) {
-            delete[] records[d];
             delete[] values[d];
         }
     }
@@ -377,7 +376,7 @@ void ReadDataSVM(size_t numBatches,  Network &_mynet, int epoch){
             EvalDataSVM(20, _mynet, epoch*numBatches+i);
         }
 
-        vector<int*> records(Batchsize);
+        vector< vector<int> > records(Batchsize);
         vector<float*> values(Batchsize);
         vector<int> sizes(Batchsize);
         vector<int*> labels(Batchsize);
@@ -411,7 +410,6 @@ void ReadDataSVM(size_t numBatches,  Network &_mynet, int epoch){
         globalTime+= timeDiffInMiliseconds;
 
         for (int d = 0; d < Batchsize; d++) {
-            delete[] records[d];
             delete[] values[d];
             delete[] labels[d];
         }
