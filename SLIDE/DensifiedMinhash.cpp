@@ -62,7 +62,13 @@ void DensifiedMinhash::getMap(int n, std::vector<int> &binids)
 }
 
 
-const int * DensifiedMinhash::getHashEasy(const std::vector<int> &binids, const float* data, int dataLen, int topK)
+const int * DensifiedMinhash::getHashEasy(const std::vector<int> &binids, const std::vector<float> &data, int dataLen, int topK)
+{
+  const SubVector<float> subVec(data, 0, data.size());
+  return getHashEasy(binids, subVec, dataLen, topK);
+}
+
+const int * DensifiedMinhash::getHashEasy(const std::vector<int> &binids, const SubVector<float> &data, int dataLen, int topK)
 {
 
     // binsize is the number of times the range is larger than the total number of hashes we need.

@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <sstream>
+#include <cassert>
 
 
 //! convert string to variable of type T. Used to reading floats, int etc from files
@@ -63,14 +64,29 @@ template<typename T>
 class SubVector
 {
 protected:
+  const std::vector<T> *_vecConst;
   std::vector<T> *_vec;
   size_t _startIdx, _size;
 
 public:
-  SubVector() {}
+  SubVector()
+  : _vecConst(NULL)
+  , _vec(NULL)
+  {}
+
+  SubVector(const std::vector<T> &vec, size_t startIdx, size_t size)
+    : _vecConst(&vec)
+    , _vec(NULL)
+    , _startIdx(startIdx)
+    , _size(size)
+  {
+    assert(_startIdx < _vec->size());
+    assert(_startIdx + _size <= _vec->size());
+  }
 
   SubVector(std::vector<T> &vec, size_t startIdx, size_t size)
-    : _vec(&vec)
+    : _vecConst(&vec)
+    , _vec(&vec)
     , _startIdx(startIdx)
     , _size(size)
   {
@@ -80,16 +96,18 @@ public:
 
   const T &operator[](size_t idx) const
   { 
+    assert(_vecConst);
     assert(idx < _size);
     return (*_vec)[_startIdx + idx];
   }
 
   T &operator[](size_t idx)
   {
+    assert(_vec);
     assert(idx < _size);
     return (*_vec)[_startIdx + idx];
   }
 
   T *data() { return _vec->data() + _startIdx; }
-  const T *data() const { return _vec->data() + _startIdx; }
+  const T *data() const { return _vecConst->data() + _startIdx; }
 };

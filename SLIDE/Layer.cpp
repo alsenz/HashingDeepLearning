@@ -131,13 +131,13 @@ void Layer::addtoHashTable(const SubVector<float> &weights, int length, float bi
     //LSH logic
     const int *hashes;
     if(HashFunction==1) {
-        hashes = _wtaHasher->getHash(weights.data());
+        hashes = _wtaHasher->getHash(weights);
     }else if (HashFunction==2) {
-        hashes = _dwtaHasher->getHashEasy(weights.data(), length, TOPK);
+        hashes = _dwtaHasher->getHashEasy(weights, length, TOPK);
     }else if (HashFunction==3) {
-        hashes = _MinHasher->getHashEasy(_binids, weights.data(), length, TOPK);
+        hashes = _MinHasher->getHashEasy(_binids, weights, length, TOPK);
     }else if (HashFunction==4) {
-        hashes = _srp->getHash(weights.data(), length);
+        hashes = _srp->getHash(weights, length);
     }
 
     std::vector<int> hashIndices = _hashTables.hashesToIndex(hashes);
@@ -205,7 +205,7 @@ float collision(int* hashes, int* table_hashes, int k, int l){
 }
 
 
-int Layer::queryActiveNodeandComputeActivations(std::vector< std::vector<int> > &activenodesperlayer, std::vector<float*> &activeValuesperlayer, std::vector<int> &lengths, int layerIndex, int inputID, const int* label, int labelsize, float Sparsity)
+int Layer::queryActiveNodeandComputeActivations(std::vector< std::vector<int> > &activenodesperlayer, std::vector< std::vector<float> > &activeValuesperlayer, std::vector<int> &lengths, int layerIndex, int inputID, const int* label, int labelsize, float Sparsity)
 {
     //LSH QueryLogic
 
@@ -418,7 +418,7 @@ int Layer::queryActiveNodeandComputeActivations(std::vector< std::vector<int> > 
             int what = 0;
 
             for (size_t s = 0; s < _noOfNodes; s++) {
-                float tmp = innerproduct(activenodesperlayer[layerIndex].data(), activeValuesperlayer[layerIndex],
+                float tmp = innerproduct(activenodesperlayer[layerIndex].data(), activeValuesperlayer[layerIndex].data(),
                                          lengths[layerIndex], _Nodes[s].getWeights().data());
                 tmp += _Nodes[s].getBias();
                 if (find(label, label + labelsize, s) != label + labelsize) {
@@ -442,7 +442,7 @@ int Layer::queryActiveNodeandComputeActivations(std::vector< std::vector<int> > 
     }
 
     //***********************************
-    activeValuesperlayer[layerIndex + 1] = new float[len]; //assuming its not initialized else memory leak;
+    activeValuesperlayer[layerIndex + 1] = std::vector<float>(len); //assuming its not initialized else memory leak;
     float maxValue = 0;
     if (_type == NodeType::Softmax)
         _normalizationConstants[inputID] = 0;

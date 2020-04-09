@@ -41,7 +41,7 @@ const Layer &Network::getLayer(int LayerID) const {
   return *_hiddenlayers[LayerID];
 }
 
-int Network::predictClass(std::vector< std::vector<int> > &inputIndices, const vector<float*> &inputValues, const vector<int> &length, const vector<int*> &labels, const vector<int> &labelsize) {
+int Network::predictClass(std::vector< std::vector<int> > &inputIndices, const vector< vector<float> > &inputValues, const vector<int> &length, const vector<int*> &labels, const vector<int> &labelsize) {
     int correctPred = 0;
     //cerr << "start Network::predictClass " << _currentBatchSize << endl;
     //cerr << "_currentBatchSize=" << _currentBatchSize << endl;
@@ -51,7 +51,7 @@ int Network::predictClass(std::vector< std::vector<int> > &inputIndices, const v
     #pragma omp parallel for reduction(+:correctPred)
     for (int i = 0; i < _currentBatchSize; i++) {
       std::vector< std::vector<int> > activenodesperlayer(_numberOfLayers + 1);
-      std::vector<float*> activeValuesperlayer(_numberOfLayers + 1);
+      std::vector< vector<float> > activeValuesperlayer(_numberOfLayers + 1);
         std::vector<int> sizes(_numberOfLayers + 1);
 
         activenodesperlayer[0] = inputIndices[i];
@@ -91,11 +91,7 @@ int Network::predictClass(std::vector< std::vector<int> > &inputIndices, const v
         if (std::find (labels[i], labels[i]+labelsize[i], predict_class)!= labels[i]+labelsize[i]) {
             correctPred++;
             //cerr << "correct" << endl;
-        }
-        
-        for (int j = 1; j < _numberOfLayers + 1; j++) {
-            delete[] activeValuesperlayer[j];
-        }
+        }        
     }
     auto t2 = std::chrono::high_resolution_clock::now();
     float timeDiffInMiliseconds = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
@@ -106,7 +102,7 @@ int Network::predictClass(std::vector< std::vector<int> > &inputIndices, const v
 }
 
 
-int Network::ProcessInput(std::vector< std::vector<int> > &inputIndices, const vector<float*> &inputValues, const vector<int> &lengths, const vector<int*> &labels, const vector<int> &labelsize, int iter, bool rehash, bool rebuild) {
+int Network::ProcessInput(std::vector< std::vector<int> > &inputIndices, const vector< vector<float> > &inputValues, const vector<int> &lengths, const vector<int*> &labels, const vector<int> &labelsize, int iter, bool rehash, bool rebuild) {
     //cerr << "start Network::ProcessInput" << endl;
     float logloss = 0.0;
     int* avg_retrieval = new int[_numberOfLayers]();
@@ -128,12 +124,12 @@ int Network::ProcessInput(std::vector< std::vector<int> > &inputIndices, const v
     }
 
     vector < vector< vector<int> > > activeNodesPerBatch(_currentBatchSize);      // batch, layer, node
-    vector < vector<float*> > activeValuesPerBatch(_currentBatchSize); // batch, layer, node ???
+    vector < vector< vector<float> > > activeValuesPerBatch(_currentBatchSize); // batch, layer, node ???
     std::vector < std::vector<int> > sizesPerBatch(_currentBatchSize);
 #pragma omp parallel for
     for (int i = 0; i < _currentBatchSize; i++) {
         vector< vector<int> > activenodesperlayer(_numberOfLayers + 1);     // layer, node
-        vector<float*> activeValuesperlayer(_numberOfLayers + 1);  // layer, node ???
+        vector< vector<float> > activeValuesperlayer(_numberOfLayers + 1);  // layer, node ???
         std::vector<int> sizes(_numberOfLayers + 1);
 
         activeNodesPerBatch[i] = activenodesperlayer;
@@ -176,12 +172,6 @@ int Network::ProcessInput(std::vector< std::vector<int> > &inputIndices, const v
             }
         }
     }
-    for (int i = 0; i < _currentBatchSize; i++) {
-        //Free memory to avoid leaks
-        for (int j = 1; j < _numberOfLayers + 1; j++) {
-            delete[] activeValuesPerBatch[i][j];
-        }
-    }
 
     auto t1 = std::chrono::high_resolution_clock::now();
     bool tmpRehash;
@@ -210,8 +200,8 @@ int Network::ProcessInput(std::vector< std::vector<int> > &inputIndices, const v
         {
             Node &tmp = getLayer(l).getNodebyID(m);
             int dim = tmp.getDim();
-            float* local_weights = new float[dim];
-            std::copy(tmp.getWeights().data(), tmp.getWeights().data() + dim, local_weights);
+            vector<float> local_weights(dim);
+            std::copy(tmp.getWeights().data(), tmp.getWeights().data() + dim, local_weights.data());
 
             if(ADAM){
                 for (int d=0; d < dim;d++){
@@ -254,8 +244,7 @@ int Network::ProcessInput(std::vector< std::vector<int> > &inputIndices, const v
                 delete[] hashes;
             }
 
-            std::copy(local_weights, local_weights + dim, tmp.getWeights().data());
-            delete[] local_weights;
+            std::copy(local_weights.begin(), local_weights.end(), tmp.getWeights().data());
         }
     }
     

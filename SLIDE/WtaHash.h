@@ -8,6 +8,7 @@
 #include <vector>
 #include <string.h>
 #include "MurmurHash.h"
+#include "Util.h"
 /*
 *  Algorithm from the paper The Power of Comparative Reasoning. Jay Yagnik, Dennis Strelow, David A. Ross, Ruei-sung Lin
 
@@ -18,6 +19,7 @@ private:
     int *_indices, _numhashes, _rangePow;
 public:
     WtaHash(int numHashes, int noOfBitsToHash);
-    const int * getHash(const float* data) const;
+    const int * getHash(const std::vector<float> &data) const;
+    const int * getHash(const SubVector<float> &data) const;
     ~WtaHash();
 };
