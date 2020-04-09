@@ -63,7 +63,7 @@ bool Node::getActiveInputs(void) const
     return _activeInputs > 0;
 }
 
-float Node::getActivation(int* indices, float* values, int length, int inputID)
+float Node::getActivation(std::vector<int> &indices, float* values, int length, int inputID)
 {
 	assert(("Input ID more than Batch Size", inputID <= _currentBatchsize));
 
@@ -121,7 +121,7 @@ void Node::ComputeExtaStatsForSoftMax(float normalizationConstant, int inputID, 
 }
 
 
-void Node::backPropagate(std::vector<Node> &previousNodes, int* previousLayerActiveNodeIds, int previousLayerActiveNodeSize, float learningRate, int inputID)
+void Node::backPropagate(std::vector<Node> &previousNodes, std::vector<int> &previousLayerActiveNodeIds, int previousLayerActiveNodeSize, float learningRate, int inputID)
 {
 	assert(("Input Not Active but still called !! BUG", _train[inputID]._ActiveinputIds == 1));
 	for (int i = 0; i < previousLayerActiveNodeSize; i++)

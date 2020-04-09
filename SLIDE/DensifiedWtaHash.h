@@ -17,6 +17,7 @@ private:
     int *_randHash, _randa, _numhashes, _rangePow,_lognumhash, *_indices, *_pos, _permute;
 public:
     DensifiedWtaHash(int numHashes, int noOfBitsToHash);
+    const int * getHash(std::vector<int> &indices, float* data, int dataLen) const;
     const int * getHash(int* indices, float* data, int dataLen) const;
     const int getRandDoubleHash(int binid, int count) const;
     const int * getHashEasy(const float* data, int dataLen, int topK) const;

@@ -205,7 +205,7 @@ float collision(int* hashes, int* table_hashes, int k, int l){
 }
 
 
-int Layer::queryActiveNodeandComputeActivations(std::vector<int*> &activenodesperlayer, std::vector<float*> &activeValuesperlayer, std::vector<int> &lengths, int layerIndex, int inputID, const int* label, int labelsize, float Sparsity)
+int Layer::queryActiveNodeandComputeActivations(std::vector< std::vector<int> > &activenodesperlayer, std::vector<float*> &activeValuesperlayer, std::vector<int> &lengths, int layerIndex, int inputID, const int* label, int labelsize, float Sparsity)
 {
     //LSH QueryLogic
 
@@ -216,7 +216,7 @@ int Layer::queryActiveNodeandComputeActivations(std::vector<int*> &activenodespe
     if(Sparsity == 1.0){
         len = _noOfNodes;
         lengths[layerIndex + 1] = len;
-        activenodesperlayer[layerIndex + 1] = new int[len]; //assuming not intitialized;
+        activenodesperlayer[layerIndex + 1] = std::vector<int>(len); //assuming not intitialized;
         for (int i = 0; i < len; i++)
         {
             activenodesperlayer[layerIndex + 1][i] = i;
@@ -281,7 +281,7 @@ int Layer::queryActiveNodeandComputeActivations(std::vector<int*> &activenodespe
 
             len = vect.size();
             lengths[layerIndex + 1] = len;
-            activenodesperlayer[layerIndex + 1] = new int[len];
+            activenodesperlayer[layerIndex + 1] = std::vector<int>(len);
 
             for (int i = 0; i < len; i++) {
                 activenodesperlayer[layerIndex + 1][i] = vect[i];
@@ -362,7 +362,7 @@ int Layer::queryActiveNodeandComputeActivations(std::vector<int*> &activenodespe
 
             len = counts.size();
             lengths[layerIndex + 1] = len;
-            activenodesperlayer[layerIndex + 1] = new int[len];
+            activenodesperlayer[layerIndex + 1] = std::vector<int>(len);
 
             // copy map into new array
             int i=0;
@@ -378,7 +378,7 @@ int Layer::queryActiveNodeandComputeActivations(std::vector<int*> &activenodespe
         else if (Mode == 2 & _type== NodeType::Softmax) {
             len = floor(_noOfNodes * Sparsity);
             lengths[layerIndex + 1] = len;
-            activenodesperlayer[layerIndex + 1] = new int[len];
+            activenodesperlayer[layerIndex + 1] = std::vector<int>(len);
 
             auto t1 = std::chrono::high_resolution_clock::now();
             bitset <MAPLEN> bs;
@@ -413,12 +413,12 @@ int Layer::queryActiveNodeandComputeActivations(std::vector<int*> &activenodespe
 
             len = floor(_noOfNodes * Sparsity);
             lengths[layerIndex + 1] = len;
-            activenodesperlayer[layerIndex + 1] = new int[len];
+            activenodesperlayer[layerIndex + 1] = std::vector<int>(len);
             vector<pair<float, int> > sortW;
             int what = 0;
 
             for (size_t s = 0; s < _noOfNodes; s++) {
-                float tmp = innerproduct(activenodesperlayer[layerIndex], activeValuesperlayer[layerIndex],
+                float tmp = innerproduct(activenodesperlayer[layerIndex].data(), activeValuesperlayer[layerIndex],
                                          lengths[layerIndex], _Nodes[s].getWeights().data());
                 tmp += _Nodes[s].getBias();
                 if (find(label, label + labelsize, s) != label + labelsize) {

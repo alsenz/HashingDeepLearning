@@ -50,11 +50,11 @@ int Network::predictClass(std::vector< std::vector<int> > &inputIndices, const v
     auto t1 = std::chrono::high_resolution_clock::now();
     #pragma omp parallel for reduction(+:correctPred)
     for (int i = 0; i < _currentBatchSize; i++) {
-      std::vector<int*> activenodesperlayer(_numberOfLayers + 1);
+      std::vector< std::vector<int> > activenodesperlayer(_numberOfLayers + 1);
       std::vector<float*> activeValuesperlayer(_numberOfLayers + 1);
         std::vector<int> sizes(_numberOfLayers + 1);
 
-        activenodesperlayer[0] = inputIndices[i].data();
+        activenodesperlayer[0] = inputIndices[i];
         activeValuesperlayer[0] = inputValues[i];
         sizes[0] = length[i];
 
@@ -94,7 +94,6 @@ int Network::predictClass(std::vector< std::vector<int> > &inputIndices, const v
         }
         
         for (int j = 1; j < _numberOfLayers + 1; j++) {
-            delete[] activenodesperlayer[j];
             delete[] activeValuesperlayer[j];
         }
     }
@@ -128,12 +127,12 @@ int Network::ProcessInput(std::vector< std::vector<int> > &inputIndices, const v
 //        tmplr *= pow(0.9, iter/10.0);
     }
 
-    vector < vector<int*> > activeNodesPerBatch(_currentBatchSize);      // batch, layer, node
+    vector < vector< vector<int> > > activeNodesPerBatch(_currentBatchSize);      // batch, layer, node
     vector < vector<float*> > activeValuesPerBatch(_currentBatchSize); // batch, layer, node ???
     std::vector < std::vector<int> > sizesPerBatch(_currentBatchSize);
 #pragma omp parallel for
     for (int i = 0; i < _currentBatchSize; i++) {
-        vector<int*> activenodesperlayer(_numberOfLayers + 1);     // layer, node
+        vector< vector<int> > activenodesperlayer(_numberOfLayers + 1);     // layer, node
         vector<float*> activeValuesperlayer(_numberOfLayers + 1);  // layer, node ???
         std::vector<int> sizes(_numberOfLayers + 1);
 
@@ -141,7 +140,7 @@ int Network::ProcessInput(std::vector< std::vector<int> > &inputIndices, const v
         activeValuesPerBatch[i] = activeValuesperlayer;
         sizesPerBatch[i] = sizes;
 
-        activenodesperlayer[0] = inputIndices[i].data();  // inputs parsed from training data file
+        activenodesperlayer[0] = inputIndices[i];  // inputs parsed from training data file
         activeValuesperlayer[0] = inputValues[i];
         sizes[0] = lengths[i];
         int in;
@@ -180,7 +179,6 @@ int Network::ProcessInput(std::vector< std::vector<int> > &inputIndices, const v
     for (int i = 0; i < _currentBatchSize; i++) {
         //Free memory to avoid leaks
         for (int j = 1; j < _numberOfLayers + 1; j++) {
-            delete[] activeNodesPerBatch[i][j];
             delete[] activeValuesPerBatch[i][j];
         }
     }

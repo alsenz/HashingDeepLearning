@@ -50,12 +50,12 @@ public:
 	
   float getLastActivation(int inputID) const;
 	void incrementDelta(int inputID, float incrementValue);
-	float getActivation(int* indices, float* values, int length, int inputID);
+	float getActivation(std::vector<int> &indices, float* values, int length, int inputID);
 	bool getInputActive(int inputID) const;
 	bool getActiveInputs(void) const;
 	void SetlastActivation(int inputID, float realActivation);
 	void ComputeExtaStatsForSoftMax(float normalizationConstant, int inputID, int* label, int labelsize);
-	void backPropagate(std::vector<Node> &previousNodes,int* previousLayerActiveNodeIds, int previousLayerActiveNodeSize, float learningRate, int inputID);
+	void backPropagate(std::vector<Node> &previousNodes, std::vector<int> &previousLayerActiveNodeIds, int previousLayerActiveNodeSize, float learningRate, int inputID);
 	void backPropagateFirstLayer(int* nnzindices, float* nnzvalues, int nnzSize, float learningRate, int inputID);
 	~Node();
 

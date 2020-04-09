@@ -58,6 +58,10 @@ const int *SparseRandomProjection::getHash(const float *vector, int length)  con
     return hashes;
 }
 
+const int * SparseRandomProjection::getHashSparse(std::vector<int> &indices, float *values, size_t length) const
+{
+  return getHashSparse(indices.data(), values, length);
+}
 
 const int *SparseRandomProjection::getHashSparse(int* indices, float *values, size_t length) const {
     int *hashes = new int[_numhashes];
