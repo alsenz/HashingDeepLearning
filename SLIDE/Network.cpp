@@ -41,7 +41,7 @@ const Layer &Network::getLayer(int LayerID) const {
   return *_hiddenlayers[LayerID];
 }
 
-int Network::predictClass(std::vector< std::vector<int> > &inputIndices, const vector< vector<float> > &inputValues, const vector<int> &length, const vector< vector<int> > &labels, const vector<int> &labelsize) {
+int Network::predictClass(const std::vector< std::vector<int> > &inputIndices, const vector< vector<float> > &inputValues, const vector<int> &length, const vector< vector<int> > &labels, const vector<int> &labelsize) {
     int correctPred = 0;
     //cerr << "start Network::predictClass " << _currentBatchSize << endl;
     //cerr << "_currentBatchSize=" << _currentBatchSize << endl;
@@ -102,7 +102,7 @@ int Network::predictClass(std::vector< std::vector<int> > &inputIndices, const v
 }
 
 
-int Network::ProcessInput(std::vector< std::vector<int> > &inputIndices, const vector< vector<float> > &inputValues, const vector<int> &lengths, const vector< vector<int> > &labels, const vector<int> &labelsize, int iter, bool rehash, bool rebuild) {
+int Network::ProcessInput(const std::vector< std::vector<int> > &inputIndices, const vector< vector<float> > &inputValues, const vector<int> &lengths, const vector< vector<int> > &labels, const vector<int> &labelsize, int iter, bool rehash, bool rebuild) {
     //cerr << "start Network::ProcessInput" << endl;
     float logloss = 0.0;
     int* avg_retrieval = new int[_numberOfLayers]();
@@ -167,7 +167,7 @@ int Network::ProcessInput(std::vector< std::vector<int> > &inputIndices, const v
                 if (j != 0) {
                     node.backPropagate(prev_layer.getAllNodes(), activeNodesPerBatch[i][j], sizesPerBatch[i][j], tmplr, i);
                 } else {
-                    node.backPropagateFirstLayer(inputIndices[i].data(), inputValues[i], lengths[i], tmplr, i);
+                    node.backPropagateFirstLayer(inputIndices[i], inputValues[i], lengths[i], tmplr, i);
                 }
             }
         }
