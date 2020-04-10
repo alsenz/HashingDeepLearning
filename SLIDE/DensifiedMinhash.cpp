@@ -62,13 +62,13 @@ void DensifiedMinhash::getMap(int n, std::vector<int> &binids)
 }
 
 
-const int * DensifiedMinhash::getHashEasy(const std::vector<int> &binids, const std::vector<float> &data, int dataLen, int topK)
+const int * DensifiedMinhash::getHashEasy(const std::vector<int> &binids, const std::vector<float> &data, int dataLen, int topK) const
 {
   const SubVector<float> subVec(data, 0, data.size());
   return getHashEasy(binids, subVec, dataLen, topK);
 }
 
-const int * DensifiedMinhash::getHashEasy(const std::vector<int> &binids, const SubVector<float> &data, int dataLen, int topK)
+const int * DensifiedMinhash::getHashEasy(const std::vector<int> &binids, const SubVector<float> &data, int dataLen, int topK) const
 {
 
     // binsize is the number of times the range is larger than the total number of hashes we need.
@@ -138,7 +138,7 @@ const int * DensifiedMinhash::getHashEasy(const std::vector<int> &binids, const 
 }
 
 
-const int * DensifiedMinhash::getHash(int* indices, float* data, int* binids, int dataLen)
+const int * DensifiedMinhash::getHash(const std::vector<int> &indices, const std::vector<float> &data, const std::vector<int> &binids, int dataLen) const
 {
     int *hashes = new int[_numhashes];
     int *hashArray = new int[_numhashes];
@@ -189,7 +189,8 @@ const int * DensifiedMinhash::getHash(int* indices, float* data, int* binids, in
 }
 
 
-int DensifiedMinhash::getRandDoubleHash(int binid, int count) {
+int DensifiedMinhash::getRandDoubleHash(int binid, int count) const
+{
     unsigned int tohash = ((binid + 1) << 6) + count;
     return (_randHash[0] * tohash << 3) >> (32 - _lognumhash); // _lognumhash needs to be ceiled.
 }

@@ -114,12 +114,7 @@ const int * DensifiedWtaHash::getHashEasy(const SubVector<float> &data, int data
     return hashArray;
 }
 
-const int * DensifiedWtaHash::getHash(std::vector<int> &indices, std::vector<float> &data, int dataLen) const
-{
-  return getHash(indices.data(), data.data(), dataLen);
-}
-
-const int* DensifiedWtaHash::getHash(int* indices, float* data, int dataLen) const
+const int * DensifiedWtaHash::getHash(const std::vector<int> &indices, const std::vector<float> &data, int dataLen) const
 {
     int *hashes = new int[_numhashes];
     float *values = new float[_numhashes];
