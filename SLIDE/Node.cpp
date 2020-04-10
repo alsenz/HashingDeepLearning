@@ -104,7 +104,7 @@ float Node::getActivation(std::vector<int> &indices, std::vector<float> &values,
 }
 
 
-void Node::ComputeExtaStatsForSoftMax(float normalizationConstant, int inputID, int* label, int labelsize)
+void Node::ComputeExtaStatsForSoftMax(float normalizationConstant, int inputID, const std::vector<int> &label, int labelsize)
 {
 	assert(("Input Not Active but still called !! BUG", _train[inputID]._ActiveinputIds ==1));
 
@@ -112,7 +112,7 @@ void Node::ComputeExtaStatsForSoftMax(float normalizationConstant, int inputID, 
 
 	//TODO:check  gradient
 	_train[inputID]._lastGradients = 1;
-	if (find (label, label+labelsize, _IDinLayer)!= label+labelsize) {
+	if (find (label.begin(), label.end(), _IDinLayer)!= label.end()) {
 	    _train[inputID]._lastDeltaforBPs = (1.0/labelsize - _train[inputID]._lastActivations) / _currentBatchsize;
 	}
 	else {

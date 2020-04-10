@@ -252,7 +252,7 @@ void CreateData(const std::string &filePath,
               std::vector< vector<int> > &records,
               std::vector< vector<float> > &values,
               std::vector<int> &sizes,
-              std::vector<int*> &labels,
+              std::vector< vector<int> > &labels,
               std::vector<int> &labelsize
               )
 {
@@ -299,7 +299,7 @@ void CreateData(const std::string &filePath,
 
     records[count] = vector<int>(list.size());
     values[count] = vector<float>(list.size());
-    labels[count] = new int[label.size()];
+    labels[count] = vector<int>(label.size());
     sizes[count] = list.size();
     labelsize[count] = label.size();
 
@@ -342,7 +342,7 @@ void EvalDataSVM(int numBatchesTest,  Network &_mynet, int iter){
         vector< vector<int> > records(Batchsize);
         vector< vector<float> > values(Batchsize);
         vector<int> sizes(Batchsize);
-        vector<int*> labels(Batchsize);
+        vector< vector<int> > labels(Batchsize);
         vector<int> labelsize(Batchsize);
 
         CreateData(testData, records, values, sizes, labels, labelsize);
@@ -375,7 +375,7 @@ void ReadDataSVM(size_t numBatches,  Network &_mynet, int epoch){
         vector< vector<int> > records(Batchsize);
         vector< vector<float> > values(Batchsize);
         vector<int> sizes(Batchsize);
-        vector<int*> labels(Batchsize);
+        vector< vector<int> > labels(Batchsize);
         vector<int> labelsize(Batchsize);
 
         CreateData(trainData, records, values, sizes, labels, labelsize);
@@ -404,10 +404,6 @@ void ReadDataSVM(size_t numBatches,  Network &_mynet, int epoch){
 
         int timeDiffInMiliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count();
         globalTime+= timeDiffInMiliseconds;
-
-        for (int d = 0; d < Batchsize; d++) {
-            delete[] labels[d];
-        }
     }
 
     cerr << "Finished ReadDataSVM" << endl;

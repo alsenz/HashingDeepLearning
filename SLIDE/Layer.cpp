@@ -205,7 +205,7 @@ float collision(int* hashes, int* table_hashes, int k, int l){
 }
 
 
-int Layer::queryActiveNodeandComputeActivations(std::vector< std::vector<int> > &activenodesperlayer, std::vector< std::vector<float> > &activeValuesperlayer, std::vector<int> &lengths, int layerIndex, int inputID, const int* label, int labelsize, float Sparsity)
+int Layer::queryActiveNodeandComputeActivations(std::vector< std::vector<int> > &activenodesperlayer, std::vector< std::vector<float> > &activeValuesperlayer, std::vector<int> &lengths, int layerIndex, int inputID, const std::vector<int> &label, int labelsize, float Sparsity)
 {
     //LSH QueryLogic
 
@@ -421,7 +421,7 @@ int Layer::queryActiveNodeandComputeActivations(std::vector< std::vector<int> > 
                 float tmp = innerproduct(activenodesperlayer[layerIndex].data(), activeValuesperlayer[layerIndex].data(),
                                          lengths[layerIndex], _Nodes[s].getWeights().data());
                 tmp += _Nodes[s].getBias();
-                if (find(label, label + labelsize, s) != label + labelsize) {
+                if (find(label.begin(), label.end(), s) != label.end()) {
                     sortW.push_back(make_pair(-1000000000, s));
                     what++;
                 }
@@ -434,7 +434,7 @@ int Layer::queryActiveNodeandComputeActivations(std::vector< std::vector<int> > 
 
             for (int i = 0; i < len; i++) {
                 activenodesperlayer[layerIndex + 1][i] = sortW[i].second;
-                if (find (label, label+labelsize, sortW[i].second)!= label+labelsize){
+                if (find (label.begin(), label.end(), sortW[i].second)!= label.end()){
                     in=1;
                 }
             }

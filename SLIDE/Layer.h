@@ -43,7 +43,7 @@ public:
 	int getNodeCount() const;
 	void addtoHashTable(const SubVector<float> &weights, int length, float bias, int id);
 	float getNomalizationConstant(int inputID) const;
-	int queryActiveNodeandComputeActivations(std::vector<std::vector<int> > &activenodesperlayer, std::vector< std::vector<float> > &activeValuesperlayer, std::vector<int> &lengths, int layerID, int inputID,  const int* label, int labelsize, float Sparsity);
+	int queryActiveNodeandComputeActivations(std::vector<std::vector<int> > &activenodesperlayer, std::vector< std::vector<float> > &activeValuesperlayer, std::vector<int> &lengths, int layerID, int inputID,  const std::vector<int> &label, int labelsize, float Sparsity);
 	void saveWeights(const std::string &file) const;
 	void updateTable();
 	void updateRandomNodes();

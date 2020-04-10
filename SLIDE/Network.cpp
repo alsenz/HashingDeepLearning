@@ -41,7 +41,7 @@ const Layer &Network::getLayer(int LayerID) const {
   return *_hiddenlayers[LayerID];
 }
 
-int Network::predictClass(std::vector< std::vector<int> > &inputIndices, const vector< vector<float> > &inputValues, const vector<int> &length, const vector<int*> &labels, const vector<int> &labelsize) {
+int Network::predictClass(std::vector< std::vector<int> > &inputIndices, const vector< vector<float> > &inputValues, const vector<int> &length, const vector< vector<int> > &labels, const vector<int> &labelsize) {
     int correctPred = 0;
     //cerr << "start Network::predictClass " << _currentBatchSize << endl;
     //cerr << "_currentBatchSize=" << _currentBatchSize << endl;
@@ -88,7 +88,7 @@ int Network::predictClass(std::vector< std::vector<int> > &inputIndices, const v
         }
         cerr << endl;
         */
-        if (std::find (labels[i], labels[i]+labelsize[i], predict_class)!= labels[i]+labelsize[i]) {
+        if (std::find (labels[i].begin(), labels[i].end(), predict_class)!= labels[i].end()) {
             correctPred++;
             //cerr << "correct" << endl;
         }        
@@ -102,7 +102,7 @@ int Network::predictClass(std::vector< std::vector<int> > &inputIndices, const v
 }
 
 
-int Network::ProcessInput(std::vector< std::vector<int> > &inputIndices, const vector< vector<float> > &inputValues, const vector<int> &lengths, const vector<int*> &labels, const vector<int> &labelsize, int iter, bool rehash, bool rebuild) {
+int Network::ProcessInput(std::vector< std::vector<int> > &inputIndices, const vector< vector<float> > &inputValues, const vector<int> &lengths, const vector< vector<int> > &labels, const vector<int> &labelsize, int iter, bool rehash, bool rebuild) {
     //cerr << "start Network::ProcessInput" << endl;
     float logloss = 0.0;
     int* avg_retrieval = new int[_numberOfLayers]();
