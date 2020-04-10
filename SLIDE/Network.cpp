@@ -130,11 +130,11 @@ int Network::ProcessInput(const std::vector< std::vector<int> > &inputIndices, c
     for (int i = 0; i < _currentBatchSize; i++) {
         vector< vector<int> > activenodesperlayer(_numberOfLayers + 1);     // layer, node
         vector< vector<float> > activeValuesperlayer(_numberOfLayers + 1);  // layer, node ???
-        std::vector<int> sizes(_numberOfLayers + 1);
 
         activeNodesPerBatch[i] = activenodesperlayer;
         activeValuesPerBatch[i] = activeValuesperlayer;
-        sizesPerBatch[i] = sizes;
+        std::vector<int> &sizes = sizesPerBatch[i];
+        sizes.resize(_numberOfLayers + 1);
 
         activenodesperlayer[0] = inputIndices[i];  // inputs parsed from training data file
         activeValuesperlayer[0] = inputValues[i];
