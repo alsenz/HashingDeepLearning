@@ -257,7 +257,7 @@ int Network::ProcessInput(const std::vector< std::vector<int> > &inputIndices, c
 }
 
 
-void Network::saveWeights(string file)
+void Network::saveWeights(const string &file)
 {
     for (int i=0; i< _numberOfLayers; i++){
       getLayer(i).saveWeights(file);
