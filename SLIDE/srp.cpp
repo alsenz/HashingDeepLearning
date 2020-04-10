@@ -63,12 +63,8 @@ const int *SparseRandomProjection::getHash(const SubVector<float> &vector, int l
     return hashes;
 }
 
-const int * SparseRandomProjection::getHashSparse(std::vector<int> &indices, std::vector<float> &values, size_t length) const
+const int * SparseRandomProjection::getHashSparse(const std::vector<int> &indices, const std::vector<float> &values, size_t length) const
 {
-  return getHashSparse(indices.data(), values.data(), length);
-}
-
-const int *SparseRandomProjection::getHashSparse(int* indices, float *values, size_t length) const {
     int *hashes = new int[_numhashes];
 
     for (size_t p = 0; p < _numhashes; p++) {
