@@ -21,6 +21,6 @@ public:
     const int * getHash(const std::vector<int> &indices, const std::vector<float> &data, int dataLen) const;
     const int getRandDoubleHash(int binid, int count) const;
     const int * getHashEasy(const std::vector<float> &data, int dataLen, int topK) const;
-    const int * getHashEasy(const SubVector<float> &data, int dataLen, int topK) const;
+    const int * getHashEasy(const SubVectorConst<float> &data, int dataLen, int topK) const;
     ~DensifiedWtaHash();
 };

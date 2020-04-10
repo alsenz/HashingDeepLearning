@@ -20,6 +20,6 @@ private:
 public:
     WtaHash(int numHashes, int noOfBitsToHash);
     const int * getHash(const std::vector<float> &data) const;
-    const int * getHash(const SubVector<float> &data) const;
+    const int * getHash(const SubVectorConst<float> &data) const;
     ~WtaHash();
 };

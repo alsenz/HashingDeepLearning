@@ -13,7 +13,7 @@ private:
 public:
 	SparseRandomProjection(size_t dimention, size_t numOfHashes, int ratio);
   const int * getHash(const std::vector<float> &vector, int length) const;
-  const int * getHash(const SubVector<float> &vector, int length) const;
+  const int * getHash(const SubVectorConst<float> &vector, int length) const;
   const int * getHashSparse(const std::vector<int> &indices, const std::vector<float> &values, size_t length) const;
 	~SparseRandomProjection();
 };

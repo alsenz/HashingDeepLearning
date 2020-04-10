@@ -61,53 +61,74 @@ inline std::vector<T> Tokenize(const std::string &input
 
 ///////////////////////////////////
 template<typename T>
-class SubVector
+class SubVectorConst
 {
 protected:
   const std::vector<T> *_vecConst;
-  std::vector<T> *_vec;
   size_t _startIdx, _size;
 
 public:
-  SubVector()
+  SubVectorConst()
   : _vecConst(NULL)
-  , _vec(NULL)
   {}
 
-  SubVector(const std::vector<T> &vec, size_t startIdx, size_t size)
+  SubVectorConst(const std::vector<T> &vec, size_t startIdx, size_t size)
     : _vecConst(&vec)
-    , _vec(NULL)
     , _startIdx(startIdx)
     , _size(size)
   {
-    assert(_startIdx < _vec->size());
-    assert(_startIdx + _size <= _vec->size());
+    assert(_startIdx < _vecConst->size());
+    assert(_startIdx + _size <= _vecConst->size());
   }
 
-  SubVector(std::vector<T> &vec, size_t startIdx, size_t size)
-    : _vecConst(&vec)
-    , _vec(&vec)
-    , _startIdx(startIdx)
-    , _size(size)
-  {
-    assert(_startIdx < _vec->size());
-    assert(_startIdx + _size <= _vec->size());
-  }
+  virtual ~SubVectorConst() {}
 
-  const T &operator[](size_t idx) const
+  virtual const T &operator[](size_t idx) const
   { 
     assert(_vecConst);
     assert(idx < _size);
-    return (*_vec)[_startIdx + idx];
+    return (*_vecConst)[_startIdx + idx];
   }
 
-  T &operator[](size_t idx)
+  virtual const T &AAA(size_t idx) const
+  {
+    return operator[](idx);
+  }
+
+  virtual const T *data() const { return _vecConst->data() + _startIdx; }
+};
+
+///////////////////////////////////
+template<typename T>
+class SubVector : public SubVectorConst<T>
+{
+protected:
+  std::vector<T> *_vec;
+
+public:
+  SubVector()
+    : SubVectorConst<T>()
+    , _vec(NULL)
+  {}
+
+  SubVector(std::vector<T> &vec, size_t startIdx, size_t size)
+    : SubVectorConst<T>(vec, startIdx, size)
+    , _vec(&vec)
+  {}
+  virtual ~SubVector() {}
+
+  virtual const T &operator[](size_t idx) const
+  { // shouldn't be needed
+    return SubVectorConst<T>::operator[](idx);
+  }
+
+  virtual T &operator[](size_t idx)
   {
     assert(_vec);
-    assert(idx < _size);
-    return (*_vec)[_startIdx + idx];
+    assert(idx < SubVectorConst<T>::_size);
+    return (*_vec)[SubVectorConst<T>::_startIdx + idx];
   }
 
-  T *data() { return _vec->data() + _startIdx; }
-  const T *data() const { return _vecConst->data() + _startIdx; }
+  virtual T *data() { return _vec->data() + SubVectorConst<T>::_startIdx; }
 };
+

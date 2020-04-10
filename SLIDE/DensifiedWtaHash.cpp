@@ -56,11 +56,11 @@ DensifiedWtaHash::DensifiedWtaHash(int numHashes, int noOfBitsToHash)
 
 const int * DensifiedWtaHash::getHashEasy(const std::vector<float> &data, int dataLen, int topk) const
 {
-  const SubVector<float> subVec(data, 0, data.size());
+  const SubVectorConst<float> subVec(data, 0, data.size());
   return getHashEasy(subVec, dataLen, topk);
 }
 
-const int * DensifiedWtaHash::getHashEasy(const SubVector<float> &data, int dataLen, int topk) const
+const int * DensifiedWtaHash::getHashEasy(const SubVectorConst<float> &data, int dataLen, int topk) const
 {
     // binsize is the number of times the range is larger than the total number of hashes we need.
 
