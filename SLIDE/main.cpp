@@ -219,7 +219,6 @@ void parseconfig(string filename)
         else if (trim(first) == "savedweight")
         {
             savedWeights = trim(second).c_str();
-            cerr << "savedWeights=" << savedWeights << endl;
         }
         else
         {
@@ -245,96 +244,107 @@ void ReadHeader(const string &str, int &numLines, int &numInClass, int &numOutCl
   numLines = vec[0];
   numInClass = vec[1];
   numOutClass = vec[2];
-  cerr << "header " << numLines << " " << numInClass << " " << numOutClass << endl;
+  //cerr << "header " << numLines << " " << numInClass << " " << numOutClass << endl;
+}
+
+void CreateData(const std::string &filePath, 
+              std::vector< vector<int> > &records,
+              std::vector<float*> &values,
+              std::vector<int> &sizes,
+              std::vector<int*> &labels,
+              std::vector<int> &labelsize
+              )
+{
+  std::ifstream file(filePath);
+  string str;
+
+  //Skip header
+  std::getline(file, str);
+
+  int numLines;
+  int numInClass;
+  int numOutClass;
+  ReadHeader(str, numLines, numInClass, numOutClass);
+
+  int count = 0;
+  while (std::getline(file, str)) {
+    //cerr << "str=" << str << endl;
+    char *mystring = &str[0];
+    char *pch, *pchlabel;
+    int track = 0;
+    vector<string> list;
+    vector<string> value;
+    vector<string> label;
+    pch = strtok(mystring, " ");
+    pch = strtok(NULL, " :");
+    while (pch != NULL) {
+      if (track % 2 == 0)
+        list.push_back(pch);
+      else if (track % 2 == 1)
+        value.push_back(pch);
+      track++;
+      pch = strtok(NULL, " :");
+    }
+
+    pchlabel = strtok(mystring, ",");
+    while (pchlabel != NULL) {
+      label.push_back(pchlabel);
+      pchlabel = strtok(NULL, ",");
+    }
+
+    //cerr << "   list=" << PrintVec(list) << endl;
+    //cerr << "   value=" << PrintVec(value) << endl;
+    //cerr << "   label=" << PrintVec(label) << endl;
+
+    records[count] = vector<int>(list.size());
+    values[count] = new float[list.size()];
+    labels[count] = new int[label.size()];
+    sizes[count] = list.size();
+    labelsize[count] = label.size();
+
+    int currcount = 0;
+    vector<string>::iterator it;
+    for (it = list.begin(); it < list.end(); it++) {
+      int inClass = stoi(*it);
+      //cerr << "inClass=" << count << " " << currcount << " " << inClass << endl;
+      assert(inClass < numInClass);
+      records[count][currcount] = inClass;
+      currcount++;
+    }
+    currcount = 0;
+    for (it = value.begin(); it < value.end(); it++) {
+      values[count][currcount] = stof(*it);
+      currcount++;
+    }
+    currcount = 0;
+    for (it = label.begin(); it < label.end(); it++) {
+      int label = stoi(*it);
+      assert(label < numOutClass);
+      //cerr << "label=" << label << endl;
+      labels[count][currcount] = label;
+      currcount++;
+    }
+
+    count++;
+    if (count >= Batchsize)
+      break;
+  }
+
 }
 
 void EvalDataSVM(int numBatchesTest,  Network &_mynet, int iter){
     cerr << "Start EvalDataSVM" << endl;
     int totCorrect = 0;
-    int debugnumber = 0;
-    std::ifstream testfile(testData);
-    string str;
-    //Skipe header
-    std::getline( testfile, str );
-
-    int numLines;
-    int numInClass;
-    int numOutClass;
-    ReadHeader(str, numLines, numInClass, numOutClass);
 
     ofstream outputFile(logFile,  std::ios_base::app);
     for (int i = 0; i < numBatchesTest; i++) {
-        vector<int*> records(Batchsize);
+        vector< vector<int> > records(Batchsize);
         vector<float*> values(Batchsize);
         vector<int> sizes(Batchsize);
         vector<int*> labels(Batchsize);
         vector<int> labelsize(Batchsize);
-        int nonzeros = 0;
-        int count = 0;
-        while (std::getline(testfile, str)) {
-            //cerr << "str=" << str << endl;
-            char *mystring = &str[0];
-            char *pch, *pchlabel;
-            int track = 0;
-            vector<string> list;
-            vector<string> value;
-            vector<string> label;
-            pch = strtok(mystring, " ");
-            pch = strtok(NULL, " :");
-            while (pch != NULL) {
-                if (track % 2 == 0)
-                    list.push_back(pch);
-                else if (track%2==1)
-                    value.push_back(pch);
-                track++;
-                pch = strtok(NULL, " :");
-            }
 
-            pchlabel = strtok(mystring, ",");
-            while (pchlabel != NULL) {
-                label.push_back(pchlabel);
-                pchlabel = strtok(NULL, ",");
-            }
-
-            //cerr << "   list=" << PrintVec(list) << endl;
-            //cerr << "   value=" << PrintVec(value) << endl;
-            //cerr << "   label=" << PrintVec(label) << endl;
-           
-            nonzeros += list.size();
-            records[count] = new int[list.size()];
-            values[count] = new float[list.size()];
-            labels[count] = new int[label.size()];
-            sizes[count] = list.size();
-            labelsize[count] = label.size();
-
-            int currcount = 0;
-            debugnumber++;
-            vector<string>::iterator it;
-            for (it = list.begin(); it < list.end(); it++) {
-                int inClass = stoi(*it);
-                assert(inClass < numInClass);
-                //cerr << "inClass=" << inClass << endl;
-                records[count][currcount] = inClass;
-                currcount++;
-            }
-            currcount = 0;
-            for (it = value.begin(); it < value.end(); it++) {
-                values[count][currcount] = stof(*it);
-                currcount++;
-            }
-            currcount = 0;
-            for (it = label.begin(); it < label.end(); it++) {
-                int label = stoi(*it);
-                assert(label < numOutClass);
-                //cerr << "label=" << label << endl;
-                labels[count][currcount] = label;
-                currcount++;
-            }
-
-            count++;
-            if (count >= Batchsize)
-                break;
-        }
+        CreateData(testData, records, values, sizes, labels, labelsize);
 
         int num_features = 0, num_labels = 0;
         for (int i = 0; i < Batchsize; i++)
@@ -343,17 +353,15 @@ void EvalDataSVM(int numBatchesTest,  Network &_mynet, int iter){
             num_labels += labelsize[i];
         }
 
-        std::cout << Batchsize << " records, with "<< num_features << " features and " << num_labels << " labels" << " debugnumber " << debugnumber << std::endl;
-        int correctPredict = _mynet.predictClass(records, values, sizes, labels, labelsize, numInClass, numOutClass);
+        std::cout << Batchsize << " records, with "<< num_features << " features and " << num_labels << " labels" << std::endl;
+        int correctPredict = _mynet.predictClass(records, values, sizes, labels, labelsize);
         totCorrect += correctPredict;
         std::cout <<" iter "<< i << ": " << totCorrect*1.0/(Batchsize*(i+1)) << " correct" << std::endl;
 
         for (int d = 0; d < Batchsize; d++) {
-            delete[] records[d];
             delete[] values[d];
         }
     }
-    testfile.close();
     cout << "over all " << totCorrect * 1.0 / (numBatchesTest*Batchsize) << endl;
     outputFile << iter << " " << globalTime/1000 << " " << totCorrect * 1.0 / (numBatchesTest*Batchsize) << endl;
 
@@ -362,95 +370,18 @@ void EvalDataSVM(int numBatchesTest,  Network &_mynet, int iter){
 
 void ReadDataSVM(size_t numBatches,  Network &_mynet, int epoch){
     cerr << "Start ReadDataSVM" << endl;
-    std::ifstream file(trainData);
-    std::string str;
-    //skipe header
-    std::getline( file, str );
-
-    int numLines;
-    int numInClass;
-    int numOutClass;
-    ReadHeader(str, numLines, numInClass, numOutClass);
-
     for (size_t i = 0; i < numBatches; i++) {
         if( (i+epoch*numBatches)%Stepsize==0) {
             EvalDataSVM(20, _mynet, epoch*numBatches+i);
         }
 
-        vector<int*> records(Batchsize);
+        vector< vector<int> > records(Batchsize);
         vector<float*> values(Batchsize);
         vector<int> sizes(Batchsize);
         vector<int*> labels(Batchsize);
         vector<int> labelsize(Batchsize);
 
-        //int **records = new int *[Batchsize];
-        //float **values = new float *[Batchsize];
-        //int *sizes = new int[Batchsize];
-        //int **labels = new int *[Batchsize];
-        //int *labelsize = new int[Batchsize];
-        int nonzeros = 0;
-        int count = 0;
-        vector<string> list;
-        vector<string> value;
-        vector<string> label;
-        while (std::getline(file, str)) {
-            //cerr << "str=" << str << endl;
-            char *mystring = &str[0];
-            char *pch, *pchlabel;
-            int track = 0;
-            list.clear();
-            value.clear();
-            label.clear();
-            pch = strtok(mystring, " ");
-            pch = strtok(NULL, " :");
-            while (pch != NULL) {
-                if (track % 2 == 0)
-                    list.push_back(pch);
-                else if (track%2==1)
-                    value.push_back(pch);
-                track++;
-                pch = strtok(NULL, " :");
-            }
-
-            pchlabel = strtok(mystring, ",");
-            while (pchlabel != NULL) {
-                label.push_back(pchlabel);
-                pchlabel = strtok(NULL, ",");
-            }
-
-            nonzeros += list.size();
-            records[count] = new int[list.size()];
-            values[count] = new float[list.size()];
-            labels[count] = new int[label.size()];
-            sizes[count] = list.size();
-            labelsize[count] = label.size();
-            int currcount = 0;
-            vector<string>::iterator it;
-            for (it = list.begin(); it < list.end(); it++) {
-                int inClass = stoi(*it);
-                assert(inClass < numInClass);
-                records[count][currcount] = inClass;
-                currcount++;
-            }
-            currcount = 0;
-            for (it = value.begin(); it < value.end(); it++) {
-                values[count][currcount] = stof(*it);
-                currcount++;
-            }
-
-            currcount = 0;
-            for (it = label.begin(); it < label.end(); it++) {
-                int label = stoi(*it);
-                assert(label < numOutClass);
-                //cerr << "label=" << label << endl;
-                labels[count][currcount] = label;
-                currcount++;
-            }
-
-            count++;
-            if (count >= Batchsize)
-                break;
-        }
+        CreateData(trainData, records, values, sizes, labels, labelsize);
 
         bool rehash = false;
         bool rebuild = false;
@@ -478,12 +409,10 @@ void ReadDataSVM(size_t numBatches,  Network &_mynet, int epoch){
         globalTime+= timeDiffInMiliseconds;
 
         for (int d = 0; d < Batchsize; d++) {
-            delete[] records[d];
             delete[] values[d];
             delete[] labels[d];
         }
     }
-    file.close();
 
     cerr << "Finished ReadDataSVM" << endl;
 }
