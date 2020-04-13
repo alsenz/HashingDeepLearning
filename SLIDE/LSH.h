@@ -18,7 +18,7 @@ public:
   std::vector<int> add(const std::vector<int> &indices, int id);
 	int add(int indices, int tableId, int id);
   std::vector<int> hashesToIndex(const std::vector<int> &hashes);
-	int** retrieveRaw(const std::vector<int> &indices);
+  std::vector<int*> retrieveRaw(const std::vector<int> &indices);
 	int retrieve(int table, int indices, int bucket);
 	void count();
 	~LSH();

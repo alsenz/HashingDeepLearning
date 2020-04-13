@@ -119,9 +119,9 @@ int LSH::add(int tableId, int indices, int id)
 /*
 * Returns all the buckets
 */
-int** LSH::retrieveRaw(const std::vector<int> &indices)
+std::vector<int*> LSH::retrieveRaw(const std::vector<int> &indices)
 {
-	int ** rawResults = new int*[_L];
+  std::vector<int*> rawResults(_L);
 
 	for (int i = 0; i < _L; i++)
 	{
