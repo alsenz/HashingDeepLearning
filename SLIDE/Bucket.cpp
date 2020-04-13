@@ -4,15 +4,14 @@
 using namespace std;
 
 Bucket::Bucket()
+:isInit(-1)
+,arr(BUCKETSIZE)
 {
-    isInit = -1;
-    arr = new int[BUCKETSIZE]();
 }
 
 
 Bucket::~Bucket()
 {
-    delete[] arr;
 }
 
 
@@ -75,5 +74,5 @@ int * Bucket::getAll()
     if(_counts<BUCKETSIZE){
         arr[_counts]=-1;
     }
-    return arr;
+    return arr.data();
 }
