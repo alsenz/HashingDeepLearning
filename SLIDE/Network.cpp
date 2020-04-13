@@ -243,7 +243,7 @@ int Network::ProcessInput(Vec2d<int> &inputIndices, Vec2d<float> &inputValues, c
                 }
 
                 std::vector<int> hashIndices = _hiddenlayers[l]->hashTables().hashesToIndex(hashes);
-                int * bucketIndices = _hiddenlayers[l]->hashTables().add(hashIndices.data(), m+1);
+                int * bucketIndices = _hiddenlayers[l]->hashTables().add(hashIndices, m+1);
 
                 delete[] bucketIndices;
             }

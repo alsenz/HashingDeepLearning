@@ -146,7 +146,7 @@ void Layer::addtoHashTable(SubVector<float> &weights, int length, float bias, in
     }
 
     std::vector<int> hashIndices = _hashTables.hashesToIndex(hashes);
-    int * bucketIndices = _hashTables.add(hashIndices.data(), ID+1);
+    int * bucketIndices = _hashTables.add(hashIndices, ID+1);
 
     _Nodes[ID].indicesInTables() = hashIndices;
     _Nodes[ID].indicesInBuckets() = bucketIndices;
@@ -235,8 +235,8 @@ int Layer::queryActiveNodeandComputeActivations(Vec2d<int> &activenodesperlayer,
             } else if (HashFunction == 4) {
                 hashes = _srp->getHashSparse(activenodesperlayer[layerIndex], activeValuesperlayer[layerIndex], lengths[layerIndex]);
             }
-            std::vector<int> hashIndices = _hashTables.hashesToIndex(hashes);
-            int **actives = _hashTables.retrieveRaw(hashIndices.data());
+            const std::vector<int> hashIndices = _hashTables.hashesToIndex(hashes);
+            int **actives = _hashTables.retrieveRaw(hashIndices);
 
             // Get candidates from hashtable
             auto t00 = std::chrono::high_resolution_clock::now();
@@ -301,8 +301,8 @@ int Layer::queryActiveNodeandComputeActivations(Vec2d<int> &activenodesperlayer,
             } else if (HashFunction == 4) {
                 hashes = _srp->getHashSparse(activenodesperlayer[layerIndex], activeValuesperlayer[layerIndex], lengths[layerIndex]);
             }
-            std::vector<int> hashIndices = _hashTables.hashesToIndex(hashes);
-            int **actives = _hashTables.retrieveRaw(hashIndices.data());
+            const std::vector<int> hashIndices = _hashTables.hashesToIndex(hashes);
+            int **actives = _hashTables.retrieveRaw(hashIndices);
             // we now have a sparse array of indices of active nodes
 
             // Get candidates from hashtable

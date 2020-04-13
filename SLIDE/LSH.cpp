@@ -98,7 +98,7 @@ std::vector<int> LSH::hashesToIndex(const std::vector<int> &hashes)
 }
 
 
-int* LSH::add(int *indices, int id)
+int* LSH::add(const std::vector<int> &indices, int id)
 {
 	int * secondIndices = new int[_L];
 	for (int i = 0; i < _L; i++)
@@ -120,7 +120,7 @@ int LSH::add(int tableId, int indices, int id)
 /*
 * Returns all the buckets
 */
-int** LSH::retrieveRaw(int *indices)
+int** LSH::retrieveRaw(const std::vector<int> &indices)
 {
 	int ** rawResults = new int*[_L];
 
