@@ -7,7 +7,7 @@
 #include <linux/mman.h>
 #include <sys/mman.h>
 #include <asm-generic/mman-common.h>
-
+#include "Util.h"
 
 using namespace std;
 
@@ -110,7 +110,6 @@ public:
 
   ////////////////////
 	Node(){};
-	Node(int dim, int nodeID, int layerID, NodeType type, int batchsize, float *weights, float bias, float *adamAvgMom, float *adamAvgVel);
 	void Update(int dim, int nodeID, int layerID, NodeType type, int batchsize, float *allWeights, float bias, float *allAdamAvgMom, float *allAdamAvgVel, train* train_blob);
 	float getLastActivation(int inputID);
 	void incrementDelta(int inputID, float incrementValue);

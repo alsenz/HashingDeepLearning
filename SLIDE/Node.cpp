@@ -10,30 +10,6 @@
 
 using namespace std;
 
-Node::Node(int dim, int nodeID, int layerID, NodeType type, int batchsize, float *weights, float bias, float *adamAvgMom, float *adamAvgVel)
-{
-	_dim = dim;
-	_IDinLayer = nodeID;
-	_type = type;
-	_layerNum = layerID;
-    _currentBatchsize = batchsize;
-
-	if (ADAM)
-	{
-		_adamAvgMom = adamAvgMom;
-		_adamAvgVel = adamAvgVel;
-		_t.resize(_dim);
-	}
-
-	_train = new train[_currentBatchsize];
-	_activeInputs = 0;
-
-    _weights = weights;
-    _bias = bias;
-	_mirrorbias = _bias;
-
-}
-
 void Node::Update(int dim, int nodeID, int layerID, NodeType type, int batchsize, float *allWeights, float bias, float *allAdamAvgMom, float *allAdamAvgVel, train* train_blob)
 {
     _dim = dim;
