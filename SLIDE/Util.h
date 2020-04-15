@@ -89,21 +89,18 @@ public:
 
 ////////////////////////////////////////////////////////
 template<typename T>
-class SubVector
+struct SubVector
 {
-protected:
   T *_ptr;
 
-public:
   SubVector()
   {}
 
-  SubVector(std::vector<T> &vec, size_t startIdx, size_t size)
-    : SubVectorConst<T>(vec, startIdx, size)
-    , _ptr(vec.data() + startIdx)
+  SubVector(T *vec, size_t startIdx, size_t size)
+    : _ptr(vec + startIdx)
   {}
 
-  inline T &operator[](size_t idx)
+  inline T &gett(size_t idx)
   {
     //assert(_vec);
     //assert(idx < SubVectorConst<T>::_size);

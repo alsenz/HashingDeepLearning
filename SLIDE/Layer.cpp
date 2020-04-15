@@ -87,7 +87,7 @@ Layer::Layer(size_t noOfNodes, int previousLayerNumOfNodes, int layerID, NodeTyp
     for (size_t i = 0; i < noOfNodes; i++)
     {
         _Nodes[i].Update(previousLayerNumOfNodes, i, _layerID, type, batchsize, _weights.data(),
-                _bias[i], _adamAvgMom.data(), _adamAvgVel.data(), _train_array.data());
+                _bias[i], _adamAvgMom.data(), _adamAvgVel.data(), _train_array);
         addtoHashTable(_Nodes[i].weights(), previousLayerNumOfNodes, _Nodes[i].bias(), i);
     }
     auto t2 = std::chrono::high_resolution_clock::now();
