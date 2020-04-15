@@ -99,23 +99,4 @@ struct SubVector
   SubVector(T *vec, size_t startIdx, size_t size)
     : _ptr(vec + startIdx)
   {}
-
-  inline T &gett(size_t idx)
-  {
-    //assert(_vec);
-    //assert(idx < SubVectorConst<T>::_size);
-    return _ptr[idx];
-  }
-
-  inline T *data() { return _ptr; }
-
-  inline const T &get(size_t idx) const
-  {
-    //assert(_vecConst);
-    //assert(idx < _size);
-    return _ptr[idx];
-  }
-
-  inline const T *data() const { return _ptr; }
-
 };
