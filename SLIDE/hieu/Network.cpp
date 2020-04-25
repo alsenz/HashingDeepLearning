@@ -10,8 +10,8 @@ Network::Network(size_t maxBatchsize) {
   size_t inputDim = 135909;
 
   cerr << "Create Network" << endl;
-  _layers.push_back(new RELULayer(0, 128, inputDim, maxBatchsize));
-  _layers.push_back(new SoftmaxLayer(1, 670091, 128, maxBatchsize));
+  _layers.push_back(RELULayer(0, 128, inputDim, maxBatchsize));
+  _layers.push_back(SoftmaxLayer(1, 670091, 128, maxBatchsize));
 }
 
 Network::~Network() { cerr << "~Network" << endl; }
