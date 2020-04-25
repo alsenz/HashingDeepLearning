@@ -7,10 +7,10 @@
 namespace hieu {
 class Network {
 protected:
-  std::vector<Layer> _layers;
+  std::vector<Layer*> _layers;
 
-  const Layer &getLayer(size_t idx) const { return _layers.at(idx); }
-  Layer &getLayer(size_t idx) { return _layers.at(idx); }
+  const Layer &getLayer(size_t idx) const { return *_layers.at(idx); }
+  Layer &getLayer(size_t idx) { return *_layers.at(idx); }
 
   const std::vector<float> *
   computeActivation(const std::vector<float> &data1,

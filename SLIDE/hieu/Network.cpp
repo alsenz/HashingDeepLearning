@@ -10,19 +10,23 @@ Network::Network(size_t maxBatchsize) {
   size_t inputDim = 135909;
 
   cerr << "Create Network" << endl;
-  _layers.push_back(RELULayer(0, 128, inputDim, maxBatchsize));
-  _layers.push_back(SoftmaxLayer(1, 670091, 128, maxBatchsize));
+  _layers.push_back(new RELULayer(0, 128, inputDim, maxBatchsize));
+  _layers.push_back(new SoftmaxLayer(1, 670091, 128, maxBatchsize));
 }
 
 Network::Network(size_t maxBatchsize, const cnpy::npz_t &npzArray) {
   size_t inputDim = 135909;
 
   cerr << "Load Network" << endl;
-  _layers.push_back(RELULayer(0, 128, inputDim, maxBatchsize, npzArray));
-  _layers.push_back(SoftmaxLayer(1, 670091, 128, maxBatchsize, npzArray));
+  _layers.push_back(new RELULayer(0, 128, inputDim, maxBatchsize, npzArray));
+  _layers.push_back(new SoftmaxLayer(1, 670091, 128, maxBatchsize, npzArray));
 }
 
-Network::~Network() { cerr << "~Network" << endl; }
+Network::~Network() { 
+  for (Layer *layer : _layers) {
+    delete layer;
+  }
+}
 
 size_t Network::predictClass(const Vec2d<float> &data,
                              const Vec2d<int> &labels) const {
@@ -63,7 +67,6 @@ Network::computeActivation(const std::vector<float> &data1,
 
     std::swap(dataIn, dataOut);
   }
-
   delete dataOut;
 
   return dataIn;

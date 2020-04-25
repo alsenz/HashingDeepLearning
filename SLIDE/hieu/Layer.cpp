@@ -47,14 +47,13 @@ Layer::Layer(size_t layerIdx, size_t numNodes, size_t prevNumNodes, size_t maxBa
 
   weightArr = npzArray.at("w_layer_" + to_string(layerIdx));
   Print("weightArr=", weightArr.shape);
-  cerr << "HH3 " << weightArr.num_vals << " " << weightArr.word_size << endl;
   assert(_weights.size() == weightArr.num_vals);
-  memcpy(_weights.data(), weightArr.data<float>(), sizeof(float) * weightArr.num_vals);
+  //memcpy(_weights.data(), weightArr.data<float>(), sizeof(float) * weightArr.num_vals);
 
   biasArr = npzArray.at("b_layer_" + to_string(layerIdx));
   Print("biasArr=", biasArr.shape);
   assert(_bias.size() == biasArr.num_vals);
-  memcpy(_bias.data(), biasArr.data<float>(), sizeof(float) * biasArr.num_vals);
+  //memcpy(_bias.data(), biasArr.data<float>(), sizeof(float) * biasArr.num_vals);
 }
 
 Layer::~Layer() {}

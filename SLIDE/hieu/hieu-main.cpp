@@ -32,9 +32,9 @@ void EvalDataSVM(int numBatchesTest, Network &mynet, const std::string &path,
     CreateData(file, data, labels, maxBatchsize, inputDim);
 
     int num_features = 0, num_labels = 0;
-    for (int i = 0; i < maxBatchsize; i++) {
-      num_features += data[i].size();
-      num_labels += labels[i].size();
+    for (int batchIdx = 0; batchIdx < maxBatchsize; batchIdx++) {
+      num_features += data[batchIdx].size();
+      num_labels += labels[batchIdx].size();
     }
 
     std::cout << maxBatchsize << " records, with " << num_features
@@ -88,8 +88,8 @@ int main(int argc, char *argv[]) {
   for (size_t epoch = 0; epoch < numEpochs; epoch++) {
     cerr << "epoch=" << epoch << endl;
 
-    ReadDataSVM(numBatches, mynet, "../dataset/Amazon/amazon_train.txt", epoch,
-      maxBatchsize, inputDim);
+    //ReadDataSVM(numBatches, mynet, "../dataset/Amazon/amazon_train.txt", epoch,
+    //  maxBatchsize, inputDim);
 
     EvalDataSVM(20, mynet, "../dataset/Amazon/amazon_test.txt", epoch,
       maxBatchsize, inputDim);
