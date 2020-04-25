@@ -28,6 +28,6 @@
 
 #define FIFO 1
 
-#define LOADWEIGHT 0
+#define LOADWEIGHT 1
 
 #define MAPLEN 325056

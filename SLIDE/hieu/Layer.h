@@ -1,5 +1,6 @@
 #pragma once
 #include "Node.h"
+#include "cnpy.h"
 #include <unordered_map>
 #include <vector>
 
@@ -14,6 +15,7 @@ protected:
 
 public:
   Layer(size_t layerIdx, size_t numNodes, size_t prevNumNodes, size_t maxBatchsize);
+  Layer(size_t layerIdx, size_t numNodes, size_t prevNumNodes, size_t maxBatchsize, const cnpy::npz_t &npzArray);
   virtual ~Layer();
 
   virtual size_t computeActivation(std::vector<float> &dataOut,
@@ -31,6 +33,7 @@ class RELULayer : public Layer {
 protected:
 public:
   RELULayer(size_t layerIdx, size_t numNodes, size_t prevNumNodes, size_t maxBatchsize);
+  RELULayer(size_t layerIdx, size_t numNodes, size_t prevNumNodes, size_t maxBatchsize, const cnpy::npz_t &npzArray);
   virtual ~RELULayer();
 };
 
@@ -39,6 +42,7 @@ class SoftmaxLayer : public Layer {
 protected:
 public:
   SoftmaxLayer(size_t layerIdx, size_t numNodes, size_t prevNumNodes, size_t maxBatchsize);
+  SoftmaxLayer(size_t layerIdx, size_t numNodes, size_t prevNumNodes, size_t maxBatchsize, const cnpy::npz_t &npzArray);
   virtual ~SoftmaxLayer();
 };
 

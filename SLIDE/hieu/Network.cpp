@@ -14,6 +14,14 @@ Network::Network(size_t maxBatchsize) {
   _layers.push_back(SoftmaxLayer(1, 670091, 128, maxBatchsize));
 }
 
+Network::Network(size_t maxBatchsize, const cnpy::npz_t &npzArray) {
+  size_t inputDim = 135909;
+
+  cerr << "Load Network" << endl;
+  _layers.push_back(RELULayer(0, 128, inputDim, maxBatchsize, npzArray));
+  _layers.push_back(SoftmaxLayer(1, 670091, 128, maxBatchsize, npzArray));
+}
+
 Network::~Network() { cerr << "~Network" << endl; }
 
 size_t Network::predictClass(const Vec2d<float> &data,

@@ -5,6 +5,7 @@
 #include <random>
 #include <stddef.h>
 #include <stdlib.h>
+#include <string.h>
 
 using namespace std;
 
@@ -14,6 +15,8 @@ Layer::Layer(size_t layerIdx, size_t numNodes, size_t prevNumNodes, size_t maxBa
 
   _weights.resize(numNodes * prevNumNodes);
   _bias.resize(numNodes);
+
+  /*
   random_device rd;
   default_random_engine dre(rd());
   normal_distribution<float> distribution(0.0, 0.01);
@@ -21,6 +24,7 @@ Layer::Layer(size_t layerIdx, size_t numNodes, size_t prevNumNodes, size_t maxBa
   generate(_weights.begin(), _weights.end(),
            [&]() { return distribution(dre); });
   generate(_bias.begin(), _bias.end(), [&]() { return distribution(dre); });
+  */
 
   _nodes.reserve(numNodes);
   for (size_t nodeIdx = 0; nodeIdx < numNodes; ++nodeIdx) {
@@ -34,6 +38,23 @@ Layer::Layer(size_t layerIdx, size_t numNodes, size_t prevNumNodes, size_t maxBa
   cerr << "Created Layer"
        << " layerIdx=" << _layerIdx << " numNodes=" << _nodes.size()
        << " prevNumNodes=" << _prevNumNodes << endl;
+}
+
+Layer::Layer(size_t layerIdx, size_t numNodes, size_t prevNumNodes, size_t maxBatchsize, const cnpy::npz_t &npzArray)
+  : Layer(layerIdx, numNodes, prevNumNodes, maxBatchsize)
+{
+  cnpy::NpyArray weightArr, biasArr;
+
+  weightArr = npzArray.at("w_layer_" + to_string(layerIdx));
+  Print("weightArr=", weightArr.shape);
+  cerr << "HH3 " << weightArr.num_vals << " " << weightArr.word_size << endl;
+  assert(_weights.size() == weightArr.num_vals);
+  memcpy(_weights.data(), weightArr.data<float>(), sizeof(float) * weightArr.num_vals);
+
+  biasArr = npzArray.at("b_layer_" + to_string(layerIdx));
+  Print("biasArr=", biasArr.shape);
+  assert(_bias.size() == biasArr.num_vals);
+  memcpy(_bias.data(), biasArr.data<float>(), sizeof(float) * biasArr.num_vals);
 }
 
 Layer::~Layer() {}
@@ -54,12 +75,25 @@ RELULayer::RELULayer(size_t layerIdx, size_t numNodes, size_t prevNumNodes, size
   cerr << "Create RELULayer" << endl;
 }
 
+RELULayer::RELULayer(size_t layerIdx, size_t numNodes, size_t prevNumNodes, size_t maxBatchsize, const cnpy::npz_t &npzArray)
+  : Layer(layerIdx, numNodes, prevNumNodes, maxBatchsize, npzArray) {
+    
+
+}
+
 RELULayer::~RELULayer() {}
 
+/////////////////////////////////////////////////////////////
 SoftmaxLayer::SoftmaxLayer(size_t layerIdx, size_t numNodes,
                            size_t prevNumNodes, size_t maxBatchsize)
     : Layer(layerIdx, numNodes, prevNumNodes, maxBatchsize) {
   cerr << "Create SoftmaxLayer" << endl;
+}
+
+SoftmaxLayer::SoftmaxLayer(size_t layerIdx, size_t numNodes, size_t prevNumNodes, size_t maxBatchsize, const cnpy::npz_t &npzArray)
+  : Layer(layerIdx, numNodes, prevNumNodes, maxBatchsize, npzArray) {
+    
+
 }
 
 SoftmaxLayer::~SoftmaxLayer() {}

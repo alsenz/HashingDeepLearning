@@ -1,6 +1,8 @@
 #include "hieu-main.h"
 #include "../Util.h"
+#include "../Config.h"
 #include "Network.h"
+#include "cnpy.h"
 #include <fstream>
 #include <iostream>
 #include <stddef.h>
@@ -75,7 +77,13 @@ int main(int argc, char *argv[]) {
   int numBatches = totRecords / maxBatchsize;
   int numBatchesTest = totRecordsTest / maxBatchsize;
 
-  hieu::Network mynet(maxBatchsize);
+  cnpy::npz_t npzArray;
+  if (LOADWEIGHT) {
+    npzArray = cnpy::npz_load("../savedWeight.npz");
+    cerr << "npzArray=" << npzArray.size() << endl;
+  }
+
+  hieu::Network mynet(maxBatchsize, npzArray);
 
   for (size_t epoch = 0; epoch < numEpochs; epoch++) {
     cerr << "epoch=" << epoch << endl;
