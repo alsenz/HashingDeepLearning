@@ -74,8 +74,8 @@ size_t Layer::computeActivation(std::vector<float> &dataOut,
     std::vector<int> hashIndices = _hashTables->hashesToIndex(hashes);
     std::vector<const std::vector<int> *> actives =
         _hashTables->retrieveRaw(hashIndices);
-
     /*
+    cerr << "hashes2 " << hashes.size() << " " << hashIndices.size() << " " << actives.size() << endl;
     Print("hashIndices", hashIndices);
     Print("actives", actives);
     for (const std::vector<int> *v : actives) {

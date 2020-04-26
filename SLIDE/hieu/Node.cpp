@@ -30,8 +30,9 @@ void Node::HashWeights(LSH &hashTables,
                        const DensifiedWtaHash &dwtaHasher) const {
   std::vector<int> hashes = dwtaHasher.getHashEasy(_weights);
   std::vector<int> hashIndices = hashTables.hashesToIndex(hashes);
-  // Print("hashIndices", hashIndices);
   hashTables.add(hashIndices, _idx, true);
+  // Print("hashIndices", hashIndices);
+  //cerr << "hashes1 " << hashes.size() << " " << hashIndices.size() << endl;
 }
 
 } // namespace hieu
