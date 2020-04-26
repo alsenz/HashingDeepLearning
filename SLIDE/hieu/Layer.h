@@ -15,11 +15,11 @@ protected:
   std::vector<float> _bias;
   size_t _layerIdx, _numNodes, _prevNumNodes;
 
-  LSH _hashTables;
+  LSH *_hashTables = nullptr;
   DensifiedWtaHash _dwtaHasher;
 
 public:
-  Layer(size_t layerIdx, size_t numNodes, size_t prevNumNodes, size_t maxBatchsize, size_t K, size_t L, size_t RangePow);
+  Layer(size_t layerIdx, size_t numNodes, size_t prevNumNodes, size_t maxBatchsize, bool sparsify, size_t K, size_t L, size_t RangePow);
   virtual ~Layer();
 
   void Load(const cnpy::npz_t &npzArray);

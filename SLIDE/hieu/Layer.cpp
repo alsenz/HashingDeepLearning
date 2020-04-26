@@ -10,21 +10,15 @@
 using namespace std;
 
 namespace hieu {
-Layer::Layer(size_t layerIdx, size_t numNodes, size_t prevNumNodes, size_t maxBatchsize, size_t K, size_t L, size_t RangePow)
-    : _layerIdx(layerIdx), _numNodes(numNodes), _prevNumNodes(prevNumNodes), _hashTables(K, L, RangePow), _dwtaHasher(K * L, prevNumNodes) {
+Layer::Layer(size_t layerIdx, size_t numNodes, size_t prevNumNodes, size_t maxBatchsize, bool sparsify, size_t K, size_t L, size_t RangePow)
+    : _layerIdx(layerIdx), _numNodes(numNodes), _prevNumNodes(prevNumNodes), _dwtaHasher(K * L, prevNumNodes) {
 
   _weights.resize(numNodes * prevNumNodes);
   _bias.resize(numNodes);
 
-  /*
-  random_device rd;
-  default_random_engine dre(rd());
-  normal_distribution<float> distribution(0.0, 0.01);
-
-  generate(_weights.begin(), _weights.end(),
-           [&]() { return distribution(dre); });
-  generate(_bias.begin(), _bias.end(), [&]() { return distribution(dre); });
-  */
+  if (sparsify) {
+    _hashTables = new LSH(K, L, RangePow);
+  }
 
   _nodes.reserve(numNodes);
   for (size_t nodeIdx = 0; nodeIdx < numNodes; ++nodeIdx) {
@@ -53,7 +47,21 @@ void Layer::Load(const cnpy::npz_t &npzArray)
   memcpy(_bias.data(), biasArr.data<float>(), sizeof(float) * biasArr.num_vals);
 }
 
-Layer::~Layer() {}
+void RandomizeWeights() {
+  /*
+random_device rd;
+default_random_engine dre(rd());
+normal_distribution<float> distribution(0.0, 0.01);
+
+generate(_weights.begin(), _weights.end(),
+         [&]() { return distribution(dre); });
+generate(_bias.begin(), _bias.end(), [&]() { return distribution(dre); });
+*/
+}
+
+Layer::~Layer() {
+  delete _hashTables;
+}
 
 size_t Layer::computeActivation(std::vector<float> &dataOut,
                                 const std::vector<float> &dataIn) const {
@@ -67,8 +75,10 @@ size_t Layer::computeActivation(std::vector<float> &dataOut,
 
 void Layer::HashWeights()
 {
-  for (Node &node : _nodes) {
-    node.HashWeights(_hashTables, _dwtaHasher);
+  if (_hashTables) {
+    for (Node &node : _nodes) {
+      node.HashWeights(*_hashTables, _dwtaHasher);
+    }
   }
 }
 
