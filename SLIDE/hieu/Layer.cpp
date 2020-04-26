@@ -82,6 +82,13 @@ size_t Layer::computeActivation(std::vector<float> &dataOut,
     }
     cerr << endl;
     */
+
+    dataOut.resize(_numNodes, 0);
+    for (size_t nodeIdx = 0; nodeIdx < _nodes.size(); ++nodeIdx) {
+      const Node &node = getNode(nodeIdx);
+      dataOut.at(nodeIdx) = node.computeActivation(dataIn);
+    }
+
   }
   else {
     dataOut.resize(_numNodes);

@@ -42,8 +42,7 @@ size_t Network::predictClass(const Vec2d<float> &data,
     const std::vector<float> &data1 = data.at(batchIdx);
     const std::vector<int> &labels1 = labels.at(batchIdx);
 
-    const std::vector<float> *lastActivations =
-        computeActivation(data1, labels1);
+    const std::vector<float> *lastActivations = computeActivation(data1, labels1);
 
     delete lastActivations;
   }
