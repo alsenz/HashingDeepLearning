@@ -10,7 +10,9 @@
 using namespace std;
 
 namespace hieu {
-Layer::Layer(size_t layerIdx, size_t numNodes, size_t prevNumNodes, size_t maxBatchsize, bool sparsify, size_t K, size_t L, size_t RangePow)
+Layer::Layer(size_t layerIdx, size_t numNodes, size_t prevNumNodes,
+             size_t maxBatchsize, bool sparsify, size_t K, size_t L,
+             size_t RangePow)
     : _layerIdx(layerIdx), _numNodes(numNodes), _prevNumNodes(prevNumNodes) {
 
   _weights.resize(numNodes * prevNumNodes);
@@ -35,12 +37,12 @@ Layer::Layer(size_t layerIdx, size_t numNodes, size_t prevNumNodes, size_t maxBa
        << " prevNumNodes=" << _prevNumNodes << endl;
 }
 
-void Layer::Load(const cnpy::npz_t &npzArray)
-{
+void Layer::Load(const cnpy::npz_t &npzArray) {
   cnpy::NpyArray weightArr = npzArray.at("w_layer_" + to_string(_layerIdx));
   Print("weightArr=", weightArr.shape);
   assert(_weights.size() == weightArr.num_vals);
-  memcpy(_weights.data(), weightArr.data<float>(), sizeof(float) * weightArr.num_vals);
+  memcpy(_weights.data(), weightArr.data<float>(),
+         sizeof(float) * weightArr.num_vals);
 
   cnpy::NpyArray biasArr = npzArray.at("b_layer_" + to_string(_layerIdx));
   Print("biasArr=", biasArr.shape);
@@ -60,9 +62,7 @@ generate(_bias.begin(), _bias.end(), [&]() { return distribution(dre); });
 */
 }
 
-Layer::~Layer() {
-  delete _hashTables;
-}
+Layer::~Layer() { delete _hashTables; }
 
 size_t Layer::computeActivation(std::vector<float> &dataOut,
                                 const std::vector<float> &dataIn) const {
@@ -71,8 +71,9 @@ size_t Layer::computeActivation(std::vector<float> &dataOut,
   if (_hashTables) {
     std::vector<int> hashes = _dwtaHasher->getHashEasy(dataIn);
     std::vector<int> hashIndices = _hashTables->hashesToIndex(hashes);
-    std::vector<const std::vector<int> *> actives = _hashTables->retrieveRaw(hashIndices);
-    
+    std::vector<const std::vector<int> *> actives =
+        _hashTables->retrieveRaw(hashIndices);
+
     /*
     Print("hashIndices", hashIndices);
     Print("actives", actives);
@@ -89,8 +90,7 @@ size_t Layer::computeActivation(std::vector<float> &dataOut,
       dataOut.at(nodeIdx) = node.computeActivation(dataIn);
     }
 
-  }
-  else {
+  } else {
     dataOut.resize(_numNodes);
     for (size_t nodeIdx = 0; nodeIdx < _nodes.size(); ++nodeIdx) {
       const Node &node = getNode(nodeIdx);
@@ -99,8 +99,7 @@ size_t Layer::computeActivation(std::vector<float> &dataOut,
   }
 }
 
-void Layer::HashWeights()
-{
+void Layer::HashWeights() {
   if (_hashTables) {
     for (Node &node : _nodes) {
       node.HashWeights(*_hashTables, *_dwtaHasher);

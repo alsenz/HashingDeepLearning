@@ -24,7 +24,7 @@ void Network::Load(const cnpy::npz_t &npzArray) {
   HashWeights();
 }
 
-Network::~Network() { 
+Network::~Network() {
   for (Layer *layer : _layers) {
     delete layer;
   }
@@ -42,7 +42,8 @@ size_t Network::predictClass(const Vec2d<float> &data,
     const std::vector<float> &data1 = data.at(batchIdx);
     const std::vector<int> &labels1 = labels.at(batchIdx);
 
-    const std::vector<float> *lastActivations = computeActivation(data1, labels1);
+    const std::vector<float> *lastActivations =
+        computeActivation(data1, labels1);
 
     delete lastActivations;
   }
@@ -73,8 +74,7 @@ Network::computeActivation(const std::vector<float> &data1,
   return dataIn;
 }
 
-void Network::HashWeights()
-{
+void Network::HashWeights() {
   cerr << "Start HashWeights()" << endl;
   for (Layer *layer : _layers) {
     layer->HashWeights();

@@ -1,6 +1,6 @@
 #include "hieu-main.h"
-#include "../Util.h"
 #include "../Config.h"
+#include "../Util.h"
 #include "Network.h"
 #include "cnpy.h"
 #include <fstream>
@@ -63,11 +63,12 @@ int main(int argc, char *argv[]) {
   for (size_t epoch = 0; epoch < numEpochs; epoch++) {
     cerr << "epoch=" << epoch << endl;
 
-    //ReadDataSVM(numBatches, mynet, "../dataset/Amazon/amazon_train.txt", epoch,
+    // ReadDataSVM(numBatches, mynet, "../dataset/Amazon/amazon_train.txt",
+    // epoch,
     //  maxBatchsize, inputDim);
 
     EvalDataSVM(20, mynet, "../dataset/Amazon/amazon_test.txt", epoch,
-      maxBatchsize, inputDim);
+                maxBatchsize, inputDim);
   }
 
   cerr << "Finished" << endl;

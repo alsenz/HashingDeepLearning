@@ -8,7 +8,8 @@
 using namespace std;
 
 namespace hieu {
-Node::Node(size_t idx, SubVector<float> &nodeWeights, float &nodeBias, size_t maxBatchsize)
+Node::Node(size_t idx, SubVector<float> &nodeWeights, float &nodeBias,
+           size_t maxBatchsize)
     : _idx(idx), _weights(nodeWeights), _nodeBias(nodeBias) {
   // cerr << "Create Node" << endl;
 }
@@ -25,11 +26,11 @@ float Node::computeActivation(const std::vector<float> &dataIn) const {
   return ret;
 }
 
-void Node::HashWeights(LSH &hashTables, const DensifiedWtaHash &dwtaHasher) const
-{
+void Node::HashWeights(LSH &hashTables,
+                       const DensifiedWtaHash &dwtaHasher) const {
   std::vector<int> hashes = dwtaHasher.getHashEasy(_weights);
   std::vector<int> hashIndices = hashTables.hashesToIndex(hashes);
-  //Print("hashIndices", hashIndices);
+  // Print("hashIndices", hashIndices);
   hashTables.add(hashIndices, _idx + 1);
 }
 

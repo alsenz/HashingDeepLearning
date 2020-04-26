@@ -1,8 +1,8 @@
 #pragma once
+#include "../DensifiedWtaHash.h"
+#include "../LSH.h"
 #include "Node.h"
 #include "cnpy.h"
-#include "../LSH.h"
-#include "../DensifiedWtaHash.h"
 #include <unordered_map>
 #include <vector>
 
@@ -19,7 +19,9 @@ protected:
   DensifiedWtaHash *_dwtaHasher = nullptr;
 
 public:
-  Layer(size_t layerIdx, size_t numNodes, size_t prevNumNodes, size_t maxBatchsize, bool sparsify, size_t K, size_t L, size_t RangePow);
+  Layer(size_t layerIdx, size_t numNodes, size_t prevNumNodes,
+        size_t maxBatchsize, bool sparsify, size_t K, size_t L,
+        size_t RangePow);
   virtual ~Layer();
 
   void Load(const cnpy::npz_t &npzArray);
@@ -34,8 +36,6 @@ public:
   std::vector<Node> &getNodes() { return _nodes; }
 
   void HashWeights();
-
 };
-
 
 } // namespace hieu
