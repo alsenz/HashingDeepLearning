@@ -15,11 +15,6 @@ void Bucket::add(int id) {
   std::lock_guard<std::mutex> guard(*_mutex);
 
   // cerr << "id=" << id << endl;
-  if (id <= 0) {
-    cerr << "shit id=" << id << endl;
-    abort();
-    exit(22);
-  }
   if (_arr.size() < BUCKETSIZE) {
     _arr.push_back(id);
   } else {
