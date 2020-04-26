@@ -13,6 +13,6 @@ public:
   Bucket();
   virtual ~Bucket();
 
-  void add(int id);
+  void add(int id, bool unlimited);
   const std::vector<int> &getAll() const;
 };

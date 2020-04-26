@@ -66,14 +66,14 @@ std::vector<int> LSH::hashesToIndex(const std::vector<int> &hashes) const {
   return indices;
 }
 
-void LSH::add(const std::vector<int> &indices, int id) {
+void LSH::add(const std::vector<int> &indices, int id, bool unlimited) {
   for (int i = 0; i < _L; i++) {
-    _bucket[i][indices[i]].add(id);
+    _bucket[i][indices[i]].add(id, unlimited);
   }
 }
 
-void LSH::add(int tableId, int indices, int id) {
-  _bucket[tableId][indices].add(id);
+void LSH::add(int tableId, int indices, int id, bool unlimited) {
+  _bucket[tableId][indices].add(id, unlimited);
 }
 
 /*

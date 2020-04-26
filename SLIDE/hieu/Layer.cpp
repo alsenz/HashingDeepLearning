@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <iostream>
 #include <random>
+#include <unordered_set>
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
@@ -74,7 +75,7 @@ size_t Layer::computeActivation(std::vector<float> &dataOut,
     std::vector<const std::vector<int> *> actives =
         _hashTables->retrieveRaw(hashIndices);
 
-    ///*
+    /*
     Print("hashIndices", hashIndices);
     Print("actives", actives);
     for (const std::vector<int> *v : actives) {
@@ -82,10 +83,17 @@ size_t Layer::computeActivation(std::vector<float> &dataOut,
       cerr << v->size() << " ";
     }
     cerr << endl;
-    //*/
+    */
+    std::unordered_set<int> nodesIdx;
+    for (const std::vector<int> *v : actives) {
+      //Print("v", *v);
+      //cerr << v->size() << " ";
+      std::copy(v->begin(), v->end(), std::inserter(nodesIdx, nodesIdx.end()));
+    }
+    //cerr << "nodesIdx" << nodesIdx.size() << endl;
 
     dataOut.resize(_numNodes, 0);
-    for (size_t nodeIdx = 0; nodeIdx < _nodes.size(); ++nodeIdx) {
+    for (int nodeIdx: nodesIdx) {
       const Node &node = getNode(nodeIdx);
       dataOut.at(nodeIdx) = node.computeActivation(dataIn);
     }
