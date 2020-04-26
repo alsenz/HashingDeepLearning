@@ -11,13 +11,14 @@ using namespace std;
 
 namespace hieu {
 Layer::Layer(size_t layerIdx, size_t numNodes, size_t prevNumNodes, size_t maxBatchsize, bool sparsify, size_t K, size_t L, size_t RangePow)
-    : _layerIdx(layerIdx), _numNodes(numNodes), _prevNumNodes(prevNumNodes), _dwtaHasher(K * L, prevNumNodes) {
+    : _layerIdx(layerIdx), _numNodes(numNodes), _prevNumNodes(prevNumNodes) {
 
   _weights.resize(numNodes * prevNumNodes);
   _bias.resize(numNodes);
 
   if (sparsify) {
     _hashTables = new LSH(K, L, RangePow);
+    _dwtaHasher = new DensifiedWtaHash(K * L, prevNumNodes);
   }
 
   _nodes.reserve(numNodes);
@@ -66,10 +67,17 @@ Layer::~Layer() {
 size_t Layer::computeActivation(std::vector<float> &dataOut,
                                 const std::vector<float> &dataIn) const {
   assert(dataIn.size() == _prevNumNodes);
-  dataOut.resize(_numNodes);
-  for (size_t nodeIdx = 0; nodeIdx < _nodes.size(); ++nodeIdx) {
-    const Node &node = getNode(nodeIdx);
-    dataOut.at(nodeIdx) = node.computeActivation(dataIn);
+
+  if (_hashTables) {
+    std::vector<int> hashes = _dwtaHasher->getHashEasy(dataIn);
+    std::vector<int> hashIndices = _hashTables->hashesToIndex(hashes);
+  }
+  else {
+    dataOut.resize(_numNodes);
+    for (size_t nodeIdx = 0; nodeIdx < _nodes.size(); ++nodeIdx) {
+      const Node &node = getNode(nodeIdx);
+      dataOut.at(nodeIdx) = node.computeActivation(dataIn);
+    }
   }
 }
 
@@ -77,7 +85,7 @@ void Layer::HashWeights()
 {
   if (_hashTables) {
     for (Node &node : _nodes) {
-      node.HashWeights(*_hashTables, _dwtaHasher);
+      node.HashWeights(*_hashTables, *_dwtaHasher);
     }
   }
 }

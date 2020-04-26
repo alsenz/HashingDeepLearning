@@ -16,7 +16,7 @@ protected:
   size_t _layerIdx, _numNodes, _prevNumNodes;
 
   LSH *_hashTables = nullptr;
-  DensifiedWtaHash _dwtaHasher;
+  DensifiedWtaHash *_dwtaHasher = nullptr;
 
 public:
   Layer(size_t layerIdx, size_t numNodes, size_t prevNumNodes, size_t maxBatchsize, bool sparsify, size_t K, size_t L, size_t RangePow);
