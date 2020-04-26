@@ -74,57 +74,6 @@ Network::computeActivation(const std::vector<float> &data1,
   return dataIn;
 }
 
-float Network::ProcessInput(const Vec2d<float> &data, const Vec2d<int> &labels,
-                            int iter, bool rehash, bool rebuild) {
-  assert(data.size() == labels.size());
-  size_t batchSize = data.size();
-
-  float logloss = 0.0;
-  float tmpLR = 24534534.5;
-
-  for (size_t batchIdx = 0; batchIdx < batchSize; ++batchIdx) {
-    const std::vector<float> &data1 = data.at(batchIdx);
-    const std::vector<int> &labels1 = labels.at(batchIdx);
-
-    const std::vector<float> *lastActivations =
-        computeActivation(data1, labels1);
-
-    delete lastActivations;
-
-    // Now backpropagate.
-    for (int layerIdx = _layers.size() - 1; layerIdx >= 0; layerIdx--) {
-      Layer &layer = getLayer(layerIdx);
-
-      // active nodes
-      std::vector<int> activeNodesIdx(layer.getNumNodes());
-      for (size_t nodeIdx = 0; nodeIdx < activeNodesIdx.size(); ++nodeIdx) {
-        activeNodesIdx[nodeIdx] = nodeIdx;
-      }
-
-      cerr << "batchIdx=" << batchIdx << " layerIdx=" << layerIdx << endl;
-
-      for (size_t nodeIdx : activeNodesIdx) {
-        Node &node = layer.getNode(nodeIdx);
-
-        if (layerIdx > 0) {
-          Layer &prevLayer = getLayer(layerIdx - 1);
-
-          // PREVIOUS active nodes
-          std::vector<int> prevActiveNodesIdx(prevLayer.getNumNodes());
-          for (size_t nodeIdx = 0; nodeIdx < prevActiveNodesIdx.size(); ++nodeIdx) {
-            prevActiveNodesIdx[nodeIdx] = nodeIdx;
-          }
-
-          node.backPropagate(prevLayer.getNodes(), prevActiveNodesIdx, tmpLR,
-                             batchIdx);
-        } else {
-          node.backPropagateFirstLayer(data, tmpLR, batchIdx);
-        }
-      }
-    }
-  }
-}
-
 void Network::HashWeights()
 {
   cerr << "Start HashWeights()" << endl;

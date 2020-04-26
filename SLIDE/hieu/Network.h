@@ -24,9 +24,6 @@ public:
 
   size_t predictClass(const Vec2d<float> &data, const Vec2d<int> &labels) const;
 
-  float ProcessInput(const Vec2d<float> &data, const Vec2d<int> &labels,
-                     int iter, bool rehash, bool rebuild);
-
   void HashWeights();
 };
 

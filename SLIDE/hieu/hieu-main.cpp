@@ -43,30 +43,6 @@ void EvalDataSVM(int numBatchesTest, Network &mynet, const std::string &path,
   }
 }
 
-void ReadDataSVM(size_t numBatches, Network &mynet, const std::string &path,
-                 int epoch, size_t maxBatchsize, size_t inputDim) {
-  std::ifstream file(path);
-  if (!file) {
-    cout << "Error file not found: " << path << endl;
-  }
-
-  std::string str;
-  // skipe header
-  std::getline(file, str);
-  for (size_t i = 0; i < numBatches; i++) {
-    Vec2d<float> data;
-    Vec2d<int> labels;
-
-    CreateData(file, data, labels, maxBatchsize, inputDim);
-
-    bool rehash = true;
-    bool rebuild = true;
-
-    // logloss
-    mynet.ProcessInput(data, labels, epoch * numBatches + i, rehash, rebuild);
-  }
-}
-
 int main(int argc, char *argv[]) {
   cerr << "Starting" << endl;
   size_t inputDim = 135909;
