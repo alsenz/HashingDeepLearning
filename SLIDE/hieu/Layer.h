@@ -1,6 +1,7 @@
 #pragma once
 #include "Node.h"
 #include "cnpy.h"
+#include "../LSH.h"
 #include <unordered_map>
 #include <vector>
 
@@ -13,9 +14,11 @@ protected:
   std::vector<float> _bias;
   size_t _layerIdx, _numNodes, _prevNumNodes;
 
+  LSH _hashTables;
+
 public:
-  Layer(size_t layerIdx, size_t numNodes, size_t prevNumNodes, size_t maxBatchsize);
-  Layer(size_t layerIdx, size_t numNodes, size_t prevNumNodes, size_t maxBatchsize, const cnpy::npz_t &npzArray);
+  Layer(size_t layerIdx, size_t numNodes, size_t prevNumNodes, size_t maxBatchsize, size_t K, size_t L, size_t RangePow);
+  Layer(size_t layerIdx, size_t numNodes, size_t prevNumNodes, size_t maxBatchsize, size_t K, size_t L, size_t RangePow, const cnpy::npz_t &npzArray);
   virtual ~Layer();
 
   virtual size_t computeActivation(std::vector<float> &dataOut,
@@ -28,22 +31,5 @@ public:
   std::vector<Node> &getNodes() { return _nodes; }
 };
 
-/////////////////////////////////////////////////////////////
-class RELULayer : public Layer {
-protected:
-public:
-  RELULayer(size_t layerIdx, size_t numNodes, size_t prevNumNodes, size_t maxBatchsize);
-  RELULayer(size_t layerIdx, size_t numNodes, size_t prevNumNodes, size_t maxBatchsize, const cnpy::npz_t &npzArray);
-  virtual ~RELULayer();
-};
-
-/////////////////////////////////////////////////////////////
-class SoftmaxLayer : public Layer {
-protected:
-public:
-  SoftmaxLayer(size_t layerIdx, size_t numNodes, size_t prevNumNodes, size_t maxBatchsize);
-  SoftmaxLayer(size_t layerIdx, size_t numNodes, size_t prevNumNodes, size_t maxBatchsize, const cnpy::npz_t &npzArray);
-  virtual ~SoftmaxLayer();
-};
 
 } // namespace hieu

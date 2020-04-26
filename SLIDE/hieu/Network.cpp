@@ -10,16 +10,16 @@ Network::Network(size_t maxBatchsize) {
   size_t inputDim = 135909;
 
   cerr << "Create Network" << endl;
-  _layers.push_back(new RELULayer(0, 128, inputDim, maxBatchsize));
-  _layers.push_back(new SoftmaxLayer(1, 670091, 128, maxBatchsize));
+  _layers.push_back(new Layer(0, 128, inputDim, maxBatchsize, 44, 22, 8));
+  _layers.push_back(new Layer(1, 670091, 128, maxBatchsize, 44, 22, 8));
 }
 
 Network::Network(size_t maxBatchsize, const cnpy::npz_t &npzArray) {
   size_t inputDim = 135909;
 
   cerr << "Load Network" << endl;
-  _layers.push_back(new RELULayer(0, 128, inputDim, maxBatchsize, npzArray));
-  _layers.push_back(new SoftmaxLayer(1, 670091, 128, maxBatchsize, npzArray));
+  _layers.push_back(new Layer(0, 128, inputDim, maxBatchsize, 44, 22, 8, npzArray));
+  _layers.push_back(new Layer(1, 670091, 128, maxBatchsize, 44, 22, 8, npzArray));
 }
 
 Network::~Network() { 

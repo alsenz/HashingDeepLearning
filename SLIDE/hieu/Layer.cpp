@@ -10,8 +10,8 @@
 using namespace std;
 
 namespace hieu {
-Layer::Layer(size_t layerIdx, size_t numNodes, size_t prevNumNodes, size_t maxBatchsize)
-    : _layerIdx(layerIdx), _numNodes(numNodes), _prevNumNodes(prevNumNodes) {
+Layer::Layer(size_t layerIdx, size_t numNodes, size_t prevNumNodes, size_t maxBatchsize, size_t K, size_t L, size_t RangePow)
+    : _layerIdx(layerIdx), _numNodes(numNodes), _prevNumNodes(prevNumNodes), _hashTables(K, L, RangePow) {
 
   _weights.resize(numNodes * prevNumNodes);
   _bias.resize(numNodes);
@@ -40,8 +40,8 @@ Layer::Layer(size_t layerIdx, size_t numNodes, size_t prevNumNodes, size_t maxBa
        << " prevNumNodes=" << _prevNumNodes << endl;
 }
 
-Layer::Layer(size_t layerIdx, size_t numNodes, size_t prevNumNodes, size_t maxBatchsize, const cnpy::npz_t &npzArray)
-  : Layer(layerIdx, numNodes, prevNumNodes, maxBatchsize)
+Layer::Layer(size_t layerIdx, size_t numNodes, size_t prevNumNodes, size_t maxBatchsize, size_t K, size_t L, size_t RangePow, const cnpy::npz_t &npzArray)
+  : Layer(layerIdx, numNodes, prevNumNodes, maxBatchsize, K, L, RangePow)
 {
   cnpy::NpyArray weightArr, biasArr;
 
@@ -68,33 +68,5 @@ size_t Layer::computeActivation(std::vector<float> &dataOut,
   }
 }
 
-//////////////////////////////////////////
-RELULayer::RELULayer(size_t layerIdx, size_t numNodes, size_t prevNumNodes, size_t maxBatchsize)
-    : Layer(layerIdx, numNodes, prevNumNodes, maxBatchsize) {
-  cerr << "Create RELULayer" << endl;
-}
-
-RELULayer::RELULayer(size_t layerIdx, size_t numNodes, size_t prevNumNodes, size_t maxBatchsize, const cnpy::npz_t &npzArray)
-  : Layer(layerIdx, numNodes, prevNumNodes, maxBatchsize, npzArray) {
-    
-
-}
-
-RELULayer::~RELULayer() {}
-
-/////////////////////////////////////////////////////////////
-SoftmaxLayer::SoftmaxLayer(size_t layerIdx, size_t numNodes,
-                           size_t prevNumNodes, size_t maxBatchsize)
-    : Layer(layerIdx, numNodes, prevNumNodes, maxBatchsize) {
-  cerr << "Create SoftmaxLayer" << endl;
-}
-
-SoftmaxLayer::SoftmaxLayer(size_t layerIdx, size_t numNodes, size_t prevNumNodes, size_t maxBatchsize, const cnpy::npz_t &npzArray)
-  : Layer(layerIdx, numNodes, prevNumNodes, maxBatchsize, npzArray) {
-    
-
-}
-
-SoftmaxLayer::~SoftmaxLayer() {}
 
 } // namespace hieu
