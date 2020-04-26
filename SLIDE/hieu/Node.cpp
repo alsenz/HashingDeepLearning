@@ -83,6 +83,7 @@ void Node::HashWeights(LSH &hashTables, const DensifiedWtaHash &dwtaHasher) cons
 {
   std::vector<int> hashes = dwtaHasher.getHashEasy(_weights);
   std::vector<int> hashIndices = hashTables.hashesToIndex(hashes);
+  //Print("hashIndices", hashIndices);
   hashTables.add(hashIndices, _idx + 1);
 }
 
