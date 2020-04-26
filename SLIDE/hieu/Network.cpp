@@ -11,16 +11,18 @@ Network::Network(size_t maxBatchsize) {
   size_t inputDim = 135909;
 
   cerr << "Create Network" << endl;
-  _layers.push_back(new Layer(0, 128, inputDim, maxBatchsize, 44, 22, 8));
-  _layers.push_back(new Layer(1, 670091, 128, maxBatchsize, 44, 22, 8));
+  _layers.push_back(new Layer(0, 128, inputDim, maxBatchsize, 2, 20, 6));
+  _layers.push_back(new Layer(1, 670091, 128, maxBatchsize, 6, 50, 18));
 }
 
 Network::Network(size_t maxBatchsize, const cnpy::npz_t &npzArray) {
   size_t inputDim = 135909;
 
   cerr << "Load Network" << endl;
-  _layers.push_back(new Layer(0, 128, inputDim, maxBatchsize, 44, 22, 8, npzArray));
-  _layers.push_back(new Layer(1, 670091, 128, maxBatchsize, 44, 22, 8, npzArray));
+  _layers.push_back(new Layer(0, 128, inputDim, maxBatchsize, 2, 20, 6, npzArray));
+  _layers.push_back(new Layer(1, 670091, 128, maxBatchsize, 6, 50, 18, npzArray));
+
+  HashWeights();
 }
 
 Network::~Network() { 
@@ -126,9 +128,11 @@ float Network::ProcessInput(const Vec2d<float> &data, const Vec2d<int> &labels,
 
 void Network::HashWeights()
 {
+  cerr << "Start HashWeights()" << endl;
   for (Layer *layer : _layers) {
     layer->HashWeights();
   }
+  cerr << "Finished HashWeights()" << endl;
 }
 
 } // namespace hieu

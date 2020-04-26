@@ -79,9 +79,11 @@ float Node::getLastActivation(int batchIdx) const {
   return _train.at(batchIdx)._lastActivations;
 }
 
-void Node::HashWeights()
+void Node::HashWeights(LSH &hashTables, const DensifiedWtaHash &dwtaHasher) const
 {
-
+  std::vector<int> hashes = dwtaHasher.getHashEasy(_weights);
+  std::vector<int> hashIndices = hashTables.hashesToIndex(hashes);
+  hashTables.add(hashIndices, _idx + 1);
 }
 
 } // namespace hieu

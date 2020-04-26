@@ -71,7 +71,7 @@ size_t Layer::computeActivation(std::vector<float> &dataOut,
 void Layer::HashWeights()
 {
   for (Node &node : _nodes) {
-
+    node.HashWeights(_hashTables, _dwtaHasher);
   }
 }
 

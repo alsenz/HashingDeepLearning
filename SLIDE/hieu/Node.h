@@ -1,6 +1,7 @@
 #pragma once
 #include "../Util.h"
 #include "../DensifiedWtaHash.h"
+#include "../LSH.h"
 #include <stddef.h>
 
 namespace hieu {
@@ -44,7 +45,7 @@ public:
                      size_t batchIdx);
   void backPropagateFirstLayer(const Vec2d<float> &data, float learningRate,
                                size_t batchIdx);
-  void HashWeights();
+  void HashWeights(LSH &hashTables, const DensifiedWtaHash &dwtaHasher) const;
 
 };
 } // namespace hieu
