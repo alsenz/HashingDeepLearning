@@ -46,7 +46,7 @@ void EvalDataSVM(int numBatchesTest, Network &mynet, const std::string &path,
 int main(int argc, char *argv[]) {
   cerr << "Starting" << endl;
   size_t inputDim = 135909;
-  size_t numEpochs = 5;
+  size_t numEpochs = 1;
   size_t maxBatchsize = 128;
   size_t totRecords = 490449;
   size_t totRecordsTest = 153025;
