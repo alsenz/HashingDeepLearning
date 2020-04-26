@@ -74,7 +74,7 @@ size_t Layer::computeActivation(std::vector<float> &dataOut,
     std::vector<const std::vector<int> *> actives =
         _hashTables->retrieveRaw(hashIndices);
 
-    /*
+    ///*
     Print("hashIndices", hashIndices);
     Print("actives", actives);
     for (const std::vector<int> *v : actives) {
@@ -82,7 +82,7 @@ size_t Layer::computeActivation(std::vector<float> &dataOut,
       cerr << v->size() << " ";
     }
     cerr << endl;
-    */
+    //*/
 
     dataOut.resize(_numNodes, 0);
     for (size_t nodeIdx = 0; nodeIdx < _nodes.size(); ++nodeIdx) {
