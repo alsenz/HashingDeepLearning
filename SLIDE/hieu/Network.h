@@ -18,8 +18,9 @@ protected:
 
 public:
   Network(size_t maxBatchsize);
-  Network(size_t maxBatchsize, const cnpy::npz_t &npzArray);
   virtual ~Network();
+
+  void Load(const cnpy::npz_t &npzArray);
 
   size_t predictClass(const Vec2d<float> &data, const Vec2d<int> &labels) const;
 

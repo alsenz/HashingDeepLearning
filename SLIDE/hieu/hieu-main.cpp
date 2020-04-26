@@ -77,13 +77,12 @@ int main(int argc, char *argv[]) {
   int numBatches = totRecords / maxBatchsize;
   int numBatchesTest = totRecordsTest / maxBatchsize;
 
-  cnpy::npz_t npzArray;
+  hieu::Network mynet(maxBatchsize);
   if (LOADWEIGHT) {
-    npzArray = cnpy::npz_load("../savedWeight.npz");
+    cnpy::npz_t npzArray = cnpy::npz_load("../savedWeight.npz");
     cerr << "npzArray=" << npzArray.size() << endl;
+    mynet.Load(npzArray);
   }
-
-  hieu::Network mynet(maxBatchsize, npzArray);
 
   for (size_t epoch = 0; epoch < numEpochs; epoch++) {
     cerr << "epoch=" << epoch << endl;

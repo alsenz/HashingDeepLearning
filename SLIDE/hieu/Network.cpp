@@ -15,12 +15,11 @@ Network::Network(size_t maxBatchsize) {
   _layers.push_back(new Layer(1, 670091, 128, maxBatchsize, 6, 50, 18));
 }
 
-Network::Network(size_t maxBatchsize, const cnpy::npz_t &npzArray) {
-  size_t inputDim = 135909;
-
+void Network::Load(const cnpy::npz_t &npzArray) {
   cerr << "Load Network" << endl;
-  _layers.push_back(new Layer(0, 128, inputDim, maxBatchsize, 2, 20, 6, npzArray));
-  _layers.push_back(new Layer(1, 670091, 128, maxBatchsize, 6, 50, 18, npzArray));
+  for (Layer *layer : _layers) {
+    layer->Load(npzArray);
+  }
 
   HashWeights();
 }

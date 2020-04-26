@@ -20,8 +20,9 @@ protected:
 
 public:
   Layer(size_t layerIdx, size_t numNodes, size_t prevNumNodes, size_t maxBatchsize, size_t K, size_t L, size_t RangePow);
-  Layer(size_t layerIdx, size_t numNodes, size_t prevNumNodes, size_t maxBatchsize, size_t K, size_t L, size_t RangePow, const cnpy::npz_t &npzArray);
   virtual ~Layer();
+
+  void Load(const cnpy::npz_t &npzArray);
 
   virtual size_t computeActivation(std::vector<float> &dataOut,
                                    const std::vector<float> &dataIn) const;
