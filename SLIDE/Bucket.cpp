@@ -17,7 +17,6 @@ void Bucket::add(int id, bool unlimited) {
 
   if (unlimited) {
     _arr.push_back(id);
-    return;
   }
   else if (_arr.size() < BUCKETSIZE) {
     _arr.push_back(id);
@@ -50,8 +49,8 @@ void Bucket::add(int id, bool unlimited) {
       }
     */
     }
+    ++_counts;
   }
-  ++_counts;
 }
 
 const std::vector<int> &Bucket::getAll() const {
