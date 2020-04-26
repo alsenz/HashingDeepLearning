@@ -25,6 +25,8 @@ public:
 
   float ProcessInput(const Vec2d<float> &data, const Vec2d<int> &labels,
                      int iter, bool rehash, bool rebuild);
+
+  void HashWeights();
 };
 
 } // namespace hieu

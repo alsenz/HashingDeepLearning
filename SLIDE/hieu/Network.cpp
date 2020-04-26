@@ -1,4 +1,5 @@
 #include "Network.h"
+#include "../DensifiedWtaHash.h"
 #include <iostream>
 #include <stddef.h>
 #include <stdlib.h>
@@ -120,6 +121,13 @@ float Network::ProcessInput(const Vec2d<float> &data, const Vec2d<int> &labels,
         }
       }
     }
+  }
+}
+
+void Network::HashWeights()
+{
+  for (Layer *layer : _layers) {
+    layer->HashWeights();
   }
 }
 

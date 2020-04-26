@@ -2,6 +2,7 @@
 #include "Node.h"
 #include "cnpy.h"
 #include "../LSH.h"
+#include "../DensifiedWtaHash.h"
 #include <unordered_map>
 #include <vector>
 
@@ -15,6 +16,7 @@ protected:
   size_t _layerIdx, _numNodes, _prevNumNodes;
 
   LSH _hashTables;
+  DensifiedWtaHash _dwtaHasher;
 
 public:
   Layer(size_t layerIdx, size_t numNodes, size_t prevNumNodes, size_t maxBatchsize, size_t K, size_t L, size_t RangePow);
@@ -29,6 +31,9 @@ public:
   Node &getNode(size_t idx) { return _nodes.at(idx); }
   const std::vector<Node> &getNodes() const { return _nodes; }
   std::vector<Node> &getNodes() { return _nodes; }
+
+  void HashWeights();
+
 };
 
 

@@ -40,7 +40,7 @@ public:
         float Sparsity);
   Node &getNodebyID(size_t nodeID);
   std::vector<Node> &getAllNodes();
-  void addtoHashTable(SubVector<float> &weights, float bias, int id);
+  void addtoHashTable(SubVector<float> &weights, int id);
   float getNomalizationConstant(int inputID) const;
   int queryActiveNodeandComputeActivations(
       Vec2d<int> &activenodesperlayer, Vec2d<float> &activeValuesperlayer, int inputID, const std::vector<int> &label,

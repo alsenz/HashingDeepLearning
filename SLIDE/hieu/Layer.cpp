@@ -11,7 +11,7 @@ using namespace std;
 
 namespace hieu {
 Layer::Layer(size_t layerIdx, size_t numNodes, size_t prevNumNodes, size_t maxBatchsize, size_t K, size_t L, size_t RangePow)
-    : _layerIdx(layerIdx), _numNodes(numNodes), _prevNumNodes(prevNumNodes), _hashTables(K, L, RangePow) {
+    : _layerIdx(layerIdx), _numNodes(numNodes), _prevNumNodes(prevNumNodes), _hashTables(K, L, RangePow), _dwtaHasher(K * L, prevNumNodes) {
 
   _weights.resize(numNodes * prevNumNodes);
   _bias.resize(numNodes);
@@ -68,5 +68,11 @@ size_t Layer::computeActivation(std::vector<float> &dataOut,
   }
 }
 
+void Layer::HashWeights()
+{
+  for (Node &node : _nodes) {
+
+  }
+}
 
 } // namespace hieu

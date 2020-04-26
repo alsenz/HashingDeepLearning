@@ -79,4 +79,9 @@ float Node::getLastActivation(int batchIdx) const {
   return _train.at(batchIdx)._lastActivations;
 }
 
+void Node::HashWeights()
+{
+
+}
+
 } // namespace hieu

@@ -77,7 +77,7 @@ if (ADAM){
   for (size_t i = 0; i < noOfNodes; i++) {
     _Nodes[i].Update(previousLayerNumOfNodes, i, _layerID, type, batchsize,
                      _weights, _bias[i], _adamAvgMom, _adamAvgVel);
-    addtoHashTable(_Nodes[i].weights(), _Nodes[i].bias(), i);
+    addtoHashTable(_Nodes[i].weights(), i);
   }
 
   auto t2 = std::chrono::high_resolution_clock::now();
@@ -112,7 +112,7 @@ void Layer::updateRandomNodes() {
   std::random_shuffle(_randNode.begin(), _randNode.end());
 }
 
-void Layer::addtoHashTable(SubVector<float> &weights, float bias, int ID) {
+void Layer::addtoHashTable(SubVector<float> &weights, int ID) {
   // LSH logic
   std::vector<int> hashes;
   if (HashFunction == 1) {
