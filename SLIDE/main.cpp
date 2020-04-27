@@ -173,6 +173,13 @@ void parseconfig(string filename) {
       cout << str << endl;
     }
   }
+
+  Print("RangePow", RangePow);
+  Print("K", K);
+  Print("L", L);
+  Print("Sparsity", Sparsity);
+  cerr << "Batchsize=" << Batchsize << endl;
+
 }
 
 void EvalDataSVM(int numBatchesTest, Network &_mynet, int iter) {
@@ -266,13 +273,13 @@ void ReadDataSVM(size_t numBatches, Network &_mynet, int epoch) {
 }
 
 int main(int argc, char *argv[]) {
-  hieu::main(argc, argv);
-
   //***********************************
   // Parse Config File
   //***********************************
   parseconfig(argv[1]);
   srand(time(NULL));
+
+  hieu::main(Batchsize, K, L, RangePow);
 
   //***********************************
   // Initialize Network

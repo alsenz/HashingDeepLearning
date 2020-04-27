@@ -19,7 +19,7 @@ protected:
                         const std::vector<int> &labels1) const;
 
 public:
-  Network(size_t maxBatchsize);
+  Network(size_t maxBatchsize, const std::vector<int> &K, const std::vector<int> &L, const std::vector<int> &RangePow);
   virtual ~Network();
 
   void Load(const cnpy::npz_t &npzArray);

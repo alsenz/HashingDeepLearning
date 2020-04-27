@@ -1,5 +1,7 @@
 #pragma once
+#include <stddef.h>
+#include <vector>
 
 namespace hieu {
-int main(int argc, char *argv[]);
+int main(size_t maxBatchsize, const std::vector<int> &K, const std::vector<int> &L, const std::vector<int> &RangePow);
 }
