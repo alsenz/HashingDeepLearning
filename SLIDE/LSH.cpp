@@ -43,30 +43,12 @@ std::vector<int> LSH::hashesToIndex(const std::vector<int> &hashes) const {
     unsigned int index = 0;
 
     for (int j = 0; j < _K; j++) {
-      if (HashFunction == 4) {
-        unsigned int h = hashes[_K * i + j];
-        index += h << (_K - 1 - j);
-      } else if (HashFunction == 1 | HashFunction == 2) {
         unsigned int h = hashes[_K * i + j];
         index += h << ((_K - 1 - j) * (int)floor(log(binsize)));
-
-      } else {
-        unsigned int h = _rand1[_K * i + j];
-        h *= _rand1[_K * i + j];
-        h ^= h >> 13;
-        h ^= _rand1[_K * i + j];
-        index += h * hashes[_K * i + j];
-      }
     }
-    if (HashFunction == 3) {
-      index = index & (_numBuckets - 1);
-    }
-    else if (HashFunction == 2) {
-      index = index % _numBuckets;
-    }
+    index = index % _numBuckets;
     indices[i] = index;
   }
-
   return indices;
 }
 

@@ -24,6 +24,7 @@ WtaHash::WtaHash(int numHashes, int noOfBitsToHash) {
   for (int i = 0; i < _rangePow; i++) {
     n_array[i] = i;
   }
+
   for (int p = 0; p < permute; p++) {
     std::shuffle(n_array.begin(), n_array.end(), rd);
     std::copy(n_array.begin(), n_array.end(),
@@ -39,7 +40,6 @@ std::vector<int> WtaHash::getHash(const std::vector<float> &data) const {
 std::vector<int> WtaHash::getHash(const SubVectorConst<float> &data) const {
   // binsize is the number of times the range is larger than the total number of
   // hashes we need.
-
   std::vector<int> hashes(_numhashes);
   std::vector<float> values(_numhashes);
 
