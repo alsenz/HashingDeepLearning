@@ -76,7 +76,6 @@ size_t Network::computeCorrect(const std::vector<float> &lastActivations, const 
 const std::vector<float> *
 Network::computeActivation(const std::vector<float> &data1,
                            const std::vector<int> &labels1) const {
-  cerr << "data1" << data1.size() << endl;
   size_t correctPred = 0;
 
   std::vector<float> *dataOut = new std::vector<float>;

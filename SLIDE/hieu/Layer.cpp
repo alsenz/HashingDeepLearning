@@ -66,7 +66,7 @@ Layer::~Layer() { delete _hashTables; }
 
 size_t Layer::computeActivation(std::vector<float> &dataOut,
                                 const std::vector<float> &dataIn) const {
-  cerr << "computeActivation layer=" << _layerIdx << endl;
+  //cerr << "computeActivation layer=" << _layerIdx << endl;
   assert(dataIn.size() == _prevNumNodes);
 
   if (_hashTables) {

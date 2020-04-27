@@ -23,8 +23,8 @@ void CreateData(std::ifstream &file, Vec2d<float> &data, Vec2d<int> &labels,
     const std::vector<int> &records1 = records[batchIdx];
     const std::vector<float> &values1 = values[batchIdx];
     assert(records1.size() == values1.size());
-    Print("records1", records1);
-    Print("values1", values1);
+    //Print("records1", records1);
+    //Print("values1", values1);
 
     std::vector<float> &data1 = data[batchIdx];
     data1.resize(inputDim, 0);
