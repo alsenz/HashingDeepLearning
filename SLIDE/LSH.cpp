@@ -4,10 +4,11 @@
 #include <climits>
 #include <iostream>
 #include <unordered_map>
+#include <algorithm>
 
 using namespace std;
 
-LSH::LSH(int K, int L, int RangePow) : _rand1(K * L), _bucket(L) {
+LSH::LSH(int K, int L, int RangePow) : _rand1(K * L), _bucket(L), _seeds(L) {
   _K = K;
   _L = L;
   _RangePow = RangePow;
@@ -28,6 +29,8 @@ LSH::LSH(int K, int L, int RangePow) : _rand1(K * L), _bucket(L) {
     if (_rand1[i] % 2 == 0)
       _rand1[i]++;
   }
+
+  generate(_seeds.begin(), _seeds.end(), [&]() { return dis(gen); });
 }
 
 void LSH::clear() {
@@ -37,6 +40,30 @@ void LSH::clear() {
   }
 }
 
+template <class T>
+inline void hash_combine(std::size_t& seed, const T& v)
+{
+  std::hash<T> hasher;
+  seed ^= hasher(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+}
+
+std::vector<int> LSH::hashesToIndex(const std::vector<int> &hashes) const {
+  //cerr << "hashes=" << hashes.size() << " " << _K << " " << _L << endl;
+  assert(hashes.size() == _K * _L);
+  std::vector<int> indices(_L);
+  for (int i = 0; i < _L; i++) {
+    size_t index = _seeds[i];
+    for (int j = 0; j < _K; j++) {
+      int h = hashes[_K * i + j];
+      hash_combine(index, h);
+    }
+    index = index % _numBuckets;
+    indices[i] = index;
+  }
+  return indices;
+}
+
+/*
 std::vector<int> LSH::hashesToIndex(const std::vector<int> &hashes) const {
   std::vector<int> indices(_L);
   for (int i = 0; i < _L; i++) {
@@ -51,6 +78,7 @@ std::vector<int> LSH::hashesToIndex(const std::vector<int> &hashes) const {
   }
   return indices;
 }
+*/
 
 void LSH::Add(const std::vector<int> &indices, int id, bool unlimited) {
   for (int i = 0; i < _L; i++) {
