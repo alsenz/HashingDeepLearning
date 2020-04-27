@@ -11,10 +11,11 @@ protected:
   size_t _idx;
   SubVectorConst<float> _weights;
   float &_nodeBias;
+  NodeType _type;
 
 public:
   Node(size_t idx, SubVectorConst<float> &nodeWeights, float &nodeBias,
-       size_t batchsize);
+       size_t batchsize, NodeType type);
   virtual ~Node();
 
   const SubVectorConst<float> &getWeights() const { return _weights; }

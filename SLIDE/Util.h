@@ -151,10 +151,10 @@ void PrintSizes(const std::string &str, const Vec2d<T> &vec) {
 
 ///////////////////////////////////////////////////////
 void CreateData(std::ifstream &file, Vec2d<float> &data, Vec2d<int> &labels,
-                int batchSize, size_t inputDim);
+                int maxBatchsize, size_t inputDim);
 
 void CreateData(std::ifstream &file, Vec2d<int> &records, Vec2d<float> &values,
-                Vec2d<int> &labels, int batchsize);
+                Vec2d<int> &labels, int maxBatchsize);
 
 ///////////////////////////////////////////////////////
 struct Train {
@@ -168,3 +168,5 @@ struct Train {
 typedef std::vector<Train> BatchTrain;
 
 ///////////////////////////////////////////////////////
+
+enum NodeType { ReLU, Softmax };

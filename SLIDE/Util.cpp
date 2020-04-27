@@ -8,14 +8,14 @@
 using namespace std;
 
 void CreateData(std::ifstream &file, Vec2d<float> &data, Vec2d<int> &labels,
-                int batchSize, size_t inputDim) {
-  data.resize(batchSize);
-  labels.resize(batchSize);
+                int maxBatchsize, size_t inputDim) {
+  data.resize(maxBatchsize);
+  labels.resize(maxBatchsize);
 
-  Vec2d<int> records(batchSize);
-  Vec2d<float> values(batchSize);
+  Vec2d<int> records(maxBatchsize);
+  Vec2d<float> values(maxBatchsize);
 
-  CreateData(file, records, values, labels, batchSize);
+  CreateData(file, records, values, labels, maxBatchsize);
   assert(records.size() == values.size());
   assert(records.size() == labels.size());
 
@@ -37,7 +37,7 @@ void CreateData(std::ifstream &file, Vec2d<float> &data, Vec2d<int> &labels,
 }
 
 void CreateData(std::ifstream &file, Vec2d<int> &records, Vec2d<float> &values,
-                Vec2d<int> &labels, int batchsize) {
+                Vec2d<int> &labels, int maxBatchsize) {
   int nonzeros = 0;
   int count = 0;
   vector<string> list;
@@ -91,7 +91,7 @@ void CreateData(std::ifstream &file, Vec2d<int> &records, Vec2d<float> &values,
     }
 
     count++;
-    if (count >= batchsize)
+    if (count >= maxBatchsize)
       break;
   }
 }

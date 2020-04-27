@@ -7,8 +7,6 @@
 #include <vector>
 #include <mutex>
 
-enum NodeType { ReLU, Softmax };
-
 class Node {
 private:
   int _activeInputs;

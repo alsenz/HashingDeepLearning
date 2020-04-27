@@ -9,8 +9,8 @@ using namespace std;
 
 namespace hieu {
 Node::Node(size_t idx, SubVectorConst<float> &nodeWeights, float &nodeBias,
-           size_t maxBatchsize)
-    : _idx(idx), _weights(nodeWeights), _nodeBias(nodeBias) {
+           size_t maxBatchsize, NodeType type)
+    : _idx(idx), _weights(nodeWeights), _nodeBias(nodeBias), _type(type) {
   // cerr << "Create Node" << endl;
 }
 
@@ -22,7 +22,9 @@ float Node::computeActivation(const std::vector<float> &dataIn) const {
   for (size_t idx = 0; idx < _weights.size(); ++idx) {
     ret += dataIn.at(idx) * _weights.at(idx);
   }
-
+  if (_type == ReLU && ret < 0) {
+    ret = 0;
+  }
   return ret;
 }
 

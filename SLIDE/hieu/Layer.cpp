@@ -13,7 +13,7 @@ using namespace std;
 namespace hieu {
 Layer::Layer(size_t layerIdx, size_t numNodes, size_t prevNumNodes,
              size_t maxBatchsize, bool sparsify, size_t K, size_t L,
-             size_t RangePow)
+             size_t RangePow, NodeType type)
     : _layerIdx(layerIdx), _numNodes(numNodes), _prevNumNodes(prevNumNodes) {
 
   _weights.resize(numNodes * prevNumNodes);
@@ -29,7 +29,7 @@ Layer::Layer(size_t layerIdx, size_t numNodes, size_t prevNumNodes,
     SubVectorConst<float> nodeWeights(_weights, nodeIdx * prevNumNodes, prevNumNodes);
     float &nodeBias = _bias.at(nodeIdx);
 
-    _nodes.emplace_back(Node(nodeIdx, nodeWeights, nodeBias, maxBatchsize));
+    _nodes.emplace_back(Node(nodeIdx, nodeWeights, nodeBias, maxBatchsize, type));
   }
 
   cerr << "Created Layer"
