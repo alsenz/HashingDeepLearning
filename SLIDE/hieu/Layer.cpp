@@ -43,13 +43,13 @@ Layer::Layer(size_t layerIdx, size_t numNodes, size_t prevNumNodes,
 
 void Layer::Load(const cnpy::npz_t &npzArray) {
   cnpy::NpyArray weightArr = npzArray.at("w_layer_" + to_string(_layerIdx));
-  Print("weightArr=", weightArr.shape);
+  //Print("weightArr=", weightArr.shape);
   assert(_weights.size() == weightArr.num_vals);
   memcpy(_weights.data(), weightArr.data<float>(),
          sizeof(float) * weightArr.num_vals);
 
   cnpy::NpyArray biasArr = npzArray.at("b_layer_" + to_string(_layerIdx));
-  Print("biasArr=", biasArr.shape);
+  //Print("biasArr=", biasArr.shape);
   assert(_bias.size() == biasArr.num_vals);
   memcpy(_bias.data(), biasArr.data<float>(), sizeof(float) * biasArr.num_vals);
 }
