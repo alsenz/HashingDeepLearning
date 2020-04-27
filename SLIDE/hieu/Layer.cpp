@@ -59,7 +59,7 @@ Layer::~Layer() {
   cerr << "Layer stats " << _layerIdx << " "
     << _totActiveNodes << " "
     << _totComputes << " "
-    << _totActiveNodes / _totComputes << " "
+    << (float) _totActiveNodes / (float) _totComputes << " "
     << endl;
 }
 

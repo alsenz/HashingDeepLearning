@@ -126,7 +126,7 @@ void Layer::addtoHashTable(SubVector<float> &weights, int ID) {
   }
 
   std::vector<int> hashIndices = _hashTables.hashesToIndex(hashes);
-  _hashTables.add(hashIndices, ID + 1, false);
+  _hashTables.Add(hashIndices, ID + 1, false);
 
   // mine
   /*

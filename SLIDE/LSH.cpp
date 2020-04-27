@@ -11,10 +11,11 @@ LSH::LSH(int K, int L, int RangePow) : _rand1(K * L), _bucket(L) {
   _K = K;
   _L = L;
   _RangePow = RangePow;
+  _numBuckets = 1 << _RangePow;
 
   //#pragma omp parallel for
   for (int i = 0; i < L; i++) {
-    _bucket[i].resize(1 << _RangePow);
+    _bucket[i].resize(_numBuckets);
   }
 
   std::random_device rd;
@@ -32,7 +33,7 @@ LSH::LSH(int K, int L, int RangePow) : _rand1(K * L), _bucket(L) {
 void LSH::clear() {
   for (int i = 0; i < _L; i++) {
     _bucket[i].clear();
-    _bucket[i].resize(1 << _RangePow);
+    _bucket[i].resize(_numBuckets);
   }
 }
 
@@ -58,7 +59,10 @@ std::vector<int> LSH::hashesToIndex(const std::vector<int> &hashes) const {
       }
     }
     if (HashFunction == 3) {
-      index = index & ((1 << _RangePow) - 1);
+      index = index & (_numBuckets - 1);
+    }
+    else if (HashFunction == 2) {
+      index = index % _numBuckets;
     }
     indices[i] = index;
   }
@@ -66,14 +70,16 @@ std::vector<int> LSH::hashesToIndex(const std::vector<int> &hashes) const {
   return indices;
 }
 
-void LSH::add(const std::vector<int> &indices, int id, bool unlimited) {
+void LSH::Add(const std::vector<int> &indices, int id, bool unlimited) {
   for (int i = 0; i < _L; i++) {
-    _bucket[i][indices[i]].add(id, unlimited);
+    Add(i, indices[i], id, unlimited);
   }
 }
 
-void LSH::add(int tableId, int indices, int id, bool unlimited) {
-  _bucket[tableId][indices].add(id, unlimited);
+void LSH::Add(int tableId, int indices, int id, bool unlimited) {
+  std::vector<Bucket> &buckets = _bucket.at(tableId);
+  Bucket &bucket = buckets.at(indices);
+  bucket.add(id, unlimited);
 }
 
 /*
