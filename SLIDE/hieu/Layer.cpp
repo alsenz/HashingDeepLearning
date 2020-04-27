@@ -95,7 +95,7 @@ size_t Layer::computeActivation(std::vector<float> &dataOut,
       const Node &node = getNode(nodeIdx);
       dataOut.at(nodeIdx) = node.computeActivation(dataIn);
     }
-    _totActiveNodes += nodeIdx.size();
+    _totActiveNodes += _nodes.size();
   }
 
   ++_totComputes;
