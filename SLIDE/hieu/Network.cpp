@@ -1,6 +1,7 @@
 #include "Network.h"
 #include "../DensifiedWtaHash.h"
 #include <iostream>
+#include <algorithm>
 #include <stddef.h>
 #include <stdlib.h>
 
@@ -45,9 +46,31 @@ size_t Network::predictClass(const Vec2d<float> &data,
     const std::vector<float> *lastActivations =
         computeActivation(data1, labels1);
 
+    size_t correctPred1 = computeCorrect(*lastActivations, labels1);
+    correctPred += correctPred1;
+
     delete lastActivations;
   }
   return correctPred;
+}
+
+size_t Network::computeCorrect(const std::vector<float> &lastActivations, const std::vector<int> &labels1) const {  
+  float max_act = -222222222;
+  int predict_class = -1;
+  for (size_t idx = 0; idx < lastActivations.size(); ++idx) {
+    float cur_act = lastActivations[idx];
+    if (max_act < cur_act) {
+      max_act = cur_act;
+      predict_class = idx;
+    }
+  }
+
+  size_t ret = 0;
+  if (std::find(labels1.begin(), labels1.end(), predict_class) !=
+    labels1.end()) {
+    ret++;
+  }
+  return ret;
 }
 
 const std::vector<float> *

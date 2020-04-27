@@ -40,7 +40,14 @@ void EvalDataSVM(int numBatchesTest, Network &mynet, const std::string &path,
     std::cout << maxBatchsize << " records, with " << num_features
               << " features and " << num_labels << " labels" << std::endl;
     size_t correctPredict = mynet.predictClass(data, labels);
+    totCorrect += correctPredict;
+    std::cout << " iter " << i << ": "
+      << totCorrect * 1.0 / (maxBatchsize * (i + 1)) << " correct"
+      << std::endl;
   }
+  file.close();
+  cout << "over all " << totCorrect * 1.0 / (numBatchesTest * maxBatchsize)
+    << endl;
 }
 
 int main(int argc, char *argv[]) {
