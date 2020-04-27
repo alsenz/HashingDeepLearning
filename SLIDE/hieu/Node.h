@@ -9,15 +9,15 @@ namespace hieu {
 class Node {
 protected:
   size_t _idx;
-  SubVector<float> _weights;
+  SubVectorConst<float> _weights;
   float &_nodeBias;
 
 public:
-  Node(size_t idx, SubVector<float> &nodeWeights, float &nodeBias,
+  Node(size_t idx, SubVectorConst<float> &nodeWeights, float &nodeBias,
        size_t batchsize);
   virtual ~Node();
 
-  const SubVector<float> &getWeights() const { return _weights; }
+  const SubVectorConst<float> &getWeights() const { return _weights; }
 
   float computeActivation(const std::vector<float> &dataIn) const;
 
