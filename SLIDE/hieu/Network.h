@@ -15,7 +15,8 @@ protected:
   const std::vector<float> *
   computeActivation(const std::vector<float> &data1,
                     const std::vector<int> &labels) const;
-  size_t computeCorrect(const std::vector<float> &lastActivations, const std::vector<int> &labels1)  const;
+  size_t computeCorrect(const std::vector<float> &lastActivations,
+                        const std::vector<int> &labels1) const;
 
 public:
   Network(size_t maxBatchsize);

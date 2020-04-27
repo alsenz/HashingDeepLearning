@@ -14,7 +14,7 @@ Node::Node() {
 }
 
 Node::~Node() {
-  //delete _mutex;
+  // delete _mutex;
 }
 
 void Node::Update(int dim, int nodeID, int layerID, NodeType type,
@@ -49,7 +49,7 @@ float Node::getLastActivation(int inputID) const {
 
 void Node::incrementDelta(int inputID, float incrementValue) {
   assert(("Input Not Active but still called !! BUG",
-    getTrain(inputID)._ActiveinputIds));
+          getTrain(inputID)._ActiveinputIds));
   if (getTrain(inputID)._lastActivations > 0)
     getTrain(inputID)._lastDeltaforBPs += incrementValue;
 }
@@ -115,8 +115,7 @@ void Node::ComputeExtaStatsForSoftMax(float normalizationConstant, int inputID,
 
 void Node::backPropagate(std::vector<Node> &previousNodes,
                          const std::vector<int> &previousLayerActiveNodeIds,
-                         float learningRate,
-                         int inputID) {
+                         float learningRate, int inputID) {
   assert(("Input Not Active but still called !! BUG",
           getTrain(inputID)._ActiveinputIds));
   for (int i = 0; i < previousLayerActiveNodeIds.size(); i++) {
@@ -126,8 +125,8 @@ void Node::backPropagate(std::vector<Node> &previousNodes,
                              getTrain(inputID)._lastDeltaforBPs *
                                  _weights[previousLayerActiveNodeIds[i]]);
 
-    float grad_t =
-        getTrain(inputID)._lastDeltaforBPs * prev_node.getLastActivation(inputID);
+    float grad_t = getTrain(inputID)._lastDeltaforBPs *
+                   prev_node.getLastActivation(inputID);
 
     if (ADAM) {
       _t[previousLayerActiveNodeIds[i]] += grad_t;
@@ -193,8 +192,8 @@ float Node::getGradient(int weightid, int inputID, float InputVal) {
   return -getTrain(inputID)._lastDeltaforBPs * InputVal;
 }
 
-const Train &Node::getTrain(size_t idx) const { 
-  //std::lock_guard<std::mutex> guard(*_mutex);
+const Train &Node::getTrain(size_t idx) const {
+  // std::lock_guard<std::mutex> guard(*_mutex);
   return _train[idx];
   /*
   BatchTrain::const_iterator iter = _train.find(idx);
@@ -204,6 +203,6 @@ const Train &Node::getTrain(size_t idx) const {
 }
 
 Train &Node::getTrain(size_t idx) {
-  //std::lock_guard<std::mutex> guard(*_mutex);
+  // std::lock_guard<std::mutex> guard(*_mutex);
   return _train[idx];
 }

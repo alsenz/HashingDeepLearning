@@ -34,7 +34,7 @@ void Node::HashWeights(LSH &hashTables,
   std::vector<int> hashIndices = hashTables.hashesToIndex(hashes);
   hashTables.add(hashIndices, _idx, true);
   // Print("hashIndices", hashIndices);
-  //cerr << "hashes1 " << hashes.size() << " " << hashIndices.size() << endl;
+  // cerr << "hashes1 " << hashes.size() << " " << hashIndices.size() << endl;
 }
 
 } // namespace hieu

@@ -42,9 +42,12 @@ public:
   std::vector<Node> &getAllNodes();
   void addtoHashTable(SubVector<float> &weights, int id);
   float getNomalizationConstant(int inputID) const;
-  int queryActiveNodeandComputeActivations(
-      Vec2d<int> &activenodesperlayer, Vec2d<float> &activeValuesperlayer, int inputID, const std::vector<int> &label,
-      float Sparsity, int iter, bool train);
+  int queryActiveNodeandComputeActivations(Vec2d<int> &activenodesperlayer,
+                                           Vec2d<float> &activeValuesperlayer,
+                                           int inputID,
+                                           const std::vector<int> &label,
+                                           float Sparsity, int iter,
+                                           bool train);
   void saveWeights(const std::string &file);
   void updateTable();
   void updateRandomNodes();

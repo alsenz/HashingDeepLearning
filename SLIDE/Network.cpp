@@ -40,7 +40,7 @@ int Network::predictClass(Vec2d<int> &inputIndices, Vec2d<float> &inputValues,
   int correctPred = 0;
 
   auto t1 = std::chrono::high_resolution_clock::now();
-#pragma omp parallel for reduction(+ : correctPred) //num_threads(1)
+#pragma omp parallel for reduction(+ : correctPred) // num_threads(1)
   for (int i = 0; i < _currentBatchSize; i++) {
     Vec2d<int> activenodesperlayer(_numberOfLayers + 1);
     Vec2d<float> activeValuesperlayer(_numberOfLayers + 1);
@@ -74,7 +74,7 @@ int Network::predictClass(Vec2d<int> &inputIndices, Vec2d<float> &inputValues,
       correctPred++;
     }
   }
- 
+
   auto t2 = std::chrono::high_resolution_clock::now();
   float timeDiffInMiliseconds =
       std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
@@ -104,7 +104,7 @@ float Network::ProcessInput(Vec2d<int> &inputIndices, Vec2d<float> &inputValues,
 
   Vec3d<int> activeNodesPerBatch(_currentBatchSize); // batch, layer, node
   Vec3d<float> activeValuesPerBatch(_currentBatchSize);
-#pragma omp parallel for //num_threads(1)
+#pragma omp parallel for // num_threads(1)
   for (int i = 0; i < _currentBatchSize; i++) {
     Vec2d<int> &activenodesperlayer = activeNodesPerBatch[i];
     activenodesperlayer.resize(_numberOfLayers + 1);
@@ -132,8 +132,8 @@ float Network::ProcessInput(Vec2d<int> &inputIndices, Vec2d<float> &inputValues,
       Layer *layer = _hiddenlayers[j];
       Layer *prev_layer = _hiddenlayers[j - 1];
 
-      //cerr << "i=" << i << " j=" << j << endl;
-      //Print("activeNodesPerBatch[i][j + 1]", activeNodesPerBatch[i][j + 1]);
+      // cerr << "i=" << i << " j=" << j << endl;
+      // Print("activeNodesPerBatch[i][j + 1]", activeNodesPerBatch[i][j + 1]);
       // nodes
       for (int k = 0; k < activeNodesPerBatch[i][j + 1].size(); k++) {
         Node &node = layer->getNodebyID(activeNodesPerBatch[i][j + 1][k]);
@@ -146,7 +146,8 @@ float Network::ProcessInput(Vec2d<int> &inputIndices, Vec2d<float> &inputValues,
           node.backPropagate(prev_layer->getAllNodes(),
                              activeNodesPerBatch[i][j], tmplr, i);
         } else {
-          node.backPropagateFirstLayer(inputIndices[i], inputValues[i], tmplr, i);
+          node.backPropagateFirstLayer(inputIndices[i], inputValues[i], tmplr,
+                                       i);
         }
       }
     }
@@ -174,7 +175,7 @@ float Network::ProcessInput(Vec2d<int> &inputIndices, Vec2d<float> &inputValues,
       _hiddenlayers[l]->updateTable();
     }
     int ratio = 1;
-#pragma omp parallel for //num_threads(1)
+#pragma omp parallel for // num_threads(1)
     for (size_t m = 0; m < _hiddenlayers[l]->noOfNodes(); m++) {
       Node &tmp = _hiddenlayers[l]->getNodebyID(m);
       int dim = tmp.dim();

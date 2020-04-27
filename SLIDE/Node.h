@@ -3,9 +3,9 @@
 #include <assert.h>
 #include <cmath>
 #include <iostream>
+#include <mutex>
 #include <stdlib.h>
 #include <vector>
-#include <mutex>
 
 class Node {
 private:
@@ -28,7 +28,7 @@ private:
   float _mirrorbias = 0; // not adam
 
   std::vector<float> _t; // for adam
-  //std::mutex *_mutex;
+  // std::mutex *_mutex;
 
   Train &getTrain(size_t idx);
 
@@ -81,4 +81,3 @@ public:
 
   const Train &getTrain(size_t idx) const;
 };
-

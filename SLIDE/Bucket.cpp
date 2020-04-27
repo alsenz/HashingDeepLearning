@@ -17,8 +17,7 @@ void Bucket::add(int id, bool unlimited) {
 
   if (unlimited) {
     _arr.push_back(id);
-  }
-  else if (_arr.size() < BUCKETSIZE) {
+  } else if (_arr.size() < BUCKETSIZE) {
     _arr.push_back(id);
   } else {
     // FIFO

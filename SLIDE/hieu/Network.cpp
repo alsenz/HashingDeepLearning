@@ -1,7 +1,7 @@
 #include "Network.h"
 #include "../DensifiedWtaHash.h"
-#include <iostream>
 #include <algorithm>
+#include <iostream>
 #include <stddef.h>
 #include <stdlib.h>
 
@@ -12,8 +12,10 @@ Network::Network(size_t maxBatchsize) {
   size_t inputDim = 135909;
 
   cerr << "Create Network" << endl;
-  _layers.push_back(new Layer(0, 128, inputDim, maxBatchsize, false, 2, 20, 6, ReLU));
-  _layers.push_back(new Layer(1, 670091, 128, maxBatchsize, true, 6, 50, 18, Softmax));
+  _layers.push_back(
+      new Layer(0, 128, inputDim, maxBatchsize, false, 2, 20, 6, ReLU));
+  _layers.push_back(
+      new Layer(1, 670091, 128, maxBatchsize, true, 6, 50, 18, Softmax));
 }
 
 void Network::Load(const cnpy::npz_t &npzArray) {
@@ -54,7 +56,8 @@ size_t Network::predictClass(const Vec2d<float> &data,
   return correctPred;
 }
 
-size_t Network::computeCorrect(const std::vector<float> &lastActivations, const std::vector<int> &labels1) const {  
+size_t Network::computeCorrect(const std::vector<float> &lastActivations,
+                               const std::vector<int> &labels1) const {
   float max_act = -222222222;
   int predict_class = -1;
   for (size_t idx = 0; idx < lastActivations.size(); ++idx) {
@@ -67,7 +70,7 @@ size_t Network::computeCorrect(const std::vector<float> &lastActivations, const 
 
   size_t ret = 0;
   if (std::find(labels1.begin(), labels1.end(), predict_class) !=
-    labels1.end()) {
+      labels1.end()) {
     ret++;
   }
   return ret;

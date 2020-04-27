@@ -3,10 +3,10 @@
 #include <algorithm>
 #include <iostream>
 #include <random>
-#include <unordered_set>
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unordered_set>
 
 using namespace std;
 
@@ -26,10 +26,12 @@ Layer::Layer(size_t layerIdx, size_t numNodes, size_t prevNumNodes,
 
   _nodes.reserve(numNodes);
   for (size_t nodeIdx = 0; nodeIdx < numNodes; ++nodeIdx) {
-    SubVectorConst<float> nodeWeights(_weights, nodeIdx * prevNumNodes, prevNumNodes);
+    SubVectorConst<float> nodeWeights(_weights, nodeIdx * prevNumNodes,
+                                      prevNumNodes);
     float &nodeBias = _bias.at(nodeIdx);
 
-    _nodes.emplace_back(Node(nodeIdx, nodeWeights, nodeBias, maxBatchsize, type));
+    _nodes.emplace_back(
+        Node(nodeIdx, nodeWeights, nodeBias, maxBatchsize, type));
   }
 
   cerr << "Created Layer"
@@ -54,7 +56,7 @@ Layer::~Layer() { delete _hashTables; }
 
 size_t Layer::computeActivation(std::vector<float> &dataOut,
                                 const std::vector<float> &dataIn) const {
-  //cerr << "computeActivation layer=" << _layerIdx << endl;
+  // cerr << "computeActivation layer=" << _layerIdx << endl;
   assert(dataIn.size() == _prevNumNodes);
 
   if (_hashTables) {
@@ -65,14 +67,14 @@ size_t Layer::computeActivation(std::vector<float> &dataOut,
 
     std::unordered_set<int> nodesIdx;
     for (const std::vector<int> *v : actives) {
-      //Print("v", *v);
-      //cerr << v->size() << " ";
+      // Print("v", *v);
+      // cerr << v->size() << " ";
       std::copy(v->begin(), v->end(), std::inserter(nodesIdx, nodesIdx.end()));
     }
-    //cerr << "nodesIdx" << nodesIdx.size() << endl;
+    // cerr << "nodesIdx" << nodesIdx.size() << endl;
 
     dataOut.resize(_numNodes, 0);
-    for (int nodeIdx: nodesIdx) {
+    for (int nodeIdx : nodesIdx) {
       const Node &node = getNode(nodeIdx);
       dataOut.at(nodeIdx) = node.computeActivation(dataIn);
     }

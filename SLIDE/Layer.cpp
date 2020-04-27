@@ -73,7 +73,7 @@ if (ADAM){
   auto t1 = std::chrono::high_resolution_clock::now();
 
   // create nodes for this layer
-#pragma omp parallel for //num_threads(1)
+#pragma omp parallel for // num_threads(1)
   for (size_t i = 0; i < noOfNodes; i++) {
     _Nodes[i].Update(previousLayerNumOfNodes, i, _layerID, type, batchsize,
                      _weights, _bias[i], _adamAvgMom, _adamAvgVel);
@@ -194,8 +194,9 @@ float collision(int *hashes, int *table_hashes, int k, int l) {
 }
 
 int Layer::queryActiveNodeandComputeActivations(
-    Vec2d<int> &activenodesperlayer, Vec2d<float> &activeValuesperlayer, int inputID, const std::vector<int> &label,
-    float Sparsity, int iter, bool train) {
+    Vec2d<int> &activenodesperlayer, Vec2d<float> &activeValuesperlayer,
+    int inputID, const std::vector<int> &label, float Sparsity, int iter,
+    bool train) {
   // LSH QueryLogic
   // Beidi. Query out all the candidate nodes
   int len;
@@ -381,7 +382,8 @@ int Layer::queryActiveNodeandComputeActivations(
       for (size_t s = 0; s < _noOfNodes; s++) {
         float tmp = innerproduct(activenodesperlayer[_layerID].data(),
                                  activeValuesperlayer[_layerID].data(),
-          activenodesperlayer[_layerID].size(), _Nodes[s].weights().data());
+                                 activenodesperlayer[_layerID].size(),
+                                 _Nodes[s].weights().data());
         tmp += _Nodes[s].bias();
         if (find(label.begin(), label.end(), s) != label.end()) {
           sortW.push_back(make_pair(-1000000000, s));
@@ -415,7 +417,7 @@ int Layer::queryActiveNodeandComputeActivations(
     activeValuesperlayer[_layerID + 1][i] =
         _Nodes[activenodesperlayer[_layerID + 1][i]].getActivation(
             activenodesperlayer[_layerID], activeValuesperlayer[_layerID],
-          activenodesperlayer[_layerID].size(), inputID);
+            activenodesperlayer[_layerID].size(), inputID);
     if (_type == NodeType::Softmax &&
         activeValuesperlayer[_layerID + 1][i] > maxValue) {
       maxValue = activeValuesperlayer[_layerID + 1][i];
@@ -467,4 +469,3 @@ Layer::~Layer() {
   delete _srp;
   delete _MinHasher;
 }
-
