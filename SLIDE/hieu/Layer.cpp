@@ -82,7 +82,6 @@ size_t Layer::computeActivation(std::vector<float> &dataOut,
     }
     //cerr << "activeNodesIdx=" << activeNodesIdx.size() << endl;
     _totActiveNodes += activeNodesIdx.size();
-    ++_totComputes;
 
     dataOut.resize(_numNodes, 0);
     for (int activeNodeIdx : activeNodesIdx) {
@@ -96,7 +95,11 @@ size_t Layer::computeActivation(std::vector<float> &dataOut,
       const Node &node = getNode(nodeIdx);
       dataOut.at(nodeIdx) = node.computeActivation(dataIn);
     }
+    _totActiveNodes += nodeIdx.size();
   }
+
+  ++_totComputes;
+
 }
 
 void Layer::HashWeights() {
