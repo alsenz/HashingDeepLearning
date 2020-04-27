@@ -50,7 +50,7 @@ void EvalDataSVM(int numBatchesTest, Network &mynet, const std::string &path,
        << endl;
 }
 
-int main(size_t maxBatchsize, const std::vector<int> &K, const std::vector<int> &L, const std::vector<int> &RangePow) {
+int main(size_t maxBatchsize, const std::vector<int> &K, const std::vector<int> &L, const std::vector<int> &RangePow, const std::vector<float> &Sparsity) {
   cerr << "Starting" << endl;
   size_t inputDim = 135909;
   size_t numEpochs = 1;
@@ -59,7 +59,7 @@ int main(size_t maxBatchsize, const std::vector<int> &K, const std::vector<int> 
   int numBatches = totRecords / maxBatchsize;
   int numBatchesTest = totRecordsTest / maxBatchsize;
 
-  hieu::Network mynet(maxBatchsize, K, L, RangePow);
+  hieu::Network mynet(maxBatchsize, K, L, RangePow, Sparsity);
   if (LOADWEIGHT) {
     cnpy::npz_t npzArray = cnpy::npz_load("../savedWeight.npz");
     cerr << "npzArray=" << npzArray.size() << endl;

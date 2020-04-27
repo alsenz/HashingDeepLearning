@@ -279,7 +279,7 @@ int main(int argc, char *argv[]) {
   parseconfig(argv[1]);
   srand(time(NULL));
 
-  hieu::main(Batchsize, K, L, RangePow);
+  hieu::main(Batchsize, K, L, RangePow, Sparsity);
 
   //***********************************
   // Initialize Network

@@ -8,14 +8,14 @@
 using namespace std;
 
 namespace hieu {
-Network::Network(size_t maxBatchsize, const std::vector<int> &K, const std::vector<int> &L, const std::vector<int> &RangePow) {
+Network::Network(size_t maxBatchsize, const std::vector<int> &K, const std::vector<int> &L, const std::vector<int> &RangePow, const std::vector<float> &Sparsity) {
   size_t inputDim = 135909;
 
   cerr << "Create Network" << endl;
   _layers.push_back(
-      new Layer(0, 128, inputDim, maxBatchsize, false, K[0], L[0], RangePow[0], ReLU));
+      new Layer(0, 128, inputDim, maxBatchsize, Sparsity[0]<1, K[0], L[0], RangePow[0], ReLU));
   _layers.push_back(
-      new Layer(1, 670091, 128, maxBatchsize, true, K[1], L[1], RangePow[1], Softmax));
+      new Layer(1, 670091, 128, maxBatchsize, Sparsity[1]<1, K[1], L[1], RangePow[1], Softmax));
 }
 
 void Network::Load(const cnpy::npz_t &npzArray) {
