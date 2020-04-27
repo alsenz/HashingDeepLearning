@@ -36,7 +36,9 @@ Layer::Layer(size_t layerIdx, size_t numNodes, size_t prevNumNodes,
 
   cerr << "Created Layer"
        << " layerIdx=" << _layerIdx << " numNodes=" << _nodes.size()
-       << " prevNumNodes=" << _prevNumNodes << endl;
+       << " prevNumNodes=" << _prevNumNodes 
+       << " sparsify=" << sparsify
+      << endl;
 }
 
 void Layer::Load(const cnpy::npz_t &npzArray) {
@@ -52,7 +54,14 @@ void Layer::Load(const cnpy::npz_t &npzArray) {
   memcpy(_bias.data(), biasArr.data<float>(), sizeof(float) * biasArr.num_vals);
 }
 
-Layer::~Layer() { delete _hashTables; }
+Layer::~Layer() { 
+  delete _hashTables; 
+  cerr << "Layer stats " << _layerIdx << " "
+    << _totActiveNodes << " "
+    << _totComputes << " "
+    << _totActiveNodes / _totComputes << " "
+    << endl;
+}
 
 size_t Layer::computeActivation(std::vector<float> &dataOut,
                                 const std::vector<float> &dataIn) const {
@@ -65,18 +74,20 @@ size_t Layer::computeActivation(std::vector<float> &dataOut,
     std::vector<const std::vector<int> *> actives =
         _hashTables->retrieveRaw(hashIndices);
 
-    std::unordered_set<int> nodesIdx;
+    std::unordered_set<int> activeNodesIdx;
     for (const std::vector<int> *v : actives) {
       // Print("v", *v);
       // cerr << v->size() << " ";
-      std::copy(v->begin(), v->end(), std::inserter(nodesIdx, nodesIdx.end()));
+      std::copy(v->begin(), v->end(), std::inserter(activeNodesIdx, activeNodesIdx.end()));
     }
-    // cerr << "nodesIdx" << nodesIdx.size() << endl;
+    //cerr << "activeNodesIdx" << activeNodesIdx.size() << endl;
+    _totActiveNodes += activeNodesIdx.size();
+    ++_totComputes;
 
     dataOut.resize(_numNodes, 0);
-    for (int nodeIdx : nodesIdx) {
-      const Node &node = getNode(nodeIdx);
-      dataOut.at(nodeIdx) = node.computeActivation(dataIn);
+    for (int activeNodeIdx : activeNodesIdx) {
+      const Node &node = getNode(activeNodeIdx);
+      dataOut.at(activeNodeIdx) = node.computeActivation(dataIn);
     }
 
   } else {

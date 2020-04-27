@@ -18,6 +18,9 @@ protected:
   LSH *_hashTables = nullptr;
   DensifiedWtaHash *_dwtaHasher = nullptr;
 
+  mutable size_t _totActiveNodes = 0;
+  mutable size_t _totComputes = 0;
+
 public:
   Layer(size_t layerIdx, size_t numNodes, size_t prevNumNodes,
         size_t maxBatchsize, bool sparsify, size_t K, size_t L, size_t RangePow,
