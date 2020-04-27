@@ -69,7 +69,7 @@ size_t Layer::computeActivation(std::vector<float> &dataOut,
   assert(dataIn.size() == _prevNumNodes);
 
   if (_hashTables) {
-    std::vector<int> hashes = _dwtaHasher->getHashEasy(dataIn);
+    std::vector<int> hashes = _dwtaHasher->getHash(dataIn);
     std::vector<int> hashIndices = _hashTables->hashesToIndex(hashes);
     std::vector<const std::vector<int> *> actives =
         _hashTables->retrieveRaw(hashIndices);

@@ -27,7 +27,7 @@ float Node::computeActivation(const std::vector<float> &dataIn) const {
 
 void Node::HashWeights(LSH &hashTables,
                        const DensifiedWtaHash &dwtaHasher) const {
-  std::vector<int> hashes = dwtaHasher.getHashEasy(_weights);
+  std::vector<int> hashes = dwtaHasher.getHash(_weights);
   std::vector<int> hashIndices = hashTables.hashesToIndex(hashes);
   hashTables.Add(hashIndices, _idx, true);
   // Print("hashIndices", hashIndices);
