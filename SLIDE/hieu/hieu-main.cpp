@@ -78,6 +78,6 @@ int main(size_t maxBatchsize, const std::vector<int> &K, const std::vector<int> 
   }
 
   cerr << "Finished" << endl;
-  exit(0);
+  //exit(0);
 }
 } // namespace hieu

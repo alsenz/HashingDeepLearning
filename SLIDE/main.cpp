@@ -280,6 +280,7 @@ int main(int argc, char *argv[]) {
   srand(time(NULL));
 
   hieu::main(Batchsize, K, L, RangePow, Sparsity);
+  exit(44);
 
   //***********************************
   // Initialize Network

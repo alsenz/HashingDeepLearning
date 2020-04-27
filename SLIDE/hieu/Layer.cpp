@@ -80,7 +80,7 @@ size_t Layer::computeActivation(std::vector<float> &dataOut,
       // cerr << v->size() << " ";
       std::copy(v->begin(), v->end(), std::inserter(activeNodesIdx, activeNodesIdx.end()));
     }
-    //cerr << "activeNodesIdx" << activeNodesIdx.size() << endl;
+    //cerr << "activeNodesIdx=" << activeNodesIdx.size() << endl;
     _totActiveNodes += activeNodesIdx.size();
     ++_totComputes;
 
