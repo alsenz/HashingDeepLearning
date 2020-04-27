@@ -67,6 +67,7 @@ Layer::~Layer() { delete _hashTables; }
 
 size_t Layer::computeActivation(std::vector<float> &dataOut,
                                 const std::vector<float> &dataIn) const {
+  cerr << "computeActivation layer=" << _layerIdx << endl;
   assert(dataIn.size() == _prevNumNodes);
 
   if (_hashTables) {
@@ -74,9 +75,10 @@ size_t Layer::computeActivation(std::vector<float> &dataOut,
     std::vector<int> hashIndices = _hashTables->hashesToIndex(hashes);
     std::vector<const std::vector<int> *> actives =
         _hashTables->retrieveRaw(hashIndices);
+    Print("dataIn", dataIn);
+    Print("hashIndices", hashIndices);
     /*
     cerr << "hashes2 " << hashes.size() << " " << hashIndices.size() << " " << actives.size() << endl;
-    Print("hashIndices", hashIndices);
     Print("actives", actives);
     for (const std::vector<int> *v : actives) {
       //Print("v", *v);
