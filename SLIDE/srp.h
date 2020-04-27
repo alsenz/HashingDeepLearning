@@ -1,8 +1,9 @@
 #pragma once
 #include "Util.h"
 #include <vector>
+#include "HashBase.h"
 
-class SparseRandomProjection {
+class SparseRandomProjection : public HashBase {
 private:
   size_t _dim;
   size_t _numhashes, _samSize;

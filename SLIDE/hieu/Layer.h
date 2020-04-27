@@ -1,5 +1,5 @@
 #pragma once
-#include "../DensifiedWtaHash.h"
+#include "../HashBase.h"
 #include "../LSH.h"
 #include "Node.h"
 #include "cnpy.h"
@@ -16,7 +16,7 @@ protected:
   size_t _layerIdx, _numNodes, _prevNumNodes;
 
   LSH *_hashTables = nullptr;
-  DensifiedWtaHash *_dwtaHasher = nullptr;
+  HashBase *_hasher = nullptr;
 
   mutable size_t _totActiveNodes = 0;
   mutable size_t _totComputes = 0;

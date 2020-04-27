@@ -27,6 +27,6 @@ public:
                      float learningRate, size_t batchIdx);
   void backPropagateFirstLayer(const Vec2d<float> &data, float learningRate,
                                size_t batchIdx);
-  void HashWeights(LSH &hashTables, const DensifiedWtaHash &dwtaHasher) const;
+  void HashWeights(LSH &hashTables, const HashBase &hasher) const;
 };
 } // namespace hieu

@@ -7,6 +7,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unordered_set>
+#include "../DensifiedWtaHash.h"
+#include "../srp.h"
+#include "../WtaHash.h"
 
 using namespace std;
 
@@ -21,7 +24,22 @@ Layer::Layer(size_t layerIdx, size_t numNodes, size_t prevNumNodes,
 
   if (sparsify) {
     _hashTables = new LSH(K, L, RangePow);
-    _dwtaHasher = new DensifiedWtaHash(K * L, prevNumNodes);
+    
+    if (HashFunction == 1) {
+      _hasher = new WtaHash(K * L, prevNumNodes);
+    }
+    else if (HashFunction == 2) {
+      _hasher = new DensifiedWtaHash(K * L, prevNumNodes);
+    }
+    else if (HashFunction == 3) {
+      //_binids.resize(previousLayerNumOfNodes);
+      //_MinHasher = new DensifiedMinhash(_K * _L, previousLayerNumOfNodes);
+      //_MinHasher->getMap(previousLayerNumOfNodes, _binids);
+    }
+    else if (HashFunction == 4) {
+      _hasher = new SparseRandomProjection(prevNumNodes, K * L, Ratio);
+    }
+
   }
 
   _nodes.reserve(numNodes);
@@ -69,7 +87,7 @@ size_t Layer::computeActivation(std::vector<float> &dataOut,
   assert(dataIn.size() == _prevNumNodes);
 
   if (_hashTables) {
-    std::vector<int> hashes = _dwtaHasher->getHash(dataIn);
+    std::vector<int> hashes = _hasher->getHash(dataIn);
     std::vector<int> hashIndices = _hashTables->hashesToIndex(hashes);
     std::vector<const std::vector<int> *> actives =
         _hashTables->retrieveRaw(hashIndices);
@@ -105,7 +123,7 @@ size_t Layer::computeActivation(std::vector<float> &dataOut,
 void Layer::HashWeights() {
   if (_hashTables) {
     for (Node &node : _nodes) {
-      node.HashWeights(*_hashTables, *_dwtaHasher);
+      node.HashWeights(*_hashTables, *_hasher);
     }
   }
 }

@@ -46,6 +46,7 @@
     <ClInclude Include="Config.h" />
     <ClInclude Include="DensifiedMinhash.h" />
     <ClInclude Include="DensifiedWtaHash.h" />
+    <ClInclude Include="HashBase.h" />
     <ClInclude Include="hieu\hieu-main.h" />
     <ClInclude Include="hieu\Layer.h" />
     <ClInclude Include="hieu\Network.h" />

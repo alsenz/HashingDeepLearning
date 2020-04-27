@@ -9,13 +9,14 @@
 #include <stdlib.h>
 #include <string.h>
 #include <vector>
+#include "HashBase.h"
 
 /*
 *  Algorithm from the paper The Power of Comparative Reasoning. Jay Yagnik,
 Dennis Strelow, David A. Ross, Ruei-sung Lin
 
 */
-class WtaHash {
+class WtaHash : public HashBase {
 private:
   int _numhashes, _rangePow;
   std::vector<int> _indices;
