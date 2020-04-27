@@ -13,7 +13,7 @@ Network::Network(size_t maxBatchsize) {
 
   cerr << "Create Network" << endl;
   _layers.push_back(new Layer(0, 128, inputDim, maxBatchsize, false, 2, 20, 6));
-  _layers.push_back(new Layer(1, 670091, 128, maxBatchsize, true, 6, 50, 18));
+  _layers.push_back(new Layer(1, 670091, 128, maxBatchsize, false, 6, 50, 18));
 }
 
 void Network::Load(const cnpy::npz_t &npzArray) {

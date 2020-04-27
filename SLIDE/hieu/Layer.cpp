@@ -50,18 +50,6 @@ void Layer::Load(const cnpy::npz_t &npzArray) {
   memcpy(_bias.data(), biasArr.data<float>(), sizeof(float) * biasArr.num_vals);
 }
 
-void RandomizeWeights() {
-  /*
-random_device rd;
-default_random_engine dre(rd());
-normal_distribution<float> distribution(0.0, 0.01);
-
-generate(_weights.begin(), _weights.end(),
-         [&]() { return distribution(dre); });
-generate(_bias.begin(), _bias.end(), [&]() { return distribution(dre); });
-*/
-}
-
 Layer::~Layer() { delete _hashTables; }
 
 size_t Layer::computeActivation(std::vector<float> &dataOut,
@@ -74,17 +62,7 @@ size_t Layer::computeActivation(std::vector<float> &dataOut,
     std::vector<int> hashIndices = _hashTables->hashesToIndex(hashes);
     std::vector<const std::vector<int> *> actives =
         _hashTables->retrieveRaw(hashIndices);
-    /*
-    Print("dataIn", dataIn);
-    Print("hashIndices", hashIndices);
-    cerr << "hashes2 " << hashes.size() << " " << hashIndices.size() << " " << actives.size() << endl;
-    Print("actives", actives);
-    for (const std::vector<int> *v : actives) {
-      //Print("v", *v);
-      cerr << v->size() << " ";
-    }
-    cerr << endl;
-    */
+
     std::unordered_set<int> nodesIdx;
     for (const std::vector<int> *v : actives) {
       //Print("v", *v);
