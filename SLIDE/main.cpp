@@ -279,8 +279,13 @@ int main(int argc, char *argv[]) {
   parseconfig(argv[1]);
   srand(time(NULL));
 
+  if (argc > 2) {
+    RangePow[1] = stoi(argv[2]);
+    Print("RangePow changed=", RangePow);
+  }
+
   hieu::main(Batchsize, K, L, RangePow, Sparsity);
-  exit(44);
+  exit(0);
 
   //***********************************
   // Initialize Network
