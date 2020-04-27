@@ -22,9 +22,6 @@ float Node::computeActivation(const std::vector<float> &dataIn) const {
   for (size_t idx = 0; idx < _weights.size(); ++idx) {
     ret += dataIn.at(idx) * _weights.at(idx);
   }
-  if (_type == ReLU && ret < 0) {
-    ret = 0;
-  }
   return ret;
 }
 
