@@ -52,7 +52,7 @@ std::vector<size_t> LSH::hashesToIndex(const std::vector<int> &hashes) const {
   std::vector<size_t> indices(_L);
   for (int i = 0; i < _L; i++) {
     size_t index;
-    if (HashFunction == 1 | HashFunction == 2 | HashFunction == 4) {
+    if (HashFunction == 1 | HashFunction == 2) { // | HashFunction == 4) {
       index = 0;
     }
     else {
@@ -60,14 +60,16 @@ std::vector<size_t> LSH::hashesToIndex(const std::vector<int> &hashes) const {
     }
 
     for (int j = 0; j < _K; j++) {
-      if (HashFunction == 4) {
-        unsigned int h = hashes[_K * i + j];
-        index += h << (_K - 1 - j);
-      }
-      else if (HashFunction == 1 | HashFunction == 2) {
+      if (HashFunction == 1 | HashFunction == 2) {
         unsigned int h = hashes[_K * i + j];
         index += h << ((_K - 1 - j) * (int)floor(log(binsize)));
       }
+      /* crap
+      else if (HashFunction == 4) {
+        unsigned int h = hashes[_K * i + j];
+        index += h << (_K - 1 - j);
+      }
+      */
       else {
         int h = hashes[_K * i + j];
         size_t hash = std::hash<int>{}(h);

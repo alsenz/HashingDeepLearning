@@ -9,7 +9,7 @@
 #define HASH_FUNCTION_TOPK_MIN 3
 #define HASH_FUNCTION_SIMHASH 4
 
-#define HashFunction 4
+#define HashFunction 3
 #define BUCKETSIZE 128
 // for minhash
 #define TOPK 30
