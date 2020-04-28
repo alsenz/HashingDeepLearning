@@ -44,22 +44,29 @@ SparseRandomProjection::getHash(const std::vector<float> &vector) const {
 
 std::vector<int>
 SparseRandomProjection::getHash(const SubVectorConst<float> &vector) const {
+  //cerr << "getHash1 " << vector.size() << endl;
   // length should be = to _dim
   std::vector<int> hashes(_numhashes);
 
   // #pragma omp parallel for
   for (size_t i = 0; i < _numhashes; i++) {
+    //cerr << "getHash2 " << endl;
     double s = 0;
     for (size_t j = 0; j < _samSize; j++) {
-      float v = vector[_indices[i][j]];
-      if (_randBits[i][j] >= 0) {
+      //cerr << "getHash3 " << endl;
+      int idx = _indices.at(i).at(j);
+      float v = vector.at(idx);
+      if (_randBits.at(i).at(j) >= 0) {
         s += v;
       } else {
         s -= v;
       }
+      //cerr << "getHash4 " << endl;
     }
-    hashes[i] = (s >= 0 ? 0 : 1);
+    //cerr << "getHash5 " << endl;
+    hashes.at(i) = (s >= 0 ? 0 : 1);
   }
+  //cerr << "getHash6 " << endl;
   return hashes;
 }
 

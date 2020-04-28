@@ -47,7 +47,7 @@ inline void hash_combine(std::size_t& seed, const T& v)
 }
 
 std::vector<size_t> LSH::hashesToIndex(const std::vector<int> &hashes) const {
-  //cerr << "hashes=" << hashes.size() << " " << _K << " " << _L << endl;
+  //cerr << "hashesToIndex1 hashes=" << hashes.size() << " " << _K << " " << _L << endl;
   assert(hashes.size() == _K * _L);
   std::vector<size_t> indices(_L);
   for (int i = 0; i < _L; i++) {
@@ -73,6 +73,8 @@ std::vector<size_t> LSH::hashesToIndex(const std::vector<int> &hashes) const {
     index = index % _numBuckets;
     indices[i] = index;
   }
+
+  //cerr << "hashesToIndex2" << endl;
   return indices;
 }
 
