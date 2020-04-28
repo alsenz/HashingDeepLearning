@@ -39,7 +39,7 @@ SparseRandomProjection::SparseRandomProjection(size_t dimension,
 std::vector<int>
 SparseRandomProjection::getHash(const std::vector<float> &vector) const {
   SubVectorConst<float> dataSub(vector, 0, vector.size());
-  return getHash(vector);
+  return getHash(dataSub);
 }
 
 std::vector<int>
