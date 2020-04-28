@@ -12,6 +12,7 @@ private:
   int _RangePow;
   size_t _numBuckets;
   std::vector<size_t> _seeds;
+  std::vector<size_t> _rand1;
 
   void Add(size_t indices, size_t tableId, int id, bool unlimited);
 
