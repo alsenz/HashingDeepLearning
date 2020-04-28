@@ -40,14 +40,14 @@ void VectorStats(const std::string &str, const SubVectorConst<float> &vec)
     sumSq += (val * val);
   }
   float mean = sum / (float)vec.size();
-  float var = sumSq + pow(mean, 2.0f) - 2.0f * mean * sum;
-  var /= (float)vec.size();
+  float stddev = sumSq/(float)vec.size() - pow(mean, 2.0f);
+  stddev = pow(stddev, 0.5);
 
   cerr << str
     << " min=" << min
     << " max=" << max
     << " mean=" << mean
-    << " var=" << var
+    << " stddev=" << stddev
     << " sum=" << sum
     << " sumSq=" << sumSq
     << endl;
