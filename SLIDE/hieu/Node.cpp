@@ -4,6 +4,7 @@
 #include <iostream>
 #include <stddef.h>
 #include <stdlib.h>
+#include <algorithm>
 
 using namespace std;
 
@@ -25,12 +26,43 @@ float Node::computeActivation(const std::vector<float> &dataIn) const {
   return ret;
 }
 
+void VectorStats(const std::string &str, const SubVectorConst<float> &vec)
+{
+  float min = 999999999;
+  float max = -99999999999;
+  float sum = 0;
+  float sumSq = 0;
+  for (size_t i = 0; i < vec.size(); ++i) {
+    float val = vec[i];
+    if (val < min) min = val;
+    if (val > max) max = val;
+    sum += val;
+    sumSq += (val * val);
+  }
+  float mean = sum / (float)vec.size();
+  float var = sumSq + pow(mean, 2.0f) - 2.0f * mean * sum;
+  var /= (float)vec.size();
+
+  cerr << str
+    << " min=" << min
+    << " max=" << max
+    << " mean=" << mean
+    << " var=" << var
+    << " sum=" << sum
+    << " sumSq=" << sumSq
+    << endl;
+}
+
 void Node::HashWeights(LSH &hashTables,
                        const HashBase &hasher) const {
   std::vector<int> hashes = hasher.getHash(_weights);
   std::vector<size_t> hashIndices = hashTables.hashesToIndex(hashes);
   hashTables.Add(hashIndices, _idx, true);
-  // Print("hashIndices", hashIndices);
+  VectorStats("_weights", _weights);
+  Print("_weights", _weights);
+  Print("hashes", hashes);
+  Print("hashIndices", hashIndices);
+  cerr << endl;
   // cerr << "hashes1 " << hashes.size() << " " << hashIndices.size() << endl;
 }
 
