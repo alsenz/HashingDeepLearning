@@ -35,7 +35,7 @@ Layer::Layer(size_t layerIdx, size_t numNodes, size_t prevNumNodes,
     else if (HashFunction == 3) {
       _binids.resize(prevNumNodes);
       DensifiedMinhash *_MinHasher = new DensifiedMinhash(K * L, prevNumNodes);
-      _MinHasher->getMap(prevNumNodes, _binids);
+      _MinHasher->getMap(prevNumNodes);
     }
     else if (HashFunction == 4) {
       _hasher = new SparseRandomProjection(prevNumNodes, K * L, Ratio);

@@ -22,7 +22,6 @@ private:
   std::vector<float> _adamAvgMom;
   std::vector<float> _adamAvgVel;
   std::vector<float> _bias;
-  std::vector<int> _binids;
   LSH _hashTables;
 
 public:
@@ -33,7 +32,6 @@ public:
 
   LSH &hashTables() { return _hashTables; }
   size_t noOfNodes() const { return _noOfNodes; }
-  const std::vector<int> &binids() const { return _binids; }
 
   Layer(size_t noOfNodes, int previousLayerNumOfNodes, int layerID,
         NodeType type, int batchsize, int K, int L, int RangePow,

@@ -32,12 +32,10 @@ Layer::Layer(size_t noOfNodes, int previousLayerNumOfNodes, int layerID,
   if (HashFunction == 1) {
     _wtaHasher = new WtaHash(_K * _L, previousLayerNumOfNodes);
   } else if (HashFunction == 2) {
-    _binids.resize(previousLayerNumOfNodes);
     _dwtaHasher = new DensifiedWtaHash(_K * _L, previousLayerNumOfNodes);
   } else if (HashFunction == 3) {
-    _binids.resize(previousLayerNumOfNodes);
     _MinHasher = new DensifiedMinhash(_K * _L, previousLayerNumOfNodes);
-    _MinHasher->getMap(previousLayerNumOfNodes, _binids);
+    _MinHasher->getMap(previousLayerNumOfNodes);
   } else if (HashFunction == 4) {
     _srp = new SparseRandomProjection(previousLayerNumOfNodes, _K * _L, Ratio);
   }
@@ -96,13 +94,11 @@ void Layer::updateTable() {
     _wtaHasher = new WtaHash(_K * _L, _previousLayerNumOfNodes);
   } else if (HashFunction == 2) {
     delete _dwtaHasher;
-    _binids.resize(_previousLayerNumOfNodes);
     _dwtaHasher = new DensifiedWtaHash(_K * _L, _previousLayerNumOfNodes);
   } else if (HashFunction == 3) {
     delete _MinHasher;
-    _binids.resize(_previousLayerNumOfNodes);
     _MinHasher = new DensifiedMinhash(_K * _L, _previousLayerNumOfNodes);
-    _MinHasher->getMap(_previousLayerNumOfNodes, _binids);
+    _MinHasher->getMap(_previousLayerNumOfNodes);
   } else if (HashFunction == 4) {
     _srp = new SparseRandomProjection(_previousLayerNumOfNodes, _K * _L, Ratio);
   }
@@ -120,7 +116,7 @@ void Layer::addtoHashTable(SubVector<float> &weights, int ID) {
   } else if (HashFunction == 2) {
     hashes = _dwtaHasher->getHash(weights);
   } else if (HashFunction == 3) {
-    hashes = _MinHasher->getHashEasy(_binids, weights, TOPK);
+    hashes = _MinHasher->getHashEasy(weights, TOPK);
   } else if (HashFunction == 4) {
     hashes = _srp->getHash(weights);
   }
@@ -217,8 +213,7 @@ int Layer::queryActiveNodeandComputeActivations(
         hashes = _dwtaHasher->getHash(activenodesperlayer[_layerID],
                                       activeValuesperlayer[_layerID]);
       } else if (HashFunction == 3) {
-        hashes = _MinHasher->getHashEasy(_binids,
-                                         activeValuesperlayer[_layerID], TOPK);
+        hashes = _MinHasher->getHashEasy(activeValuesperlayer[_layerID], TOPK);
       } else if (HashFunction == 4) {
         hashes = _srp->getHashSparse(activenodesperlayer[_layerID],
                                      activeValuesperlayer[_layerID]);
@@ -278,8 +273,7 @@ int Layer::queryActiveNodeandComputeActivations(
         hashes = _dwtaHasher->getHash(activenodesperlayer[_layerID],
                                       activeValuesperlayer[_layerID]);
       } else if (HashFunction == 3) {
-        hashes = _MinHasher->getHashEasy(_binids,
-                                         activeValuesperlayer[_layerID], TOPK);
+        hashes = _MinHasher->getHashEasy(activeValuesperlayer[_layerID], TOPK);
       } else if (HashFunction == 4) {
         hashes = _srp->getHashSparse(activenodesperlayer[_layerID],
                                      activeValuesperlayer[_layerID]);

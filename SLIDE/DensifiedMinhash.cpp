@@ -17,7 +17,7 @@ struct cmp {
 };
 
 DensifiedMinhash::DensifiedMinhash(int numHashes, int noOfBitsToHash)
-    : _randHash(2) {
+    : _randHash(2), _binids(noOfBitsToHash) {
   _numhashes = numHashes;
   _rangePow = noOfBitsToHash;
   _lognumhash = log2(numHashes);
@@ -38,7 +38,7 @@ DensifiedMinhash::DensifiedMinhash(int numHashes, int noOfBitsToHash)
     _randHash[1]++;
 }
 
-void DensifiedMinhash::getMap(int n, std::vector<int> &binids) const {
+void DensifiedMinhash::getMap(int n) {
   int range = 1 << _rangePow;
   // binsize is the number of times the range is larger than the total number of
   // hashes we need.
@@ -52,21 +52,19 @@ void DensifiedMinhash::getMap(int n, std::vector<int> &binids) const {
     uint32_t curhash =
         MurmurHash((char *)&i, (uint32_t)sizeof(i), (uint32_t)_randa);
     curhash = curhash & ((1 << _rangePow) - 1);
-    binids[i] = (int)floor(curhash / binsize);
+    _binids[i] = (int)floor(curhash / binsize);
     ;
   }
 }
 
-std::vector<int> DensifiedMinhash::getHashEasy(const std::vector<int> &binids,
-                                               const std::vector<float> &data,
+std::vector<int> DensifiedMinhash::getHashEasy(const std::vector<float> &data,
                                                int topK) const {
   SubVectorConst<float> dataSub(data, 0, data.size());
-  return getHashEasy(binids, dataSub, topK);
+  return getHashEasy(dataSub, topK);
 }
 
 std::vector<int>
-DensifiedMinhash::getHashEasy(const std::vector<int> &binids,
-                              const SubVectorConst<float> &data,
+DensifiedMinhash::getHashEasy(const SubVectorConst<float> &data,
                               int topK) const {
   // binsize is the number of times the range is larger than the total number of
   // hashes we need.
@@ -96,7 +94,7 @@ DensifiedMinhash::getHashEasy(const std::vector<int> &binids,
     PAIR pair = pq.top();
     pq.pop();
     int index = pair.first;
-    int binid = binids[index];
+    int binid = _binids[index];
     if (hashes[binid] < index) {
       hashes[binid] = index;
     }
@@ -124,8 +122,7 @@ DensifiedMinhash::getHashEasy(const std::vector<int> &binids,
 
 std::vector<int>
 DensifiedMinhash::getHash(const std::vector<int> &indices,
-                          const std::vector<float> &data,
-                          const std::vector<int> &binids) const {
+                          const std::vector<float> &data) const {
   std::vector<int> hashes(_numhashes);
   std::vector<int> hashArray(_numhashes);
 
@@ -138,7 +135,7 @@ if (dataLen<0){
 }
 */
   for (int i = 0; i < data.size(); i++) {
-    int binid = binids[indices[i]];
+    int binid = _binids[indices[i]];
 
     if (hashes[binid] < indices[i]) {
       hashes[binid] = indices[i];
@@ -172,3 +169,13 @@ int DensifiedMinhash::getRandDoubleHash(int binid, int count) const {
 }
 
 DensifiedMinhash::~DensifiedMinhash() {}
+
+std::vector<int> DensifiedMinhash::getHash(const std::vector<float> &data) const
+{
+
+}
+
+std::vector<int> DensifiedMinhash::getHash(const SubVectorConst<float> &data) const
+{
+
+}
