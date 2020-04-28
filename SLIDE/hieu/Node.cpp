@@ -28,7 +28,7 @@ float Node::computeActivation(const std::vector<float> &dataIn) const {
 void Node::HashWeights(LSH &hashTables,
                        const HashBase &hasher) const {
   std::vector<int> hashes = hasher.getHash(_weights);
-  std::vector<int> hashIndices = hashTables.hashesToIndex(hashes);
+  std::vector<size_t> hashIndices = hashTables.hashesToIndex(hashes);
   hashTables.Add(hashIndices, _idx, true);
   // Print("hashIndices", hashIndices);
   // cerr << "hashes1 " << hashes.size() << " " << hashIndices.size() << endl;

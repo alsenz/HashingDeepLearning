@@ -221,7 +221,7 @@ float Network::ProcessInput(Vec2d<int> &inputIndices, Vec2d<float> &inputValues,
           hashes = _hiddenlayers[l]->_srp->getHash(local_weights);
         }
 
-        std::vector<int> hashIndices =
+        std::vector<size_t> hashIndices =
             _hiddenlayers[l]->hashTables().hashesToIndex(hashes);
         _hiddenlayers[l]->hashTables().Add(hashIndices, m + 1, false);
       }

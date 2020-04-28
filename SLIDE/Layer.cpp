@@ -125,7 +125,7 @@ void Layer::addtoHashTable(SubVector<float> &weights, int ID) {
     hashes = _srp->getHash(weights);
   }
 
-  std::vector<int> hashIndices = _hashTables.hashesToIndex(hashes);
+  std::vector<size_t> hashIndices = _hashTables.hashesToIndex(hashes);
   _hashTables.Add(hashIndices, ID + 1, false);
 
   // mine
@@ -223,7 +223,7 @@ int Layer::queryActiveNodeandComputeActivations(
         hashes = _srp->getHashSparse(activenodesperlayer[_layerID],
                                      activeValuesperlayer[_layerID]);
       }
-      std::vector<int> hashIndices = _hashTables.hashesToIndex(hashes);
+      std::vector<size_t> hashIndices = _hashTables.hashesToIndex(hashes);
       std::vector<const std::vector<int> *> actives =
           _hashTables.retrieveRaw(hashIndices);
 
@@ -284,7 +284,7 @@ int Layer::queryActiveNodeandComputeActivations(
         hashes = _srp->getHashSparse(activenodesperlayer[_layerID],
                                      activeValuesperlayer[_layerID]);
       }
-      std::vector<int> hashIndices = _hashTables.hashesToIndex(hashes);
+      std::vector<size_t> hashIndices = _hashTables.hashesToIndex(hashes);
       std::vector<const std::vector<int> *> actives =
           _hashTables.retrieveRaw(hashIndices);
       // we now have a sparse array of indices of active nodes

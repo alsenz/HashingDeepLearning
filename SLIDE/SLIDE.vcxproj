@@ -63,6 +63,7 @@
   <ItemGroup>
     <None Include="Config_amz.csv" />
     <None Include="Makefile" />
+    <None Include="run.sh" />
     <None Include="temp.py" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

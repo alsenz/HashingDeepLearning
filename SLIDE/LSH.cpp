@@ -40,10 +40,10 @@ inline void hash_combine(std::size_t& seed, const T& v)
   seed ^= hasher(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
 }
 
-std::vector<int> LSH::hashesToIndex(const std::vector<int> &hashes) const {
+std::vector<size_t> LSH::hashesToIndex(const std::vector<int> &hashes) const {
   //cerr << "hashes=" << hashes.size() << " " << _K << " " << _L << endl;
   assert(hashes.size() == _K * _L);
-  std::vector<int> indices(_L);
+  std::vector<size_t> indices(_L);
   for (int i = 0; i < _L; i++) {
     size_t index = _seeds[i];
     for (int j = 0; j < _K; j++) {
@@ -56,13 +56,13 @@ std::vector<int> LSH::hashesToIndex(const std::vector<int> &hashes) const {
   return indices;
 }
 
-void LSH::Add(const std::vector<int> &indices, int id, bool unlimited) {
+void LSH::Add(const std::vector<size_t> &indices, int id, bool unlimited) {
   for (int i = 0; i < _L; i++) {
     Add(i, indices[i], id, unlimited);
   }
 }
 
-void LSH::Add(int tableId, int indices, int id, bool unlimited) {
+void LSH::Add(size_t tableId, size_t indices, int id, bool unlimited) {
   std::vector<Bucket> &buckets = _bucket.at(tableId);
   Bucket &bucket = buckets.at(indices);
   bucket.add(id, unlimited);
@@ -72,7 +72,7 @@ void LSH::Add(int tableId, int indices, int id, bool unlimited) {
  * Returns all the buckets
  */
 std::vector<const std::vector<int> *>
-LSH::retrieveRaw(const std::vector<int> &indices) const {
+LSH::retrieveRaw(const std::vector<size_t> &indices) const {
   std::vector<const std::vector<int> *> rawResults(_L);
 
   for (int i = 0; i < _L; i++) {
