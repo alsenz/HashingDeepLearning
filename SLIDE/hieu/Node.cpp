@@ -58,11 +58,7 @@ void Node::HashWeights(LSH &hashTables,
   std::vector<int> hashes = hasher.getHash(_weights);
   std::vector<size_t> hashIndices = hashTables.hashesToIndex(hashes);
   hashTables.Add(hashIndices, _idx, true);
-  VectorStats("_weights", _weights);
-  Print("_weights", _weights);
-  Print("hashes", hashes);
-  Print("hashIndices", hashIndices);
-  cerr << endl;
+  //VectorStats("_weights", _weights);
   // cerr << "hashes1 " << hashes.size() << " " << hashIndices.size() << endl;
 }
 
