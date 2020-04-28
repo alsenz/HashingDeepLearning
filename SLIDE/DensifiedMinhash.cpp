@@ -59,13 +59,13 @@ void DensifiedMinhash::getMap(int n) {
   }
 }
 
-std::vector<int> DensifiedMinhash::getHashEasy(const std::vector<float> &data) const {
+std::vector<int> DensifiedMinhash::getHash(const std::vector<float> &data) const {
   SubVectorConst<float> dataSub(data, 0, data.size());
-  return getHashEasy(dataSub);
+  return getHash(dataSub);
 }
 
 std::vector<int>
-DensifiedMinhash::getHashEasy(const SubVectorConst<float> &data) const {
+DensifiedMinhash::getHash(const SubVectorConst<float> &data) const {
   // binsize is the number of times the range is larger than the total number of
   // hashes we need.
   // read the data and add it to priority queue O(dlogk approx 7d) with index as
@@ -170,12 +170,3 @@ int DensifiedMinhash::getRandDoubleHash(int binid, int count) const {
 
 DensifiedMinhash::~DensifiedMinhash() {}
 
-std::vector<int> DensifiedMinhash::getHash(const std::vector<float> &data) const
-{
-
-}
-
-std::vector<int> DensifiedMinhash::getHash(const SubVectorConst<float> &data) const
-{
-
-}
