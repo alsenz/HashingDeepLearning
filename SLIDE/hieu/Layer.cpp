@@ -33,9 +33,9 @@ Layer::Layer(size_t layerIdx, size_t numNodes, size_t prevNumNodes,
       _hasher = new DensifiedWtaHash(K * L, prevNumNodes);
     }
     else if (HashFunction == 3) {
-      _binids.resize(prevNumNodes);
-      DensifiedMinhash *_MinHasher = new DensifiedMinhash(K * L, prevNumNodes);
-      _MinHasher->getMap(prevNumNodes);
+      DensifiedMinhash *minHasher = new DensifiedMinhash(K * L, prevNumNodes);
+      minHasher->getMap(prevNumNodes);
+      _hasher = minHasher;
     }
     else if (HashFunction == 4) {
       _hasher = new SparseRandomProjection(prevNumNodes, K * L, Ratio);

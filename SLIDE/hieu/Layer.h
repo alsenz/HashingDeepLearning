@@ -17,8 +17,7 @@ protected:
 
   LSH *_hashTables = nullptr;
   HashBase *_hasher = nullptr;
-  std::vector<int> _binids;
-
+  
   mutable size_t _totActiveNodes = 0;
   mutable size_t _totComputes = 0;
 
