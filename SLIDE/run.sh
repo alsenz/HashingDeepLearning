@@ -1,4 +1,3 @@
-
 #!/bin/bash
 
 for RangePow in {1..18}
