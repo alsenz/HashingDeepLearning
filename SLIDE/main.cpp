@@ -179,7 +179,6 @@ void parseconfig(string filename) {
   Print("L", L);
   Print("Sparsity", Sparsity);
   cerr << "Batchsize=" << Batchsize << endl;
-
 }
 
 void EvalDataSVM(int numBatchesTest, Network &_mynet, int iter) {

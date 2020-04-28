@@ -1,11 +1,11 @@
 #include "LSH.h"
 #include "Config.h"
+#include <algorithm>
 #include <chrono>
 #include <climits>
+#include <functional>
 #include <iostream>
 #include <unordered_map>
-#include <algorithm>
-#include <functional>
 
 using namespace std;
 
@@ -39,23 +39,21 @@ void LSH::clear() {
   }
 }
 
-template <class T>
-inline void hash_combine(std::size_t& seed, const T& v)
-{
+template <class T> inline void hash_combine(std::size_t &seed, const T &v) {
   std::hash<T> hasher;
   seed ^= hasher(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
 }
 
 std::vector<size_t> LSH::hashesToIndex(const std::vector<int> &hashes) const {
-  //cerr << "hashesToIndex1 hashes=" << hashes.size() << " " << _K << " " << _L << endl;
+  // cerr << "hashesToIndex1 hashes=" << hashes.size() << " " << _K << " " << _L
+  // << endl;
   assert(hashes.size() == _K * _L);
   std::vector<size_t> indices(_L);
   for (int i = 0; i < _L; i++) {
     size_t index;
     if (HashFunction == 1 | HashFunction == 2) { // | HashFunction == 4) {
       index = 0;
-    }
-    else {
+    } else {
       index = _seeds[i];
     }
 
@@ -80,7 +78,7 @@ std::vector<size_t> LSH::hashesToIndex(const std::vector<int> &hashes) const {
     indices[i] = index;
   }
 
-  //cerr << "hashesToIndex2" << endl;
+  // cerr << "hashesToIndex2" << endl;
   return indices;
 }
 

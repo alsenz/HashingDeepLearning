@@ -1,4 +1,5 @@
 #include "DensifiedMinhash.h"
+#include "Config.h"
 #include <algorithm>
 #include <climits>
 #include <iostream>
@@ -6,7 +7,6 @@
 #include <queue>
 #include <random>
 #include <vector>
-#include "Config.h"
 
 using namespace std;
 
@@ -59,7 +59,8 @@ void DensifiedMinhash::getMap(int n) {
   }
 }
 
-std::vector<int> DensifiedMinhash::getHash(const std::vector<float> &data) const {
+std::vector<int>
+DensifiedMinhash::getHash(const std::vector<float> &data) const {
   SubVectorConst<float> dataSub(data, 0, data.size());
   return getHash(dataSub);
 }
@@ -169,4 +170,3 @@ int DensifiedMinhash::getRandDoubleHash(int binid, int count) const {
 }
 
 DensifiedMinhash::~DensifiedMinhash() {}
-

@@ -50,7 +50,9 @@ void EvalDataSVM(int numBatchesTest, Network &mynet, const std::string &path,
        << endl;
 }
 
-int main(size_t maxBatchsize, const std::vector<int> &K, const std::vector<int> &L, const std::vector<int> &RangePow, const std::vector<float> &Sparsity) {
+int main(size_t maxBatchsize, const std::vector<int> &K,
+         const std::vector<int> &L, const std::vector<int> &RangePow,
+         const std::vector<float> &Sparsity) {
   cerr << "Starting" << endl;
   size_t inputDim = 135909;
   size_t numEpochs = 1;
@@ -78,6 +80,6 @@ int main(size_t maxBatchsize, const std::vector<int> &K, const std::vector<int> 
   }
 
   cerr << "Finished" << endl;
-  //exit(0);
+  // exit(0);
 }
 } // namespace hieu

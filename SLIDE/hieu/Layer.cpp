@@ -1,5 +1,9 @@
 #include "Layer.h"
+#include "../DensifiedMinhash.h"
+#include "../DensifiedWtaHash.h"
 #include "../Util.h"
+#include "../WtaHash.h"
+#include "../srp.h"
 #include <algorithm>
 #include <iostream>
 #include <random>
@@ -7,10 +11,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unordered_set>
-#include "../DensifiedWtaHash.h"
-#include "../srp.h"
-#include "../WtaHash.h"
-#include "../DensifiedMinhash.h"
 
 using namespace std;
 
@@ -25,22 +25,18 @@ Layer::Layer(size_t layerIdx, size_t numNodes, size_t prevNumNodes,
 
   if (sparsify) {
     _hashTables = new LSH(K, L, RangePow);
-    
+
     if (HashFunction == 1) {
       _hasher = new WtaHash(K * L, prevNumNodes);
-    }
-    else if (HashFunction == 2) {
+    } else if (HashFunction == 2) {
       _hasher = new DensifiedWtaHash(K * L, prevNumNodes);
-    }
-    else if (HashFunction == 3) {
+    } else if (HashFunction == 3) {
       DensifiedMinhash *minHasher = new DensifiedMinhash(K * L, prevNumNodes);
       minHasher->getMap(prevNumNodes);
       _hasher = minHasher;
-    }
-    else if (HashFunction == 4) {
+    } else if (HashFunction == 4) {
       _hasher = new SparseRandomProjection(prevNumNodes, K * L, Ratio);
     }
-
   }
 
   _nodes.reserve(numNodes);
@@ -55,31 +51,27 @@ Layer::Layer(size_t layerIdx, size_t numNodes, size_t prevNumNodes,
 
   cerr << "Created Layer"
        << " layerIdx=" << _layerIdx << " numNodes=" << _nodes.size()
-       << " prevNumNodes=" << _prevNumNodes 
-       << " sparsify=" << sparsify
-      << endl;
+       << " prevNumNodes=" << _prevNumNodes << " sparsify=" << sparsify << endl;
 }
 
 void Layer::Load(const cnpy::npz_t &npzArray) {
   cnpy::NpyArray weightArr = npzArray.at("w_layer_" + to_string(_layerIdx));
-  //Print("weightArr=", weightArr.shape);
+  // Print("weightArr=", weightArr.shape);
   assert(_weights.size() == weightArr.num_vals);
   memcpy(_weights.data(), weightArr.data<float>(),
          sizeof(float) * weightArr.num_vals);
 
   cnpy::NpyArray biasArr = npzArray.at("b_layer_" + to_string(_layerIdx));
-  //Print("biasArr=", biasArr.shape);
+  // Print("biasArr=", biasArr.shape);
   assert(_bias.size() == biasArr.num_vals);
   memcpy(_bias.data(), biasArr.data<float>(), sizeof(float) * biasArr.num_vals);
 }
 
-Layer::~Layer() { 
-  delete _hashTables; 
-  cerr << "Layer stats " << _layerIdx << " "
-    << _totActiveNodes << " "
-    << _totComputes << " "
-    << (float) _totActiveNodes / (float) _totComputes << " "
-    << endl;
+Layer::~Layer() {
+  delete _hashTables;
+  cerr << "Layer stats " << _layerIdx << " " << _totActiveNodes << " "
+       << _totComputes << " " << (float)_totActiveNodes / (float)_totComputes
+       << " " << endl;
 }
 
 size_t Layer::computeActivation(std::vector<float> &dataOut,
@@ -97,9 +89,10 @@ size_t Layer::computeActivation(std::vector<float> &dataOut,
     for (const std::vector<int> *v : actives) {
       // Print("v", *v);
       // cerr << v->size() << " ";
-      std::copy(v->begin(), v->end(), std::inserter(activeNodesIdx, activeNodesIdx.end()));
+      std::copy(v->begin(), v->end(),
+                std::inserter(activeNodesIdx, activeNodesIdx.end()));
     }
-    //cerr << "activeNodesIdx=" << activeNodesIdx.size() << endl;
+    // cerr << "activeNodesIdx=" << activeNodesIdx.size() << endl;
     _totActiveNodes += activeNodesIdx.size();
 
     dataOut.resize(_numNodes, 0);
@@ -118,7 +111,6 @@ size_t Layer::computeActivation(std::vector<float> &dataOut,
   }
 
   ++_totComputes;
-
 }
 
 void Layer::HashWeights() {

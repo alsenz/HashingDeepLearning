@@ -40,7 +40,7 @@ std::vector<int> WtaHash::getHash(const std::vector<float> &data) const {
 std::vector<int> WtaHash::getHash(const SubVectorConst<float> &data) const {
   // binsize is the number of times the range is larger than the total number of
   // hashes we need.
-  //cerr << "data=" << data.size() << endl;
+  // cerr << "data=" << data.size() << endl;
   std::vector<int> hashes(_numhashes);
   std::vector<float> values(_numhashes);
 
@@ -52,7 +52,7 @@ std::vector<int> WtaHash::getHash(const SubVectorConst<float> &data) const {
   for (int i = 0; i < _numhashes; i++) {
     for (int j = 0; j < binsizeConst; j++) {
       size_t dataIdx = _indices[i * binsizeConst + j];
-      //cerr << "dataIdx=" << dataIdx << endl;
+      // cerr << "dataIdx=" << dataIdx << endl;
       float value = data[dataIdx];
       if (values[i] < value) {
         values[i] = value;
@@ -61,7 +61,7 @@ std::vector<int> WtaHash::getHash(const SubVectorConst<float> &data) const {
     }
   }
 
-  //Print("hashes", hashes);
+  // Print("hashes", hashes);
   return hashes;
 }
 

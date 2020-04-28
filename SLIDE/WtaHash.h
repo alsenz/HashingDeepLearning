@@ -1,4 +1,5 @@
 #pragma once
+#include "HashBase.h"
 #include "MurmurHash.h"
 #include "Util.h"
 #include <chrono>
@@ -9,7 +10,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <vector>
-#include "HashBase.h"
 
 /*
 *  Algorithm from the paper The Power of Comparative Reasoning. Jay Yagnik,

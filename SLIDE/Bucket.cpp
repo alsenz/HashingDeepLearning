@@ -12,7 +12,7 @@ Bucket::Bucket() {
 Bucket::~Bucket() { delete _mutex; }
 
 void Bucket::add(int id, bool unlimited) {
-  //std::lock_guard<std::mutex> guard(*_mutex);
+  // std::lock_guard<std::mutex> guard(*_mutex);
   // cerr << "id=" << id << endl;
 
   if (unlimited) {

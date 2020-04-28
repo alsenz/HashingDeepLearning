@@ -1,4 +1,5 @@
 #pragma once
+#include "HashBase.h"
 #include "MurmurHash.h"
 #include "Util.h"
 #include <chrono>
@@ -9,13 +10,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <vector>
-#include "HashBase.h"
 
 /*
  *  Algorithm from the paper Densified Winner Take All (WTA) Hashing for Sparse
  * Datasets. Beidi Chen, Anshumali Shrivastava
  */
-class DensifiedWtaHash: public HashBase {
+class DensifiedWtaHash : public HashBase {
 private:
   int _randa, _numhashes, _rangePow, _lognumhash, _permute;
   std::vector<int> _randHash, _indices, _pos;
