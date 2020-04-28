@@ -10,6 +10,7 @@
 #include "../DensifiedWtaHash.h"
 #include "../srp.h"
 #include "../WtaHash.h"
+#include "../DensifiedMinhash.h"
 
 using namespace std;
 
@@ -32,9 +33,9 @@ Layer::Layer(size_t layerIdx, size_t numNodes, size_t prevNumNodes,
       _hasher = new DensifiedWtaHash(K * L, prevNumNodes);
     }
     else if (HashFunction == 3) {
-      //_binids.resize(previousLayerNumOfNodes);
-      //_MinHasher = new DensifiedMinhash(_K * _L, previousLayerNumOfNodes);
-      //_MinHasher->getMap(previousLayerNumOfNodes, _binids);
+      _binids.resize(prevNumNodes);
+      DensifiedMinhash *_MinHasher = new DensifiedMinhash(K * L, prevNumNodes);
+      _MinHasher->getMap(prevNumNodes, _binids);
     }
     else if (HashFunction == 4) {
       _hasher = new SparseRandomProjection(prevNumNodes, K * L, Ratio);
