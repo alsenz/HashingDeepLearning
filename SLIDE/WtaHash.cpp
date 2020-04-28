@@ -16,7 +16,7 @@ WtaHash::WtaHash(int numHashes, int noOfBitsToHash) {
   std::random_device rd;
   std::mt19937 gen(rd());
 
-  int permute = ceil(_numhashes * binsize * 1.0 / noOfBitsToHash);
+  int permute = ceil(_numhashes * binsizeConst * 1.0 / noOfBitsToHash);
 
   std::vector<int> n_array(_rangePow);
   _indices.resize(_rangePow * permute);
@@ -50,8 +50,8 @@ std::vector<int> WtaHash::getHash(const SubVectorConst<float> &data) const {
   }
 
   for (int i = 0; i < _numhashes; i++) {
-    for (int j = 0; j < binsize; j++) {
-      size_t dataIdx = _indices[i * binsize + j];
+    for (int j = 0; j < binsizeConst; j++) {
+      size_t dataIdx = _indices[i * binsizeConst + j];
       //cerr << "dataIdx=" << dataIdx << endl;
       float value = data[dataIdx];
       if (values[i] < value) {

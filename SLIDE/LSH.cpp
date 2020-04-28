@@ -62,7 +62,7 @@ std::vector<size_t> LSH::hashesToIndex(const std::vector<int> &hashes) const {
     for (int j = 0; j < _K; j++) {
       if (HashFunction == 1 | HashFunction == 2) {
         unsigned int h = hashes[_K * i + j];
-        index += h << ((_K - 1 - j) * (int)floor(log(binsize)));
+        index += h << ((_K - 1 - j) * (int)floor(log(binsizeConst)));
       }
       /* crap
       else if (HashFunction == 4) {

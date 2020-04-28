@@ -116,7 +116,7 @@ void Layer::addtoHashTable(SubVector<float> &weights, int ID) {
   } else if (HashFunction == 2) {
     hashes = _dwtaHasher->getHash(weights);
   } else if (HashFunction == 3) {
-    hashes = _MinHasher->getHashEasy(weights, TOPK);
+    hashes = _MinHasher->getHashEasy(weights);
   } else if (HashFunction == 4) {
     hashes = _srp->getHash(weights);
   }
@@ -213,7 +213,7 @@ int Layer::queryActiveNodeandComputeActivations(
         hashes = _dwtaHasher->getHash(activenodesperlayer[_layerID],
                                       activeValuesperlayer[_layerID]);
       } else if (HashFunction == 3) {
-        hashes = _MinHasher->getHashEasy(activeValuesperlayer[_layerID], TOPK);
+        hashes = _MinHasher->getHashEasy(activeValuesperlayer[_layerID]);
       } else if (HashFunction == 4) {
         hashes = _srp->getHashSparse(activenodesperlayer[_layerID],
                                      activeValuesperlayer[_layerID]);
@@ -273,7 +273,7 @@ int Layer::queryActiveNodeandComputeActivations(
         hashes = _dwtaHasher->getHash(activenodesperlayer[_layerID],
                                       activeValuesperlayer[_layerID]);
       } else if (HashFunction == 3) {
-        hashes = _MinHasher->getHashEasy(activeValuesperlayer[_layerID], TOPK);
+        hashes = _MinHasher->getHashEasy(activeValuesperlayer[_layerID]);
       } else if (HashFunction == 4) {
         hashes = _srp->getHashSparse(activenodesperlayer[_layerID],
                                      activeValuesperlayer[_layerID]);

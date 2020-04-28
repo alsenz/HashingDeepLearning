@@ -6,6 +6,8 @@
 #include <queue>
 #include <random>
 #include <vector>
+#include "Config.h"
+
 using namespace std;
 
 typedef pair<int, float> PAIR;
@@ -57,15 +59,13 @@ void DensifiedMinhash::getMap(int n) {
   }
 }
 
-std::vector<int> DensifiedMinhash::getHashEasy(const std::vector<float> &data,
-                                               int topK) const {
+std::vector<int> DensifiedMinhash::getHashEasy(const std::vector<float> &data) const {
   SubVectorConst<float> dataSub(data, 0, data.size());
-  return getHashEasy(dataSub, topK);
+  return getHashEasy(dataSub);
 }
 
 std::vector<int>
-DensifiedMinhash::getHashEasy(const SubVectorConst<float> &data,
-                              int topK) const {
+DensifiedMinhash::getHashEasy(const SubVectorConst<float> &data) const {
   // binsize is the number of times the range is larger than the total number of
   // hashes we need.
   // read the data and add it to priority queue O(dlogk approx 7d) with index as
@@ -74,11 +74,11 @@ DensifiedMinhash::getHashEasy(const SubVectorConst<float> &data,
 
   priority_queue<PAIR, vector<PAIR>, cmp> pq;
 
-  for (int i = 0; i < topK; i++) {
+  for (int i = 0; i < TOPK; i++) {
     pq.push(std::make_pair(i, data[i]));
   }
 
-  for (int i = topK; i < data.size(); i++) {
+  for (int i = TOPK; i < data.size(); i++) {
     pq.push(std::make_pair(i, data[i]));
     pq.pop();
   }
@@ -90,7 +90,7 @@ DensifiedMinhash::getHashEasy(const SubVectorConst<float> &data,
     hashes[i] = INT_MIN;
   }
 
-  for (int i = 0; i < topK; i++) {
+  for (int i = 0; i < TOPK; i++) {
     PAIR pair = pq.top();
     pq.pop();
     int index = pair.first;

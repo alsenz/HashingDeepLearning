@@ -215,7 +215,7 @@ float Network::ProcessInput(Vec2d<int> &inputIndices, Vec2d<float> &inputValues,
         } else if (HashFunction == 2) {
           hashes = _hiddenlayers[l]->_dwtaHasher->getHash(local_weights);
         } else if (HashFunction == 3) {
-          hashes = _hiddenlayers[l]->_MinHasher->getHashEasy(local_weights, TOPK);
+          hashes = _hiddenlayers[l]->_MinHasher->getHashEasy(local_weights);
         } else if (HashFunction == 4) {
           hashes = _hiddenlayers[l]->_srp->getHash(local_weights);
         }

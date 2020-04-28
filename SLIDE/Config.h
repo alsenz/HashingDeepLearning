@@ -16,7 +16,7 @@
 // for simhash
 #define Ratio 3
 // for wta/dwta
-#define binsize 8
+#define binsizeConst 8
 
 // Mode 1: Topk thresholding Mode 4: Sampling
 #define MODE_TOPK_THRESHOLD 1
