@@ -19,7 +19,7 @@ DensifiedWtaHash::DensifiedWtaHash(int numHashes, int noOfBitsToHash)
   std::random_device rd;
   std::mt19937 gen(rd());
 
-  _permute = ceil(_numhashes * binsizeConst * 1.0 / noOfBitsToHash);
+  _permute = ceil(_numhashes * g_binsize * 1.0 / noOfBitsToHash);
 
   std::vector<int> n_array(_rangePow);
   _indices.resize(_rangePow * _permute);
@@ -38,8 +38,8 @@ DensifiedWtaHash::DensifiedWtaHash(int numHashes, int noOfBitsToHash)
   for (int p = 0; p < _permute; p++) {
     std::shuffle(n_array.begin(), n_array.end(), rd);
     for (int j = 0; j < _rangePow; j++) {
-      _indices[p * _rangePow + n_array[j]] = (p * _rangePow + j) / binsizeConst;
-      _pos[p * _rangePow + n_array[j]] = (p * _rangePow + j) % binsizeConst;
+      _indices[p * _rangePow + n_array[j]] = (p * _rangePow + j) / g_binsize;
+      _pos[p * _rangePow + n_array[j]] = (p * _rangePow + j) % g_binsize;
     }
   }
 
