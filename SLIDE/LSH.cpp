@@ -62,17 +62,27 @@ std::vector<size_t> LSH::hashesToIndex(const std::vector<int> &hashes) const {
         unsigned int h = hashes[_K * i + j];
         index += h << ((_K - 1 - j) * (int)floor(log(binsizeConst)));
       }
-      /* crap
+      /* crap - worse than default
       else if (HashFunction == 4) {
         unsigned int h = hashes[_K * i + j];
         index += h << (_K - 1 - j);
       }
       */
-      else {
+      else if (HashFunction == 3) {
+        unsigned int h = _rand1[_K * i + j];
+        h *= _rand1[_K * i + j];
+        h ^= h >> 13;
+        h ^= _rand1[_K * i + j];
+        index += h * hashes[_K * i + j];
+      } else {
         int h = hashes[_K * i + j];
         size_t hash = std::hash<int>{}(h);
         hash_combine(index, hash);
       }
+    }
+
+    if (HashFunction == 3) {
+      index = index & ((1 << _RangePow) - 1);
     }
     index = index % _numBuckets;
     indices[i] = index;
