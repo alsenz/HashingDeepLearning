@@ -25,7 +25,6 @@ public:
   std::vector<int> getHash(const std::vector<int> &indices,
                            const std::vector<float> &data) const;
   int getRandDoubleHash(int binid, int count) const;
-  std::vector<int> getHash(const std::vector<float> &data) const;
   std::vector<int> getHash(const SubVectorConst<float> &data) const;
   ~DensifiedWtaHash();
 };

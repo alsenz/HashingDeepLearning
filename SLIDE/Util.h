@@ -71,6 +71,10 @@ protected:
 public:
   SubVectorConst() {}
 
+  SubVectorConst(const std::vector<T> &vec)
+    : _ptrConst(vec.data()), _size(vec.size()) {
+  }
+
   SubVectorConst(const std::vector<T> &vec, size_t startIdx, size_t size)
       : _ptrConst(vec.data() + startIdx), _size(size) {
     assert(startIdx < vec.size());
@@ -100,6 +104,10 @@ protected:
 
 public:
   SubVector() : SubVectorConst<T>() {}
+
+  SubVector(const std::vector<T> &vec)
+    : SubVectorConst<T>(vec), _ptr(vec.data()) {
+  }
 
   SubVector(std::vector<T> &vec, size_t startIdx, size_t size)
       : SubVectorConst<T>(vec, startIdx, size), _ptr(vec.data() + startIdx) {}
