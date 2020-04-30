@@ -17,6 +17,7 @@
 #include <vector>
 
 using namespace std;
+using namespace slide;
 
 std::vector<int> RangePow;
 std::vector<int> K;

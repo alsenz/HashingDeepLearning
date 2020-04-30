@@ -13,7 +13,7 @@
 using namespace std;
 
 namespace hieu {
-void EvalDataSVM(int numBatchesTest, Network &mynet, const std::string &path,
+void EvalDataSVM(int numBatchesTest, slide::hieu::Network &mynet, const std::string &path,
                  int epoch, size_t maxBatchsize, size_t inputDim) {
   int totCorrect = 0;
   std::ifstream file(path);
@@ -26,10 +26,10 @@ void EvalDataSVM(int numBatchesTest, Network &mynet, const std::string &path,
   std::getline(file, str);
 
   for (int i = 0; i < numBatchesTest; i++) {
-    Vec2d<float> data;
-    Vec2d<int> labels;
+    slide::Vec2d<float> data;
+    slide::Vec2d<int> labels;
 
-    CreateData(file, data, labels, maxBatchsize, inputDim);
+    slide::CreateData(file, data, labels, maxBatchsize, inputDim);
 
     int num_features = 0, num_labels = 0;
     for (int batchIdx = 0; batchIdx < maxBatchsize; batchIdx++) {
@@ -61,7 +61,7 @@ int main(size_t maxBatchsize, const std::vector<int> &K,
   int numBatches = totRecords / maxBatchsize;
   int numBatchesTest = totRecordsTest / maxBatchsize;
 
-  hieu::Network mynet(maxBatchsize, K, L, RangePow, Sparsity);
+  slide::hieu::Network mynet(maxBatchsize, K, L, RangePow, Sparsity);
   if (LOADWEIGHT) {
     cnpy::npz_t npzArray = cnpy::npz_load("../savedWeight.npz");
     cerr << "npzArray=" << npzArray.size() << endl;

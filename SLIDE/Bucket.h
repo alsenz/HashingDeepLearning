@@ -3,16 +3,20 @@
 #include <mutex>
 #include <vector>
 
-class Bucket {
-private:
-  std::vector<int> _arr;
-  int _counts = 0;
-  std::mutex *_mutex;
+namespace slide {
 
-public:
-  Bucket();
-  virtual ~Bucket();
+  class Bucket {
+  private:
+    std::vector<int> _arr;
+    int _counts = 0;
+    std::mutex *_mutex;
 
-  void add(int id, bool unlimited);
-  const std::vector<int> &getAll() const;
-};
+  public:
+    Bucket();
+    virtual ~Bucket();
+
+    void add(int id, bool unlimited);
+    const std::vector<int> &getAll() const;
+  };
+
+}

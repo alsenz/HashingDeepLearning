@@ -7,107 +7,110 @@
 
 using namespace std;
 
-namespace hieu {
-Network::Network(size_t maxBatchsize, const std::vector<int> &K,
-                 const std::vector<int> &L, const std::vector<int> &RangePow,
-                 const std::vector<float> &Sparsity) {
-  size_t inputDim = 135909;
+namespace slide {
+  namespace hieu {
+    Network::Network(size_t maxBatchsize, const std::vector<int> &K,
+      const std::vector<int> &L, const std::vector<int> &RangePow,
+      const std::vector<float> &Sparsity) {
+      size_t inputDim = 135909;
 
-  cerr << "Create Network" << endl;
-  _layers.push_back(new Layer(0, 128, inputDim, maxBatchsize, Sparsity[0] < 1,
-                              K[0], L[0], RangePow[0], ReLU));
-  _layers.push_back(new Layer(1, 670091, 128, maxBatchsize, Sparsity[1] < 1,
-                              K[1], L[1], RangePow[1], Softmax));
-}
-
-void Network::Load(const cnpy::npz_t &npzArray) {
-  cerr << "Load Network" << endl;
-  for (Layer *layer : _layers) {
-    layer->Load(npzArray);
-  }
-
-  HashWeights();
-}
-
-Network::~Network() {
-  for (Layer *layer : _layers) {
-    delete layer;
-  }
-}
-
-size_t Network::predictClass(const Vec2d<float> &data,
-                             const Vec2d<int> &labels) const {
-  assert(data.size() == labels.size());
-  size_t batchSize = data.size();
-
-  size_t correctPred = 0;
-
-  // inference
-  for (size_t batchIdx = 0; batchIdx < batchSize; ++batchIdx) {
-    const std::vector<float> &data1 = data.at(batchIdx);
-    const std::vector<int> &labels1 = labels.at(batchIdx);
-
-    const std::vector<float> *lastActivations =
-        computeActivation(data1, labels1);
-
-    size_t correctPred1 = computeCorrect(*lastActivations, labels1);
-    correctPred += correctPred1;
-
-    delete lastActivations;
-  }
-  return correctPred;
-}
-
-size_t Network::computeCorrect(const std::vector<float> &lastActivations,
-                               const std::vector<int> &labels1) const {
-  float max_act = -222222222;
-  int predict_class = -1;
-  for (size_t idx = 0; idx < lastActivations.size(); ++idx) {
-    float cur_act = lastActivations[idx];
-    if (max_act < cur_act) {
-      max_act = cur_act;
-      predict_class = idx;
+      cerr << "Create Network" << endl;
+      _layers.push_back(new Layer(0, 128, inputDim, maxBatchsize, Sparsity[0] < 1,
+        K[0], L[0], RangePow[0], ReLU));
+      _layers.push_back(new Layer(1, 670091, 128, maxBatchsize, Sparsity[1] < 1,
+        K[1], L[1], RangePow[1], Softmax));
     }
-  }
 
-  size_t ret = 0;
-  if (std::find(labels1.begin(), labels1.end(), predict_class) !=
-      labels1.end()) {
-    ret++;
-  }
-  return ret;
+    void Network::Load(const cnpy::npz_t &npzArray) {
+      cerr << "Load Network" << endl;
+      for (Layer *layer : _layers) {
+        layer->Load(npzArray);
+      }
+
+      HashWeights();
+    }
+
+    Network::~Network() {
+      for (Layer *layer : _layers) {
+        delete layer;
+      }
+    }
+
+    size_t Network::predictClass(const Vec2d<float> &data,
+      const Vec2d<int> &labels) const {
+      assert(data.size() == labels.size());
+      size_t batchSize = data.size();
+
+      size_t correctPred = 0;
+
+      // inference
+      for (size_t batchIdx = 0; batchIdx < batchSize; ++batchIdx) {
+        const std::vector<float> &data1 = data.at(batchIdx);
+        const std::vector<int> &labels1 = labels.at(batchIdx);
+
+        const std::vector<float> *lastActivations =
+          computeActivation(data1, labels1);
+
+        size_t correctPred1 = computeCorrect(*lastActivations, labels1);
+        correctPred += correctPred1;
+
+        delete lastActivations;
+      }
+      return correctPred;
+    }
+
+    size_t Network::computeCorrect(const std::vector<float> &lastActivations,
+      const std::vector<int> &labels1) const {
+      float max_act = -222222222;
+      int predict_class = -1;
+      for (size_t idx = 0; idx < lastActivations.size(); ++idx) {
+        float cur_act = lastActivations[idx];
+        if (max_act < cur_act) {
+          max_act = cur_act;
+          predict_class = idx;
+        }
+      }
+
+      size_t ret = 0;
+      if (std::find(labels1.begin(), labels1.end(), predict_class) !=
+        labels1.end()) {
+        ret++;
+      }
+      return ret;
+    }
+
+    const std::vector<float> *
+      Network::computeActivation(const std::vector<float> &data1,
+        const std::vector<int> &labels1) const {
+      size_t correctPred = 0;
+
+      std::vector<float> *dataOut = new std::vector<float>;
+
+      const Layer &firstLayer = getLayer(0);
+      firstLayer.computeActivation(*dataOut, data1);
+
+      std::vector<float> *dataIn = dataOut;
+      dataOut = new std::vector<float>;
+
+      for (int layerIdx = 1; layerIdx < _layers.size(); ++layerIdx) {
+        const Layer &layer = getLayer(layerIdx);
+        layer.computeActivation(*dataOut, *dataIn);
+
+        std::swap(dataIn, dataOut);
+      }
+      delete dataOut;
+
+      return dataIn;
+    }
+
+    void Network::HashWeights() {
+      cerr << "Start HashWeights()" << endl;
+      for (Layer *layer : _layers) {
+        layer->HashWeights();
+      }
+      cerr << "Finished HashWeights()" << endl;
+    }
+
+  } // namespace hieu
 }
 
-const std::vector<float> *
-Network::computeActivation(const std::vector<float> &data1,
-                           const std::vector<int> &labels1) const {
-  size_t correctPred = 0;
-
-  std::vector<float> *dataOut = new std::vector<float>;
-
-  const Layer &firstLayer = getLayer(0);
-  firstLayer.computeActivation(*dataOut, data1);
-
-  std::vector<float> *dataIn = dataOut;
-  dataOut = new std::vector<float>;
-
-  for (int layerIdx = 1; layerIdx < _layers.size(); ++layerIdx) {
-    const Layer &layer = getLayer(layerIdx);
-    layer.computeActivation(*dataOut, *dataIn);
-
-    std::swap(dataIn, dataOut);
-  }
-  delete dataOut;
-
-  return dataIn;
-}
-
-void Network::HashWeights() {
-  cerr << "Start HashWeights()" << endl;
-  for (Layer *layer : _layers) {
-    layer->HashWeights();
-  }
-  cerr << "Finished HashWeights()" << endl;
-}
-
-} // namespace hieu
