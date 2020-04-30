@@ -1,6 +1,5 @@
 #pragma once
 #include "HashBase.h"
-#include "MurmurHash.h"
 #include "Util.h"
 #include <chrono>
 #include <climits>

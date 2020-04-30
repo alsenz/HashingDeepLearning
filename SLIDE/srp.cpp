@@ -73,7 +73,7 @@ SparseRandomProjection::getHashSparse(const std::vector<int> &indices,
     double s = 0;
     size_t i = 0;
     size_t j = 0;
-    while (i < values.size() & j < _samSize) {
+    while (i < values.size() && j < _samSize) {
       if (indices[i] == _indices[p][j]) {
         float v = values[i];
         if (_randBits[p][j] >= 0) {
