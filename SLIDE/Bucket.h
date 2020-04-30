@@ -5,18 +5,18 @@
 
 namespace slide {
 
-  class Bucket {
-  private:
-    std::vector<int> _arr;
-    int _counts = 0;
-    std::mutex *_mutex;
+class Bucket {
+private:
+  std::vector<int> _arr;
+  int _counts = 0;
+  std::mutex *_mutex;
 
-  public:
-    Bucket();
-    virtual ~Bucket();
+public:
+  Bucket();
+  virtual ~Bucket();
 
-    void add(int id, bool unlimited);
-    const std::vector<int> &getAll() const;
-  };
+  void add(int id, bool unlimited);
+  const std::vector<int> &getAll() const;
+};
 
-}
+} // namespace slide

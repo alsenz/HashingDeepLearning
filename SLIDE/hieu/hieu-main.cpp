@@ -13,8 +13,9 @@
 using namespace std;
 
 namespace hieu {
-void EvalDataSVM(int numBatchesTest, slide::hieu::Network &mynet, const std::string &path,
-                 int epoch, size_t maxBatchsize, size_t inputDim) {
+void EvalDataSVM(int numBatchesTest, slide::hieu::Network &mynet,
+                 const std::string &path, int epoch, size_t maxBatchsize,
+                 size_t inputDim) {
   int totCorrect = 0;
   std::ifstream file(path);
   if (!file) {

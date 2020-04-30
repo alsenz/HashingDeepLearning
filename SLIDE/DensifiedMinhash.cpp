@@ -12,159 +12,159 @@ using namespace std;
 
 namespace slide {
 
-  typedef pair<int, float> PAIR;
+typedef pair<int, float> PAIR;
 
-  struct cmp {
-    bool operator()(const PAIR &a, const PAIR &b) {
-      return a.second > b.second; // lower is better
-    };
+struct cmp {
+  bool operator()(const PAIR &a, const PAIR &b) {
+    return a.second > b.second; // lower is better
   };
+};
 
-  DensifiedMinhash::DensifiedMinhash(int numHashes, int noOfBitsToHash)
+DensifiedMinhash::DensifiedMinhash(int numHashes, int noOfBitsToHash)
     : _randHash(2), _binids(noOfBitsToHash) {
-    _numhashes = numHashes;
-    _rangePow = noOfBitsToHash;
-    _lognumhash = log2(numHashes);
+  _numhashes = numHashes;
+  _rangePow = noOfBitsToHash;
+  _lognumhash = log2(numHashes);
 
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<> dis(1, INT_MAX);
+  std::random_device rd;
+  std::mt19937 gen(rd());
+  std::uniform_int_distribution<> dis(1, INT_MAX);
 
-    _randa = dis(gen);
-    if (_randa % 2 == 0)
-      _randa++;
+  _randa = dis(gen);
+  if (_randa % 2 == 0)
+    _randa++;
 
-    _randHash[0] = dis(gen);
-    if (_randHash[0] % 2 == 0)
-      _randHash[0]++;
-    _randHash[1] = dis(gen);
-    if (_randHash[1] % 2 == 0)
-      _randHash[1]++;
-  }
+  _randHash[0] = dis(gen);
+  if (_randHash[0] % 2 == 0)
+    _randHash[0]++;
+  _randHash[1] = dis(gen);
+  if (_randHash[1] % 2 == 0)
+    _randHash[1]++;
+}
 
-  void DensifiedMinhash::getMap(int n) {
-    int range = 1 << _rangePow;
-    // binsize is the number of times the range is larger than the total number of
-    // hashes we need.
-    int binsize = ceil(1.0 * range / _numhashes);
-    for (int i = 0; i < n; i++) {
-      unsigned int h = i;
-      h *= _randa;
-      h ^= h >> 13;
-      h *= 0x85ebca6b;
-      //        unsigned int curhash = (unsigned int)(((unsigned int)h*i) << 5);
-      uint32_t curhash =
+void DensifiedMinhash::getMap(int n) {
+  int range = 1 << _rangePow;
+  // binsize is the number of times the range is larger than the total number of
+  // hashes we need.
+  int binsize = ceil(1.0 * range / _numhashes);
+  for (int i = 0; i < n; i++) {
+    unsigned int h = i;
+    h *= _randa;
+    h ^= h >> 13;
+    h *= 0x85ebca6b;
+    //        unsigned int curhash = (unsigned int)(((unsigned int)h*i) << 5);
+    uint32_t curhash =
         MurmurHash((char *)&i, (uint32_t)sizeof(i), (uint32_t)_randa);
-      curhash = curhash & ((1 << _rangePow) - 1);
-      _binids[i] = (int)floor(curhash / binsize);
-      ;
+    curhash = curhash & ((1 << _rangePow) - 1);
+    _binids[i] = (int)floor(curhash / binsize);
+    ;
+  }
+}
+
+std::vector<int>
+DensifiedMinhash::getHash(const SubVectorConst<float> &data) const {
+  // binsize is the number of times the range is larger than the total number of
+  // hashes we need.
+  // read the data and add it to priority queue O(dlogk approx 7d) with index as
+  // key and values as priority value, get topk index O(1) and apply minhash on
+  // retuned index.
+
+  priority_queue<PAIR, vector<PAIR>, cmp> pq;
+
+  for (int i = 0; i < TOPK; i++) {
+    pq.push(std::make_pair(i, data[i]));
+  }
+
+  for (int i = TOPK; i < data.size(); i++) {
+    pq.push(std::make_pair(i, data[i]));
+    pq.pop();
+  }
+
+  std::vector<int> hashes(_numhashes);
+  std::vector<int> hashArray(_numhashes);
+
+  for (int i = 0; i < _numhashes; i++) {
+    hashes[i] = INT_MIN;
+  }
+
+  for (int i = 0; i < TOPK; i++) {
+    PAIR pair = pq.top();
+    pq.pop();
+    int index = pair.first;
+    int binid = _binids[index];
+    if (hashes[binid] < index) {
+      hashes[binid] = index;
     }
   }
 
-  std::vector<int>
-    DensifiedMinhash::getHash(const SubVectorConst<float> &data) const {
-    // binsize is the number of times the range is larger than the total number of
-    // hashes we need.
-    // read the data and add it to priority queue O(dlogk approx 7d) with index as
-    // key and values as priority value, get topk index O(1) and apply minhash on
-    // retuned index.
-
-    priority_queue<PAIR, vector<PAIR>, cmp> pq;
-
-    for (int i = 0; i < TOPK; i++) {
-      pq.push(std::make_pair(i, data[i]));
+  for (int i = 0; i < _numhashes; i++) {
+    int next = hashes[i];
+    if (next != INT_MIN) {
+      hashArray[i] = hashes[i];
+      continue;
     }
+    int count = 0;
+    while (next == INT_MIN) {
+      count++;
+      int index = std::min(getRandDoubleHash(i, count), _numhashes);
 
-    for (int i = TOPK; i < data.size(); i++) {
-      pq.push(std::make_pair(i, data[i]));
-      pq.pop();
+      next = hashes[index]; // Kills GPU.
+      if (count > 100)      // Densification failure.
+        break;
     }
-
-    std::vector<int> hashes(_numhashes);
-    std::vector<int> hashArray(_numhashes);
-
-    for (int i = 0; i < _numhashes; i++) {
-      hashes[i] = INT_MIN;
-    }
-
-    for (int i = 0; i < TOPK; i++) {
-      PAIR pair = pq.top();
-      pq.pop();
-      int index = pair.first;
-      int binid = _binids[index];
-      if (hashes[binid] < index) {
-        hashes[binid] = index;
-      }
-    }
-
-    for (int i = 0; i < _numhashes; i++) {
-      int next = hashes[i];
-      if (next != INT_MIN) {
-        hashArray[i] = hashes[i];
-        continue;
-      }
-      int count = 0;
-      while (next == INT_MIN) {
-        count++;
-        int index = std::min(getRandDoubleHash(i, count), _numhashes);
-
-        next = hashes[index]; // Kills GPU.
-        if (count > 100)      // Densification failure.
-          break;
-      }
-      hashArray[i] = next;
-    }
-    return hashArray;
+    hashArray[i] = next;
   }
+  return hashArray;
+}
 
-  std::vector<int>
-    DensifiedMinhash::getHash(const std::vector<int> &indices,
-      const std::vector<float> &data) const {
-    std::vector<int> hashes(_numhashes);
-    std::vector<int> hashArray(_numhashes);
+std::vector<int>
+DensifiedMinhash::getHash(const std::vector<int> &indices,
+                          const std::vector<float> &data) const {
+  std::vector<int> hashes(_numhashes);
+  std::vector<int> hashArray(_numhashes);
 
-    for (int i = 0; i < _numhashes; i++) {
-      hashes[i] = INT_MIN;
-    }
-    /*
-  if (dataLen<0){
-
+  for (int i = 0; i < _numhashes; i++) {
+    hashes[i] = INT_MIN;
   }
-  */
-    for (int i = 0; i < data.size(); i++) {
-      int binid = _binids[indices[i]];
-
-      if (hashes[binid] < indices[i]) {
-        hashes[binid] = indices[i];
-      }
-    }
-
-    for (int i = 0; i < _numhashes; i++) {
-      int next = hashes[i];
-      if (next != INT_MIN) {
-        hashArray[i] = hashes[i];
-        continue;
-      }
-      int count = 0;
-      while (next == INT_MIN) {
-        count++;
-        int index = std::min(getRandDoubleHash(i, count), _numhashes);
-
-        next = hashes[index]; // Kills GPU.
-        if (count > 100)      // Densification failure.
-          break;
-      }
-      hashArray[i] = next;
-    }
-    return hashArray;
-  }
-
-  int DensifiedMinhash::getRandDoubleHash(int binid, int count) const {
-    unsigned int tohash = ((binid + 1) << 6) + count;
-    return (_randHash[0] * tohash << 3) >>
-      (32 - _lognumhash); // _lognumhash needs to be ceiled.
-  }
-
-  DensifiedMinhash::~DensifiedMinhash() {}
+  /*
+if (dataLen<0){
 
 }
+*/
+  for (int i = 0; i < data.size(); i++) {
+    int binid = _binids[indices[i]];
+
+    if (hashes[binid] < indices[i]) {
+      hashes[binid] = indices[i];
+    }
+  }
+
+  for (int i = 0; i < _numhashes; i++) {
+    int next = hashes[i];
+    if (next != INT_MIN) {
+      hashArray[i] = hashes[i];
+      continue;
+    }
+    int count = 0;
+    while (next == INT_MIN) {
+      count++;
+      int index = std::min(getRandDoubleHash(i, count), _numhashes);
+
+      next = hashes[index]; // Kills GPU.
+      if (count > 100)      // Densification failure.
+        break;
+    }
+    hashArray[i] = next;
+  }
+  return hashArray;
+}
+
+int DensifiedMinhash::getRandDoubleHash(int binid, int count) const {
+  unsigned int tohash = ((binid + 1) << 6) + count;
+  return (_randHash[0] * tohash << 3) >>
+         (32 - _lognumhash); // _lognumhash needs to be ceiled.
+}
+
+DensifiedMinhash::~DensifiedMinhash() {}
+
+} // namespace slide
