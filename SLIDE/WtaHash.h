@@ -23,7 +23,6 @@ private:
 
 public:
   WtaHash(int numHashes, int noOfBitsToHash);
-  std::vector<int> getHash(const std::vector<float> &data) const;
-  std::vector<int> getHash(const SubVectorConst<float> &data) const;
+  std::vector<int> getHash(const SubVectorConst<float> &data) const override;
   ~WtaHash();
 };
