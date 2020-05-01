@@ -76,11 +76,14 @@ public:
   SubVectorConst(const T *ptr, size_t size)
     : _ptrConst(ptr), _size(size) {}
 
+  SubVectorConst(const T *ptr, size_t startIdx, size_t size)
+    : SubVectorConst(ptr + startIdx, size) {}
+
   SubVectorConst(const std::vector<T> &vec)
       : SubVectorConst(vec.data(), vec.size()) {}
 
   SubVectorConst(const std::vector<T> &vec, size_t startIdx, size_t size)
-      : SubVectorConst(vec.data() + startIdx, size) {
+      : SubVectorConst(vec.data(), startIdx, size) {
     assert(startIdx < vec.size());
     assert(startIdx + size <= vec.size());
   }
